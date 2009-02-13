@@ -53,7 +53,9 @@ int main() {
   delete(root);
 }
 
-
+// Local variables:
+// compile-command: "gcc -o ev main.cpp Node.cpp -lstdc++"
+// End:
 
 
 
