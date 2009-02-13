@@ -3,49 +3,51 @@
 #include <iostream>
 #include <fstream>
 
-
 #include "Node.h"
 
 using namespace std;
 
+int to255(double x) {
+  int v = int(x*255);
+  if (v > 255) v = 255;
+  if (v < 0)   v = 0;
+  return v;
+}
+
 int main() {
-  int m = 1024, n = 768;
+  int m = 128, n = 128;
     
   X* Xv = new X();
   Y* Yv = new Y();
   Sum* Sumv = new Sum(Xv, Yv);
   Node* root = new Mult(Sumv, Xv);
     
-  double imatge[m][n], maxvalue = 0;
+  RGB imatge[m][n], maxvalue = 0;
   int i,j;
     
   for (i = 0; i < m; i++) {
     for (j = 0; j < n; j++) {
-      Env e(i,j);
+      Env e(i/double(m),j/double(n));
       imatge[i][j] = root->eval(e);
-
-      //cout << imatge[i][j] << endl; 
-      if (imatge[i][j] > maxvalue) {
-	maxvalue = imatge[i][j];
-      }
     }
   }
-  
-  ofstream out; 
-  out.open("sortida.pgm");
 
-  out << "P2" << endl
-      << n << " " << m << endl
-      << "65535" << endl;
-
-  for(i = 0; i < m; i++) {
-    for(j = 0; j < n; j++) {
-      out << int((imatge[i][j]/maxvalue)*65535) << " ";
-    }
-    out << endl;
-  }
+  {
+    ofstream out("sortida.pgm");
     
-  out.close();    
+    out << "P3" << endl
+	<< n << " " << m << endl
+	<< "255" << endl;
+    
+    for(i = 0; i < m; i++) {
+      for(j = 0; j < n; j++) {
+	out << to255(imatge[i][j].getr()) << ' '
+	    << to255(imatge[i][j].getg()) << ' '
+	    << to255(imatge[i][j].getb()) << ' ';
+      }
+      out << endl;
+    }
+  }
     
   delete(Xv);
   delete(Yv);
@@ -54,7 +56,7 @@ int main() {
 }
 
 // Local variables:
-// compile-command: "gcc -o ev main.cpp Node.cpp -lstdc++"
+// compile-command: "gcc -Wall -g3 -o ev main.cpp Node.cpp -lstdc++"
 // End:
 
 

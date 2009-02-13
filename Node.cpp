@@ -2,26 +2,41 @@
 #include "Node.h"
 using namespace std;
 
-double Sum::eval(Env& e) {
+RGB RGB::operator+(const RGB& o) {
+  return RGB(_r + o._r, _g + o._g, _b + o._b);
+}
+
+RGB RGB::operator*(const RGB& o) {
+  return RGB(_r * o._r, _g * o._g, _b * o._b);
+}
+
+RGB RGB::map(PFunction f) {
+  return RGB( f(_r), f(_g), f(_b) );
+}
+
+
+
+RGB Sum::eval(Env& e) {
   return op1()->eval(e) + op2()->eval(e);
 }
 
-double Mult::eval(Env& e) {
+RGB Mult::eval(Env& e) {
   return op1()->eval(e) * op2()->eval(e);
 }
 
-double Log10::eval(Env& e) {
-  return log10(op1()->eval(e));
+RGB Log10::eval(Env& e) {
+  RGB p = op1()->eval(e);
+  return p.map(log10);
 }
 
 
 
-double X::eval(Env& e) { 
-  return e.getX();
+RGB X::eval(Env& e) { 
+  return RGB(e.getX());
 }
 
-double Y::eval(Env& e) { 
-  return e.getY();
+RGB Y::eval(Env& e) { 
+  return RGB(e.getY());
 }
 
 
