@@ -21,7 +21,9 @@ class RGB {
   RGB map(PFunction f);
 
   RGB operator+(const RGB& o);
+  RGB operator-(const RGB& o);  
   RGB operator*(const RGB& o);
+  RGB operator/(const RGB& o);
 };
 
 class Env {
@@ -35,11 +37,8 @@ class Env {
   }
 };
 
-//! Classe Node: Mare de les altres
 class Node {
-  //! 1r parametre
 public:
-  //! eval virtual, s'implanta en les filles.
   virtual RGB eval(Env& e) = 0;
 };
 
@@ -72,44 +71,55 @@ public:
 
 class Sum : public BinOp {
 public:
-  //! constructor.
   Sum(Node* p1, Node* p2): BinOp(p1, p2) {}
-  //! Aqui l'eval seria fer la suma de l'eval dels dos punters que tenim no?
+  RGB eval( Env& e);
+};
+
+class Rest : public BinOp {
+public:
+  Rest(Node* p1, Node* p2): BinOp(p1, p2) {}
   RGB eval( Env& e);
 };
 
 class Mult : public BinOp {
  public:
-  //! constructor. 
  Mult(Node* p1, Node* p2): BinOp(p1, p2) {}
 
-  //! Aquí l'eval seria fer el producte de l'eval dels dos punters que tenim no?
+  RGB eval(Env& e);
+};
+
+class Div : public BinOp {
+ public:
+ Div(Node* p1, Node* p2): BinOp(p1, p2) {}
+
   RGB eval(Env& e);
 };
 
 class Log10 : public UnaryOp {
  public:
-  //! constructor. 
  Log10(Node* p1): UnaryOp(p1) {}
 
-  //! Aquí l'eval seria fer el producte de l'eval dels dos punters que tenim no?
   RGB eval(Env& e);
 };
 
 
 class X : public Node {
 public:
-  //! aqui evaluar seria unicament passar el valor de la posicio del vector no? la variable x aquesta
   RGB eval( Env& e);
 };
 
 class Y : public Node {
-  //! Aquest parametre és el que considero que és el valor de l'index de l'eix y, aixo està bé?
 public:
-  //! aqui evaluar seria unicament passar el valor de la posicio del vector no? la variable y aquesta
   RGB eval( Env& e);
 };
 
-
+class v_fix : public Node {
+	double p1;
+	
+public:
+	RGB eval( Env& e);
+	v_fix( double p1);
+};
+	
 
 #endif

@@ -21,7 +21,7 @@ int main() {
   Y* Yv = new Y();
   Sum* Sumv = new Sum(Xv, Yv);
   Node* root = new Mult(Sumv, Xv);
-    
+//v_fix trenta = new v_fix(30);   
   RGB imatge[m][n], maxvalue = 0;
   int i,j;
     
