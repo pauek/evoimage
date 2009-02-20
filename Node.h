@@ -118,7 +118,9 @@ class v_fix : public Node {
 	
 public:
 	RGB eval( Env& e);
-	v_fix( double p1);
+	v_fix( double _p1){
+		p1=_p1;
+		}
 };
 	
 

@@ -19,9 +19,16 @@ int main() {
     
   X* Xv = new X();
   Y* Yv = new Y();
-  Sum* Sumv = new Sum(Xv, Yv);
-  Node* root = new Mult(Sumv, Xv);
-//v_fix trenta = new v_fix(30);   
+  v_fix* trenta = new v_fix(30.0);
+  v_fix* migMD = new v_fix ( 128.0);
+  Mult* Mult_1 = new Mult (Xv , migMD);
+  Rest* Rest_1 = new Rest ( Yv , trenta);
+  v_fix* quaranta = new v_fix (40.0);
+  Sum* Sum_1 = new Sum(Rest_1, quaranta);
+  Div* Div_1 = new Div ( Mult_1 , Sum_1);
+  
+  Node* root = new Log10(Div_1);
+     
   RGB imatge[m][n], maxvalue = 0;
   int i,j;
     
@@ -51,7 +58,13 @@ int main() {
     
   delete(Xv);
   delete(Yv);
-  delete(Sumv);
+  delete(trenta);
+  delete(quaranta);
+  delete(migMD);
+  delete(Mult_1);
+  delete(Rest_1);
+  delete(Div_1);
+  delete(Sum_1);
   delete(root);
 }
 

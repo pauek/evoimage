@@ -41,11 +41,9 @@ RGB Div::eval(Env& e) {
 }
 
 RGB Log10::eval(Env& e) {
-  RGB p = op1()->eval(e);
-  return p.map(log10);
+  RGB p = op1() -> eval(e);
+  return p.map( log10);
 }
-
-
 
 RGB X::eval(Env& e) { 
   return RGB(e.getX());
