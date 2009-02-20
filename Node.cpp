@@ -40,9 +40,10 @@ RGB Div::eval(Env& e) {
   return op1()->eval(e) / op2()->eval(e);
 }
 
-RGB Log10::eval(Env& e) {
+RGB Log::eval(Env& e) {
   RGB p = op1() -> eval(e);
-  return p.map( log10);
+  RGB b = op2() -> eval(e);
+  return (p.map( log10) / b.map( log10));
 }
 
 RGB X::eval(Env& e) { 
@@ -54,5 +55,5 @@ RGB Y::eval(Env& e) {
 }
 
 RGB v_fix::eval(Env& e) {
-	return RGB( p1);
+	return RGB( p1, p1, p1);
 }

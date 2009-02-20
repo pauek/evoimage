@@ -26,8 +26,8 @@ int main() {
   v_fix* quaranta = new v_fix (40.0);
   Sum* Sum_1 = new Sum(Rest_1, quaranta);
   Div* Div_1 = new Div ( Mult_1 , Sum_1);
-  
-  Node* root = new Log10(Div_1);
+  v_fix* base10 = new v_fix(10.0);  
+  Node* root = new Log ( Div_1, base10);
      
   RGB imatge[m][n], maxvalue = 0;
   int i,j;
@@ -36,7 +36,9 @@ int main() {
     for (j = 0; j < n; j++) {
       Env e(i/double(m),j/double(n));
       imatge[i][j] = root->eval(e);
+      
     }
+    
   }
 
   {
@@ -58,13 +60,13 @@ int main() {
     
   delete(Xv);
   delete(Yv);
-  delete(trenta);
-  delete(quaranta);
-  delete(migMD);
-  delete(Mult_1);
-  delete(Rest_1);
-  delete(Div_1);
-  delete(Sum_1);
+  //delete(trenta);
+  //delete(quaranta);
+  //delete(migMD);
+  //delete(Mult_1);
+  //delete(Rest_1);
+  //delete(Div_1);
+  //delete(Sum_1);
   delete(root);
 }
 

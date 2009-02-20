@@ -10,7 +10,7 @@ class RGB {
  public:
   
  RGB(double x=0.0) : _r(x), _g(x), _b(x) {}
-  
+ 
  RGB(double r, double g, double b)
    : _r(r), _g(g), _b(b) {}
 
@@ -95,9 +95,9 @@ class Div : public BinOp {
   RGB eval(Env& e);
 };
 
-class Log10 : public UnaryOp {
+class Log : public BinOp {
  public:
- Log10(Node* p1): UnaryOp(p1) {}
+ Log(Node* p1 , Node* p2): BinOp( p1, p2) {}
 
   RGB eval(Env& e);
 };
