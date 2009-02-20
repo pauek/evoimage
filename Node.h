@@ -4,6 +4,7 @@
 #define Node_h
 
 typedef double (*PFunction)(double);
+typedef double (*PFunction2)(double,double);
 
 class RGB {
   double _r, _g, _b;
@@ -19,11 +20,13 @@ class RGB {
   double getb() const { return _b; }
 
   RGB map(PFunction f);
+  RGB map2(PFunction2 f, RGB& o);
 
   RGB operator+(const RGB& o);
   RGB operator-(const RGB& o);  
   RGB operator*(const RGB& o);
   RGB operator/(const RGB& o);
+  
 };
 
 class Env {
@@ -36,6 +39,7 @@ class Env {
       y = _y;
   }
 };
+
 
 class Node {
 public:
@@ -56,7 +60,6 @@ public:
   }
 };
 
-
 class UnaryOp : public Node {
   Node *p1;
 
@@ -68,6 +71,7 @@ public:
     p1 = _p1;
   }
 };
+
 
 class Sum : public BinOp {
 public:
@@ -95,6 +99,13 @@ class Div : public BinOp {
   RGB eval(Env& e);
 };
 
+class Mod : public BinOp {
+	public:
+	Mod( Node* p1, Node* p2) : BinOp( p1, p2) {}
+	
+	RGB eval ( Env& e);
+};
+
 class Log : public BinOp {
  public:
  Log(Node* p1 , Node* p2): BinOp( p1, p2) {}
@@ -102,6 +113,13 @@ class Log : public BinOp {
   RGB eval(Env& e);
 };
 
+class Round : public BinOp {
+ public:
+ Round(Node* p1 , Node* p2): BinOp( p1, p2) {}
+
+  RGB eval(Env& e);	
+	
+	};
 
 class X : public Node {
 public:
