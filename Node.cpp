@@ -18,6 +18,17 @@ RGB RGB::operator/(const RGB& o) {
   return RGB(_r / o._r, _g / o._g, _b / o._b);
 }
 
+RGB RGB::operator&(const RGB& o) {
+  return RGB(double(int(_r) & int(o._r)), double(int(_g) & int(o._g)), double(int(_b) & int(o._b)));
+}
+
+RGB RGB::operator|(const RGB& o) {
+  return RGB(double(int(_r) | int(o._r)), double(int(_g) | int(o._g)), double(int(_b) | int(o._b)));
+}
+
+RGB RGB::operator^(const RGB& o){
+  return RGB(double(int(_r) ^ int(o._r)), double(int(_g) ^ int(o._g)), double(int(_b) ^ int(o._b)));
+	}
 
 RGB RGB::map(PFunction f) {
   return RGB( f(_r), f(_g), f(_b) );
@@ -65,6 +76,21 @@ RGB Round::eval(Env& e) {
   RGB offs = RGB( 0.5, 0.5, 0.5);
   return (((b/p)+offs).map( floor));
 }
+
+RGB And::eval ( Env& e){
+	return op1()->eval(e) & op2()->eval(e);	
+	
+	}
+	
+RGB Or::eval ( Env& e){
+	return op1()->eval(e) | op2()->eval(e);	
+	
+	}
+	
+RGB Xor::eval ( Env& e){
+	return op1()->eval(e) ^ op2()->eval(e);	
+	
+	}
 
 RGB X::eval(Env& e) { 
   return RGB(e.getX());

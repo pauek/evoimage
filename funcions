@@ -25,12 +25,13 @@ veure els resultats que dóna d'exemple a hyperspec
 log DONE --> 2 d'entrada, numero i la base del logaritme a aplicar. No 
 entenc l'últim exemple¿? no te sentit el resultat.
 
-and --> com a tal no està, serà bit-and?? Si ho és, simplement 2 arg i 
+and DONE amb problemes de tipus -->  com a tal no està, serà bit-and?? 
+Si ho és, simplement 2 arg i 
 retorna 1, clar
 
-or --> bit-ior
+or DONE amb problemes de tipus --> bit-ior
 
-xor --> xor
+xor DONE amb problemes de tipus --> xor
 
 sin --> un argument, ja sigui num o vector. En el cas d vector retorna 
 un per camp no?

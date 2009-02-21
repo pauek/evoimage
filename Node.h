@@ -26,6 +26,9 @@ class RGB {
   RGB operator-(const RGB& o);  
   RGB operator*(const RGB& o);
   RGB operator/(const RGB& o);
+  RGB operator&(const RGB& o);
+  RGB operator|(const RGB& o);
+  RGB operator^(const RGB& o);
   
 };
 
@@ -118,6 +121,27 @@ class Round : public BinOp {
  Round(Node* p1 , Node* p2): BinOp( p1, p2) {}
 
   RGB eval(Env& e);	
+	
+	};
+
+class And : public BinOp {
+	public:
+	And ( Node* p1, Node* p2) : BinOp ( p1, p2) {}
+	RGB eval ( Env& e);
+	
+	};
+	
+class Or : public BinOp {
+	public:
+	Or ( Node* p1, Node* p2) : BinOp ( p1, p2) {}
+	RGB eval ( Env& e);
+	
+	};
+	
+class Xor : public BinOp {
+	public:
+	Xor ( Node* p1, Node* p2) : BinOp ( p1, p2) {}
+	RGB eval ( Env& e);
 	
 	};
 
