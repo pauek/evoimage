@@ -92,6 +92,23 @@ RGB Xor::eval ( Env& e){
 	
 	}
 
+RGB Sin::eval ( Env& e){
+	RGB p = op1() -> eval(e);
+	return p.map(sin);
+	}
+	
+RGB Cos::eval ( Env& e){
+	RGB p = op1() -> eval(e);
+	return p.map(cos);
+	}
+
+RGB Atan::eval(Env& e){
+  RGB p = op1() -> eval(e);
+  RGB b = op2() -> eval(e);
+	return ( p.map2( atan2, b ));
+	
+	}
+
 RGB X::eval(Env& e) { 
   return RGB(e.getX());
 }

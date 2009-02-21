@@ -145,6 +145,27 @@ class Xor : public BinOp {
 	
 	};
 
+class Sin : public UnaryOp {
+	public:
+	Sin ( Node* p1) : UnaryOp( p1) {}
+	RGB eval ( Env& e);
+	
+	};
+	
+class Cos : public UnaryOp {
+	public:
+	Cos ( Node* p1) : UnaryOp( p1) {}
+	RGB eval ( Env& e);
+	
+	};
+
+class Atan : public BinOp {
+	public:
+	Atan ( Node* p1, Node* p2) : BinOp( p1, p2) {}
+	RGB eval ( Env& e);
+	
+	};
+
 class X : public Node {
 public:
   RGB eval( Env& e);
