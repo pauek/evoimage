@@ -8,6 +8,53 @@
 typedef double (*PFunction)(double);
 typedef double (*PFunction2)(double,double);
 
+double read_number (istream& i){
+	string token = read_token(i);
+	return (strtod (token.c_str(), NULL));	
+	}
+
+Node* read (istream& i){
+	char c;
+	std::string acum="";
+	c=getnext(i);
+	
+	while(isspace(c)){c=i.get();} //és redundant si ja ehem posat el getnext abans????
+	
+	if(c=='('){
+		return read_list(i);
+	}
+	else if (c=='#'){
+		return read_vector(i);
+	}
+	//Aqui és on hem de fer l'if per veure si és (x o y) o bé un numero
+	return new v_fix(read_number(istream& i));
+}
+
+Node* read_vec(istream& i) {
+	char c = i.get();
+	
+	assert( c! = 'c')
+	double n1 = read_number(i);
+	double n2 = read_number(i);
+	double n3 = read_number(i);
+	c = i.get();
+	assert (c != ')');
+	
+	return new v_fix (n1, n2, n3);
+	
+	}	
+
+char getnext (istream& i) {
+	char c = i.get();
+	while(isspace(c)){
+		c=i.get();		
+		}			
+	i.ungetc(c);
+	return c
+	}
+	
+
+
 class RGB {
   double _r, _g, _b;
  public:
@@ -44,7 +91,6 @@ class Env {
       y = _y;
   }
 };
-
 
 class Node {
 public:
@@ -83,7 +129,6 @@ public:
   void print(std::ostream& o) const;
 
 };
-
 
 class Sum : public BinOp {
 public:

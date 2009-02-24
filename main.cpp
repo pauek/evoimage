@@ -59,7 +59,7 @@ int main() {
   }
 
   cout << "Print: ";
-  root->print(cout); // (+ (- y 30.0) 40.0)
+  root->print(cout); 
   cout << endl;
     
   delete(Xv);
