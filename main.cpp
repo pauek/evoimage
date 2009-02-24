@@ -17,17 +17,17 @@ int to255(double x) {
 int main() {
   int m = 128, n = 128;
     
-  //X* Xv = new X();
-  //Y* Yv = new Y();
-  //v_fix* trenta = new v_fix(30.0);
-  //v_fix* migMD = new v_fix ( 128.0);
-  //Mult* Mult_1 = new Mult (Xv , migMD);
-  //Rest* Rest_1 = new Rest ( Yv , trenta);
-  //v_fix* quaranta = new v_fix (40.0);
-  //Sum* Sum_1 = new Sum(Rest_1, quaranta);
-  //Div* Div_1 = new Div ( Mult_1 , Sum_1);
-  //v_fix* base10 = new v_fix(10.0);  
-  //Node* root = new Log ( Div_1, base10);
+  X* Xv = new X();
+  Y* Yv = new Y();
+  v_fix* trenta = new v_fix(30.0);
+  v_fix* migMD = new v_fix ( 128.0);
+  Mult* Mult_1 = new Mult (Xv , migMD);
+  Rest* Rest_1 = new Rest ( Yv , trenta);
+  v_fix* quaranta = new v_fix (40.0);
+  Sum* Sum_1 = new Sum(Rest_1, quaranta);
+  Div* Div_1 = new Div ( Mult_1 , Sum_1);
+  v_fix* base10 = new v_fix(10.0);  
+  Node* root = new Log ( Div_1, base10);
      
   RGB imatge[m][n], maxvalue = 0;
   int i,j;
@@ -35,7 +35,7 @@ int main() {
   for (i = 0; i < m; i++) {
     for (j = 0; j < n; j++) {
       Env e(i/double(m),j/double(n));
-     // imatge[i][j] = root->eval(e);
+      imatge[i][j] = root->eval(e);
       
     }
     
@@ -59,19 +59,19 @@ int main() {
   }
 
   cout << "Print: ";
-  Sum_1->print(cout); // (+ (- y 30.0) 40.0)
+  root->print(cout); // (+ (- y 30.0) 40.0)
   cout << endl;
     
-  //delete(Xv);
-  //delete(Yv);
-  //delete(trenta);
-  //delete(quaranta);
-  //delete(migMD);
-  //delete(Mult_1);
-  //delete(Rest_1);
-  //delete(Div_1);
-  //delete(Sum_1);
-  //delete(root);
+  delete(Xv);
+  delete(Yv);
+  delete(trenta);
+  delete(quaranta);
+  delete(migMD);
+  delete(Mult_1);
+  delete(Rest_1);
+  delete(Div_1);
+  delete(Sum_1);
+  delete(root);
 }
 
 // Local variables:

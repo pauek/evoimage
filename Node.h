@@ -73,12 +73,15 @@ class UnaryOp : public Node {
   Node *p1;
 
 protected:
-  Node* op1() { return p1; }
-    
+  Node* op1() const { return p1; }
+  virtual std::string head() const { return "?"; }  
 public:
   UnaryOp(Node* _p1) {
     p1 = _p1;
   }
+
+  void print(std::ostream& o) const;
+
 };
 
 
@@ -101,6 +104,7 @@ class Mult : public BinOp {
  Mult(Node* p1, Node* p2): BinOp(p1, p2) {}
 
   RGB eval(Env& e);
+  std::string head() const;
 };
 
 class Div : public BinOp {
@@ -108,6 +112,7 @@ class Div : public BinOp {
  Div(Node* p1, Node* p2): BinOp(p1, p2) {}
 
   RGB eval(Env& e);
+  std::string head() const;
 };
 
 class Mod : public BinOp {
@@ -115,6 +120,7 @@ class Mod : public BinOp {
 	Mod( Node* p1, Node* p2) : BinOp( p1, p2) {}
 	
 	RGB eval ( Env& e);
+	std::string head() const;
 };
 
 class Log : public BinOp {
@@ -122,6 +128,7 @@ class Log : public BinOp {
  Log(Node* p1 , Node* p2): BinOp( p1, p2) {}
 
   RGB eval(Env& e);
+  std::string head() const;
 };
 
 class Round : public BinOp {
@@ -129,6 +136,7 @@ class Round : public BinOp {
  Round(Node* p1 , Node* p2): BinOp( p1, p2) {}
 
   RGB eval(Env& e);	
+  std::string head() const;
 	
 	};
 
@@ -136,6 +144,7 @@ class And : public BinOp {
 	public:
 	And ( Node* p1, Node* p2) : BinOp ( p1, p2) {}
 	RGB eval ( Env& e);
+	std::string head() const;
 	
 	};
 	
@@ -143,6 +152,7 @@ class Or : public BinOp {
 	public:
 	Or ( Node* p1, Node* p2) : BinOp ( p1, p2) {}
 	RGB eval ( Env& e);
+	std::string head() const;
 	
 	};
 	
@@ -150,6 +160,7 @@ class Xor : public BinOp {
 	public:
 	Xor ( Node* p1, Node* p2) : BinOp ( p1, p2) {}
 	RGB eval ( Env& e);
+	std::string head() const;
 	
 	};
 
@@ -171,12 +182,14 @@ class Atan : public BinOp {
 	public:
 	Atan ( Node* p1, Node* p2) : BinOp( p1, p2) {}
 	RGB eval ( Env& e);
+	std::string head() const;
 	
 	};
 
 class X : public Node {
 public:
   RGB eval( Env& e);
+  void print(std::ostream& o) const;
 };
 
 class Y : public Node {

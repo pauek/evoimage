@@ -129,11 +129,27 @@ void BinOp::print(ostream& o) const {
   o << ")";
 }
 
+void UnaryOp::print(ostream& o) const {
+  o << "(" << head() << " ";
+  op1()->print(o);
+  o << ")";
+  }
+
 void v_fix::print(ostream& o) const {
   o << p1;
 }
 
 string Sum::head()  const { return "+"; }
 string Rest::head() const { return "-"; }
+string Mult::head()  const { return "*"; }
+string Div::head()  const { return "/"; }
+string Mod::head()  const { return "%"; }
+string Log::head()  const { return "Log"; }
+string Round::head()  const { return "Round"; }
+string And::head()  const { return "&"; }
+string Or::head()  const { return "|"; }
+string Xor::head()  const { return "^"; }
+string Atan::head()  const { return "Atan"; }
 
 void Y::print(ostream& o) const { o << "y"; }
+void X::print(ostream& o) const { o << "x"; }
