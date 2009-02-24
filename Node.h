@@ -1,3 +1,5 @@
+
+#include <iostream>
 #include <math.h>
 
 #ifndef Node_h
@@ -47,20 +49,24 @@ class Env {
 class Node {
 public:
   virtual RGB eval(Env& e) = 0;
+  virtual void print(std::ostream& o) const { o << "?"; }
 };
 
 class BinOp : public Node {
   Node *p1, *p2;
 
 protected:
-  Node* op1() { return p1; }
-  Node* op2() { return p2; }
+  Node* op1() const { return p1; }
+  Node* op2() const { return p2; }
+  virtual std::string head() const { return "?"; }
   
 public:
   BinOp(Node* _p1, Node* _p2) {
     p1 = _p1;
     p2 = _p2;
   }
+
+  void print(std::ostream& o) const;
 };
 
 class UnaryOp : public Node {
@@ -80,12 +86,14 @@ class Sum : public BinOp {
 public:
   Sum(Node* p1, Node* p2): BinOp(p1, p2) {}
   RGB eval( Env& e);
+  std::string head() const;
 };
 
 class Rest : public BinOp {
 public:
   Rest(Node* p1, Node* p2): BinOp(p1, p2) {}
   RGB eval( Env& e);
+  std::string head() const;
 };
 
 class Mult : public BinOp {
@@ -174,6 +182,7 @@ public:
 class Y : public Node {
 public:
   RGB eval( Env& e);
+  void print(std::ostream& o) const;
 };
 
 class v_fix : public Node {
@@ -181,8 +190,13 @@ class v_fix : public Node {
 	
 public:
 	RGB eval( Env& e);
+
 	v_fix( double _p1){	p1=_p1; p2=_p1; p3=_p1;	}
 	v_fix( double _p1, double _p2, double _p3) { p1=_p1; p2=_p2; p3=_p3; }
+
+
+	void print(std::ostream& o) const;
+
 };
 	
 

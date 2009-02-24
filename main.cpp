@@ -57,6 +57,10 @@ int main() {
       out << endl;
     }
   }
+
+  cout << "Print: ";
+  Sum_1->print(cout); // (+ (- y 30.0) 40.0)
+  cout << endl;
     
   //delete(Xv);
   //delete(Yv);

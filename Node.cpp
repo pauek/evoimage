@@ -120,3 +120,20 @@ RGB Y::eval(Env& e) {
 RGB v_fix::eval(Env& e) {
 	return RGB( p1, p1, p1);
 }
+
+void BinOp::print(ostream& o) const {
+  o << "(" << head() << " ";
+  op1()->print(o);
+  o << " ";
+  op2()->print(o);
+  o << ")";
+}
+
+void v_fix::print(ostream& o) const {
+  o << p1;
+}
+
+string Sum::head()  const { return "+"; }
+string Rest::head() const { return "-"; }
+
+void Y::print(ostream& o) const { o << "y"; }
