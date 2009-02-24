@@ -177,13 +177,12 @@ public:
 };
 
 class v_fix : public Node {
-	double p1;
+	double p1, p2, p3;
 	
 public:
 	RGB eval( Env& e);
-	v_fix( double _p1){
-		p1=_p1;
-		}
+	v_fix( double _p1){	p1=_p1; p2=_p1; p3=_p1;	}
+	v_fix( double _p1, double _p2, double _p3) { p1=_p1; p2=_p2; p3=_p3; }
 };
 	
 
