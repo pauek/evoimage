@@ -1,4 +1,4 @@
-OBJECTS = main.o Node.o
+OBJECTS = main.o Node.o Reader.o
 
 all: evoimg
 
