@@ -25,10 +25,17 @@ double read_number (std::istream& i){
 
 Node* read_vec(std::istream& i) {
 	char c = i.get();
+	c = i.get();
 	//assert( c != 'c')
+	cout << c << endl;
 	double n1 = read_number(i);
+	cout << i.get() << endl;
 	double n2 = read_number(i);
+	cout << i.get() << endl;
 	double n3 = read_number(i);
+	
+	cout << n1 << " " << n2 << " " << n3 << endl;
+	
 	c = i.get();
 	//assert (c != ')');
 	

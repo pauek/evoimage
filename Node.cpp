@@ -149,6 +149,8 @@ string Round::head()  const { return "Round"; }
 string And::head()  const { return "&"; }
 string Or::head()  const { return "|"; }
 string Xor::head()  const { return "^"; }
+string Sin::head()  const { return "Sin"; }
+string Cos::head()  const { return "Cos"; }
 string Atan::head()  const { return "Atan"; }
 
 void Y::print(ostream& o) const { o << "y"; }

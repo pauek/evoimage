@@ -172,14 +172,14 @@ class Sin : public UnaryOp {
 	public:
 	Sin ( Node* p1) : UnaryOp( p1) {}
 	RGB eval ( Env& e);
-	
+	std::string head() const;
 	};
 	
 class Cos : public UnaryOp {
 	public:
 	Cos ( Node* p1) : UnaryOp( p1) {}
 	RGB eval ( Env& e);
-	
+	std::string head() const;
 	};
 
 class Atan : public BinOp {

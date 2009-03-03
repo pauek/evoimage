@@ -23,17 +23,7 @@ int main(int argc, char **argv) {
   	
   }
     
-  //X* Xv = new X();
-  //Y* Yv = new Y();
-  //v_fix* trenta = new v_fix(30.0);
-  //v_fix* migMD = new v_fix ( 128.0);
-  //Mult* Mult_1 = new Mult (Xv , migMD);
-  //Rest* Rest_1 = new Rest ( Yv , trenta);
-  //v_fix* quaranta = new v_fix (40.0);
-  //Sum* Sum_1 = new Sum(Rest_1, quaranta);
-  //Div* Div_1 = new Div ( Mult_1 , Sum_1);
-  //v_fix* base10 = new v_fix(10.0);  
-  //Node* root = new Log ( Div_1, base10);
+
     stringstream sin(arg1);
      
 Node* root =  read ( sin);
@@ -73,16 +63,7 @@ Node* root =  read ( sin);
   root->print(cout); 
   cout << endl;
     
-  //delete(Xv);
-  //delete(Yv);
-  //delete(trenta);
-  //delete(quaranta);
-  //delete(migMD);
-  //delete(Mult_1);
-  //delete(Rest_1);
-  //delete(Div_1);
-  //delete(Sum_1);
-  //delete(root);
+
   
   
   
