@@ -118,7 +118,7 @@ RGB Y::eval(Env& e) {
 }
 
 RGB v_fix::eval(Env& e) {
-	return RGB( p1, p1, p1);
+	return RGB( p1, p2, p3);
 }
 
 void BinOp::print(ostream& o) const {

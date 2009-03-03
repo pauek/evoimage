@@ -35,7 +35,7 @@ Node* root =  read ( sin);
     
   for (i = 0; i < m; i++) {
     for (j = 0; j < n; j++) {
-      Env e(i/double(m),j/double(n));
+      Env e(double(i)/double(m),double(j)/double(n));
       imatge[i][j] = root->eval(e);
       
     }

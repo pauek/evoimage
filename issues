@@ -1,0 +1,14 @@
+PROBLEMES DEL READER
+
+-Problemes llegint X i Y?
+
+-Problemes deixant espais, però només en l'ultim caracter, és a dir, 
+entre lultim param i el parentesi final
+
+-Amb parentesi de mes al prinipi també peta, però aixo sembla evident i 
+insolucionable.
+
+-Amb paràmetre de menys peta. S'ha de fer algo pq no sigui així o no 
+val la pena?
+
+-Pilla malament els vectors, pero no se com
