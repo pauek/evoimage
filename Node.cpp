@@ -136,7 +136,7 @@ void UnaryOp::print(ostream& o) const {
   }
 
 void v_fix::print(ostream& o) const {
-  o << p1;
+  o << "#(" << p1 << " " << p2 << " " << p3 << ")";
 }
 
 string Sum::head()  const { return "+"; }

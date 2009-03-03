@@ -98,5 +98,11 @@ Node* read (std::istream& i){
 		return read_vec(i);
 	}
 	//Aqui és on hem de fer l'if per veure si és (x o y) o bé un numero
+	else if ( c == 'x' || c == 'X' ) {
+		return new X();
+		}
+	else if ( c == 'y' || c == 'Y' ) {
+		return new Y();
+		}
 	return new v_fix(read_number( i));
 }
