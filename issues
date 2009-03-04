@@ -1,3 +1,12 @@
+COSES A IMPLEMENTAR
+
+-els deletes i mecanismes contra errors en el reader (asserts?)
+
+-Funcions de regió i les que queden de les altres
+
+
+
+
 PROBLEMES DEL READER
 
 -Problemes deixant espais, però només en l'ultim caracter, és a dir, 
