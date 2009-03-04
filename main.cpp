@@ -15,12 +15,12 @@ int to255(double x) {
 }
 
 int main(int argc, char **argv) {
-  int m = 128, n = 128;
-  string arg1;
+  int m = 400, n = 400;
+  string arg1 , arg2;
   
   if (argc > 0) {
   	arg1 = string(argv[1]);
-  	
+  	arg2 = string(argv[2]);
   }
     
 
@@ -59,7 +59,7 @@ Node* root =  read ( sin);
     }
   }
 
-  cout << "Print: ";
+  cout << "Print " << arg2 << ": ";
   root->print(cout); 
   cout << endl;
     

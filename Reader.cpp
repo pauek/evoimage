@@ -8,7 +8,7 @@ string read_token( std::istream& i) {
 	while ( !i.eof() && !isspace(c) && c != ')'){
 		acum += c;
 		c=i.get();
-		cout << acum << endl;
+		
 		}
 	
 	if(!i.eof()) { i.putback(c );  }
@@ -27,14 +27,14 @@ Node* read_vec(std::istream& i) {
 	char c = i.get();
 	c = i.get();
 	//assert( c != 'c')
-	cout << c << endl;
+	
 	double n1 = read_number(i);
-	cout << i.get() << endl;
+	 c = i.get();
 	double n2 = read_number(i);
-	cout << i.get() << endl;
+	c = i.get();
 	double n3 = read_number(i);
 	
-	cout << n1 << " " << n2 << " " << n3 << endl;
+	
 	
 	c = i.get();
 	//assert (c != ')');
@@ -55,30 +55,29 @@ char getnext (std::istream& i) {
 Node* read_list ( std::istream& i ){
 	
 	vector <Node*> acum;
-	char c;
+	char c = i.get();
 	Node* n;
-	i.get();
 	string head = read_token ( i);
 	while ( c != ')' ) {
 		n = read ( i);
 		if ( n != NULL) {acum.push_back ( n);}
 		c = i.get ();  // aqui no seria get_next?
 		}
-	if ( head == "+") { return new Sum ( acum [0], acum [1] ); }
-	else if ( head == "-") { return new Rest ( acum [0] , acum [1] ); }
-	else if ( head == "*") { return new Mult ( acum [0], acum [1] ); }
-	else if ( head == "/") { return new Div ( acum [0], acum [1] ); }
-	else if ( head == "%") { return new Mod ( acum [0], acum [1] ); }
-	else if ( head == "Log") { return new Log ( acum [0], acum [1] ); }
-	else if ( head == "Round") { return new Round ( acum [0], acum [1] ); }
-	else if ( head == "&") { return new And ( acum [0], acum [1] ); }
-	else if ( head == "|") { return new Or ( acum [0], acum [1] ); }
-	else if ( head == "^") { return new Xor ( acum [0], acum [1] ); }
-	else if ( head == "Sin") { return new Sin ( acum [0]);}
-	else if ( head == "Cos") { return new Cos ( acum [0]);}
-	else if ( head == "Atan") { return new Atan ( acum [0], acum [1] ); }
-	else if ( head == "X") { return new X ( ); }
-	else if ( head == "Y") { return new Y ( ); }
+	if ( head == "+" || head == "Sum" || head == "sum") { return new Sum ( acum [0], acum [1] ); }
+	else if ( head == "-"  || head == "Rest" || head == "rest") { return new Rest ( acum [0] , acum [1] ); }
+	else if ( head == "*" || head == "Mult" || head == "mult") { return new Mult ( acum [0], acum [1] ); }
+	else if ( head == "/" || head == "Div" || head == "div") { return new Div ( acum [0], acum [1] ); }
+	else if ( head == "%" || head == "Mod" || head == "mod") { return new Mod ( acum [0], acum [1] ); }
+	else if ( head == "Log" || head == "log") { return new Log ( acum [0], acum [1] ); }
+	else if ( head == "Round" || head == "round") { return new Round ( acum [0], acum [1] ); }
+	else if ( head == "&" || head == "And" || head == "and") { return new And ( acum [0], acum [1] ); }
+	else if ( head == "|" || head == "Or" || head == "or") { return new Or ( acum [0], acum [1] ); }
+	else if ( head == "^" || head == "Xor" || head == "xor") { return new Xor ( acum [0], acum [1] ); }
+	else if ( head == "Sin" || head == "sin") { return new Sin ( acum [0]);}
+	else if ( head == "Cos" || head == "cos") { return new Cos ( acum [0]);}
+	else if ( head == "Atan" || head == "atan") { return new Atan ( acum [0], acum [1] ); }
+	else if ( head == "X" || head == "x") { return new X ( ); }
+	else if ( head == "Y" || head == "y") { return new Y ( ); }
 	else {return NULL;}
 	
 	

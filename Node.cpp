@@ -136,7 +136,8 @@ void UnaryOp::print(ostream& o) const {
   }
 
 void v_fix::print(ostream& o) const {
-  o << "#(" << p1 << " " << p2 << " " << p3 << ")";
+	if( p1 == p2 || p2 == p3) { o << p1; } 
+	else{ o << "#(" << p1 << " " << p2 << " " << p3 << ")"; }
 }
 
 string Sum::head()  const { return "+"; }

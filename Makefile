@@ -1,12 +1,13 @@
+CXXFLAGS = -Wall -O2
 OBJECTS = main.o Node.o Reader.o
 
 all: evoimg
 
 evoimg: $(OBJECTS)
-	g++ -o evoimg $(OBJECTS) -lstdc++ -lm
+	g++ $(CXXFLAGS) -o evoimg $(OBJECTS) -lstdc++ -lm
 
 .cpp.o:
-	g++ -c -o $@ $<
+	g++ $(CXXFLAGS) -c -o $@ $<
 	
 clean:
 	rm *.o evoimg
