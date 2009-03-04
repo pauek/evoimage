@@ -1,16 +1,17 @@
-CXXFLAGS = -Wall -O2
-OBJECTS = Node.o Reader.o
+CXXFLAGS = -Wall -O2 -Ilibevoimg
 
 all: evoimg
 
-evoimg: main.o libevoimg.a
-	g++ $(CXXFLAGS) -o evoimg main.o -L. -levoimg -lstdc++ -lm
+evoimg: main.o libevoimg
+	g++ $(CXXFLAGS) -o evoimg main.o -Llibevoimg -levoimg -lstdc++ -lm
 
-libevoimg.a: $(OBJECTS)
-	ar rcs libevoimg.a $(OBJECTS)
+libevoimg: 
+	make -C libevoimg
 
 .cpp.o:
 	g++ $(CXXFLAGS) -c -o $@ $<
 	
 clean:
-	rm *.o evoimg libevoimg.a
+	rm -f *.o evoimg
+
+.PHONY: libevoimg
