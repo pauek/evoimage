@@ -1,4 +1,18 @@
-COSES A IMPLEMENTAR
+OBJECTIUS A CURT TERMINI EN LA GUI
+
+-Que es tanqui el programa en l'atura i surt
+
+-Que quan es cliqui a resolució s'obri una finestra on posar dos valors 
+(posteriorment que s'enviin al core)
+
+-que es pugui carregar una imatge en pgm en els huecos per imatges
+
+
+
+
+
+
+COSES A IMPLEMENTAR EN EL CORE
 
 -els deletes i mecanismes contra errors en el reader (asserts?)
 
