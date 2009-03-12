@@ -21,12 +21,18 @@ class Prova1GTK:
 	
 	def on_resolucio_activate(self , window):
         	self.setter.show()
+	def on_quant_a_activate(self , window):
+		self.quanta.show()
 	
-	def gtk_widget_destroy(self , window):
-		print "esborrat"
-		gtk_widget_destroy()
+	def gtk_widget_hide(self , window):
+		print "esborrat2"
+		self.setter.hide()
 		
-	
+	def on_res_setter_hide(self , window):
+		print "esborrat"
+		self.setter.hide()
+	def on_quant_a_close(self , window):
+		self.quanta.hide()
 
 	def on_window1_destroy(self , window):
 		gtk.main_quit()
@@ -34,13 +40,16 @@ class Prova1GTK:
 	def __init__(self):
 		self.gladefile = "prova1.glade"  
 		self.wTree = gtk.glade.XML(self.gladefile)
-		
+		self.quanta = gtk.glade.XML.get_widget(self.wTree , "quant_a")
 		self.setter = gtk.glade.XML.get_widget(self.wTree , "res_setter")
 		
 		dic = { "on_inicia_activate" : self.on_inicia_activate,
 			"on_atura_i_surt_activate" : self.on_atura_i_surt_activate,
 			"on_resolucio_activate" : self.on_resolucio_activate,
-			"getk_widget_destroy" : self.gtk_widget_destroy,
+			"on_quant_a_activate" : self.on_quant_a_activate,
+			"gtk_widget_hide" : self.gtk_widget_hide,
+			"on_res_setter_hide" : self.on_res_setter_hide,
+			"on_quant_a_close" : self.on_quant_a_close,
 			"on_window1_destroy" : self.on_window1_destroy }
 		self.wTree.signal_autoconnect(dic)
 
