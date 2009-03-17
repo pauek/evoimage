@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from PIL import Image
+from PIL import Image, ImageFile
 import evoimg
 print " inicia2"
 def to_img(M):
@@ -11,4 +11,6 @@ def to_img(M):
 
 M = evoimg.eval("(and (* x 255) (* y 255))")
 I = to_img(M)
-I.show()
+I.save("1.png")
+
+#I.show()

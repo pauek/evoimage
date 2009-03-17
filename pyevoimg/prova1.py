@@ -15,7 +15,9 @@ except:
 class Prova1GTK:
 	def on_inicia_activate(self , window):
 		import test
+		self.window1.vbox1.table1.image1.gtk_image_new_from_file ('1.png')
 		print "inicia"
+		
 		
 
 	def on_atura_i_surt_activate(self , window):
@@ -47,6 +49,7 @@ class Prova1GTK:
 	def __init__(self):
 		self.gladefile = "prova1.glade"  
 		self.wTree = gtk.glade.XML(self.gladefile)
+		self.window1 = gtk.glade.XML.get_widget(self.wTree , "window1")
 		self.quanta = gtk.glade.XML.get_widget(self.wTree , "quant_a")
 		self.setter = gtk.glade.XML.get_widget(self.wTree , "res_setter")
 		
