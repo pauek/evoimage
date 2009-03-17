@@ -14,7 +14,9 @@ except:
 
 class Prova1GTK:
 	def on_inicia_activate(self , window):
+		import test
 		print "inicia"
+		
 
 	def on_atura_i_surt_activate(self , window):
 		gtk.main_quit()
@@ -31,6 +33,11 @@ class Prova1GTK:
 	def on_res_setter_hide(self , window):
 		print "esborrat"
 		self.setter.hide()
+		
+	def on_buttonOK_clicked(self, window):
+		res = gtk_entry_get_text (self.entry1)
+		print res
+
 	def on_quant_a_close(self , window):
 		self.quanta.hide()
 
@@ -49,6 +56,7 @@ class Prova1GTK:
 			"on_quant_a_activate" : self.on_quant_a_activate,
 			"gtk_widget_hide" : self.gtk_widget_hide,
 			"on_res_setter_hide" : self.on_res_setter_hide,
+			"on_buttonOK_clicked" : self.on_buttonOK_clicked,
 			"on_quant_a_close" : self.on_quant_a_close,
 			"on_window1_destroy" : self.on_window1_destroy }
 		self.wTree.signal_autoconnect(dic)

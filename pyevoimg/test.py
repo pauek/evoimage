@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from PIL import Image
 import evoimg
-
+print " inicia2"
 def to_img(M):
     I = Image.new("RGB", (256, 256))
     for i in range(256):
