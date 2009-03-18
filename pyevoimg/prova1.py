@@ -12,13 +12,36 @@ try:
 except:
 	sys.exit(1)
 
+def genera_escacs():
+	M = []
+	for i in range(256):
+		fila = []
+		for j in range(256):
+			fila.append(((i+j)%2)*255)
+		M.append(fila)
+	return M
+
+import evoimg
+
+def matriu2pixbuf(M):
+	height = len(M)
+	width = len(M[0])
+	B = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, height, width)
+	A = B.get_pixels_array()
+	for j in range(height):
+		for i in range(width):
+			A[i][j][0] = M[i][j][0]
+			A[i][j][1] = M[i][j][1]
+			A[i][j][2] = M[i][j][2]
+	return B
+
 class Prova1GTK:
 	def on_inicia_activate(self , window):
-		import test
-		self.window1.vbox1.table1.image1.gtk_image_new_from_file ('1.png')
+		w_img = gtk.glade.XML.get_widget(self.wTree , "image1")
+		M = evoimg.eval("(cos (* 255 x))")
+		print M
+		w_img.set_from_pixbuf( matriu2pixbuf(M) )
 		print "inicia"
-		
-		
 
 	def on_atura_i_surt_activate(self , window):
 		gtk.main_quit()
