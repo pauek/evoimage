@@ -1,15 +1,6 @@
 OBJECTIUS A CURT TERMINI EN LA GUI
 
--Que es tanqui el programa en l'atura i surt
-
--Que quan es cliqui a resolució s'obri una finestra on posar dos valors 
-(posteriorment que s'enviin al core)
-
--que es pugui carregar una imatge en pgm en els huecos per imatges
-
-
-
-
+Saber fer algo, gracies.
 
 
 COSES A IMPLEMENTAR EN EL CORE
@@ -18,7 +9,10 @@ COSES A IMPLEMENTAR EN EL CORE
 
 -Funcions de regió i les que queden de les altres
 
-
+-IMPORTANT: fer una funcio general que faci tot el filtratge de la imatge amb diferents 
+patrons donats. Per exemple aixi es poden fer gradients, sobel, blurs etc etc etc etc
+Tenir MOLT en compte el tema d'afegir un borde a la imatge que ha de tenir valor exacte 
+del pixel perpendicular mes pròxim.
 
 
 PROBLEMES DEL READER

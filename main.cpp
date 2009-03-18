@@ -36,10 +36,8 @@ Node* root =  read ( sin);
   for (i = 0; i < m; i++) {
     for (j = 0; j < n; j++) {
       Env e(double(i)/double(m),double(j)/double(n));
-      imatge[i][j] = root->eval(e);
-      
-    }
-    
+      imatge[i][j] = root->eval(e);      
+    }    
   }
 
   {
@@ -62,20 +60,8 @@ Node* root =  read ( sin);
   cout << "Print " << arg2 << ": ";
   root->print(cout); 
   cout << endl;
-    
-
   
-  
-  
-
-
-
-
-
 }
-
-
-
 // Local variables:
 // compile-command: "gcc -Wall -g3 -o ev main.cpp Node.cpp -lstdc++"
 // End:

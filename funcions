@@ -1,40 +1,39 @@
-+ DONE
-- DONE 
-* DONE
-/ DONE
 mod DONE --> 2 params, numero i divisor i surt modul clar
-
 round DONE --> 2 params(numero i divisor) retorna quocient i resta. 
-
-
-
-min --> x arg, 1sort  Atencio tan per aquesta com per max, que en c++ no 
+____min --> x arg, 1sort  Atencio tan per aquesta com per max, que en c++ no 
 n'hi ha cap que etfaci bé lo dels x arguments, així que suposo que 
 s'haurà de definir una funcio especifica i poc eficient (xD) a partir 
 del min i max de dos parametres.
-
-max --> x arg, 1sort. Atencio al que explico a min.
-
-abs --> num o vector. tenir en compte que si es vector ha de fer arrel 
+____max --> x arg, 1sort. Atencio al que explico a min.
+____abs --> num o vector. tenir en compte que si es vector ha de fer arrel 
 de blabla Torna un unic numero clar
-
-expt --> 2 arg, el primer es el numero o vector base i el segon es 
+____expt --> 2 arg, el primer es el numero o vector base i el segon es 
 l'exponent. La funció que el defineix és b^x=e^x log b.....(no acabo de 
 veure els resultats que dóna d'exemple a hyperspec
-
-log DONE --> 2 d'entrada, numero i la base del logaritme a aplicar. No 
-entenc l'últim exemple¿? no te sentit el resultat.
-
-and DONE amb problemes de tipus -->  com a tal no està, serà bit-and?? 
-Si ho és, simplement 2 arg i 
-retorna 1, clar
-
-or DONE amb problemes de tipus --> bit-ior
-
-xor DONE amb problemes de tipus --> xor
-
+log DONE --> 2 d'entrada, numero i la base del logaritme a aplicar
+and DONE --> 2 params return 1 (ints tots)
+or DONE (and-doc)
+xor DONE (and-doc)
 sin DONE --> un argument
-cos DONE  -> idem
-
+cos DONE  -> (sin-doc)
 atan DONE -->  dos params 
-if --> NPI
+____if --> NPI
+____dissolve
+____hsv-to-rgb
+____vector
+____transform-vector
+____bw-noise
+____color-noise
+____warped-bw-noise
+____warped-color-noise
+____blur
+____band-pass
+____grad-mag
+____grad-dir
+____bump
+____ifs 
+____warped-ifs
+____warp-abs
+____warp-reg
+____warp-by-grad
+
