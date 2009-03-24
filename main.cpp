@@ -30,15 +30,14 @@ Node* root =  read ( sin);
 
      
      
-  RGB imatge[m][n], maxvalue = 0;
+  RGB maxvalue = 0;
+  
   int i,j;
     
-  for (i = 0; i < m; i++) {
-    for (j = 0; j < n; j++) {
-      Env e(double(i)/double(m),double(j)/double(n));
-      imatge[i][j] = root->eval(e);      
-    }    
-  }
+
+      Env e(m,n);
+      root->eval(e);      
+
 
   {
     ofstream out(argv[2]);

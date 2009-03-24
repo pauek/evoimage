@@ -34,90 +34,251 @@ RGB RGB::map(PFunction f) {
   return RGB( f(_r), f(_g), f(_b) );
 }
 
-RGB RGB::map2(PFunction2 f , RGB& o) {
+RGB RGB::map2(PFunction2 f , RGB o) {
   
   
   return RGB( f(_r, o.getr()), f(_g, o.getg()), f(_b, o.getb()) );
 }
 
 
-RGB Sum::eval(Env& e) {
-  return op1()->eval(e) + op2()->eval(e);
+void Sum::eval(Env& e) {
+  
+  int x=e.getX();
+  int y=e.getY();
+   
+  Env e1(x , y);
+  Env e2(x , y);
+  op1()->eval(e1); 
+  op2()->eval(e2);
+  
+  int i,j;
+  for (i = 0 ; i < x ; i++){
+  	for (j=0 ; j < y ; j++){
+  		
+  		e.putPixel(i,j,(e1.getPixel(i,j) + e2.getPixel(i,j)));
+  		  		
+  		}
+  	}
+  
+  
 }
 
-RGB Rest::eval(Env& e) {
-  return op1()->eval(e) - op2()->eval(e);
+void Rest::eval(Env& e) {
+    int x=e.getX();
+  int y=e.getY();
+   
+  Env e1(x , y);
+  Env e2(x , y);
+  op1()->eval(e1); 
+  op2()->eval(e2);
+  
+  int i,j;
+  for (i = 0 ; i < x ; i++){
+  	for (j=0 ; j < y ; j++){
+  		
+  		e.putPixel(i,j,(e1.getPixel(i,j) - e2.getPixel(i,j)));
+  		  		
+  		}
+  	}
 }
 
-RGB Mult::eval(Env& e) {
-  return op1()->eval(e) * op2()->eval(e);
+void Mult::eval(Env& e) {
+    int x=e.getX();
+  int y=e.getY();
+   
+  Env e1(x , y);
+  Env e2(x , y);
+  op1()->eval(e1); 
+  op2()->eval(e2);
+  
+  int i,j;
+  for (i = 0 ; i < x ; i++){
+  	for (j=0 ; j < y ; j++){
+  		
+  		e.putPixel(i,j,(e1.getPixel(i,j) * e2.getPixel(i,j)));
+  		  		
+  		}
+  	}
 }
 
-RGB Div::eval(Env& e) {
-  return op1()->eval(e) / op2()->eval(e);
+void Div::eval(Env& e) {
+    int x=e.getX();
+  int y=e.getY();
+   
+  Env e1(x , y);
+  Env e2(x , y);
+  op1()->eval(e1); 
+  op2()->eval(e2);
+  
+  int i,j;
+  for (i = 0 ; i < x ; i++){
+  	for (j=0 ; j < y ; j++){
+  		
+  		e.putPixel(i,j,(e1.getPixel(i,j) / e2.getPixel(i,j)));
+  		  		
+  		}
+  	}
 }
 
-RGB Mod::eval(Env& e){
-  RGB p = op1() -> eval(e);
-  RGB b = op2() -> eval(e);
-	return ( p.map2( fmod, b ));
+void Mod::eval(Env& e){
+
+	
+  int x=e.getX();
+  int y=e.getY();
+   
+  Env e1(x , y);
+  Env e2(x , y);
+  op1()->eval(e1); 
+  op2()->eval(e2);
+  
+  int i,j;
+  for (i = 0 ; i < x ; i++){
+  	for (j=0 ; j < y ; j++){
+  		
+  		e.putPixel(i,j,((e1.getPixel(i,j)).map2( fmod ,  (e2.getPixel(i,j)))));
+  		  		
+  		}
+  	}
+	
 	
 	}
 
-RGB Log::eval(Env& e) {
-  RGB p = op1() -> eval(e);
-  RGB b = op2() -> eval(e);
-  return (p.map( log10) / b.map( log10));
+void Log::eval(Env& e) {
+
+  
+  
+  int x=e.getX();
+  int y=e.getY();
+   
+  Env e1(x , y);
+  Env e2(x , y);
+  op1()->eval(e1); 
+  op2()->eval(e2);
+  
+  int i,j;
+  for (i = 0 ; i < x ; i++){
+  	for (j=0 ; j < y ; j++){
+  		
+  		e.putPixel(i,j,(((e1.getPixel(i,j)).map( log10 )) /  ((e2.getPixel(i,j)).map( log10))));
+  		  		
+  		}
+  	}
+  
+  
 }
 
-RGB Round::eval(Env& e) {
-  RGB p = op1() -> eval(e);
-  RGB b = op2() -> eval(e);
+void Round::eval(Env& e) {
+
   RGB offs = RGB( 0.5, 0.5, 0.5);
-  return (((b/p)+offs).map( floor));
+  
+  
+  
+  int x=e.getX();
+  int y=e.getY();
+   
+  Env e1(x , y);
+  Env e2(x , y);
+  op1()->eval(e1); 
+  op2()->eval(e2);
+  
+  int i,j;
+  for (i = 0 ; i < x ; i++){
+  	for (j=0 ; j < y ; j++){
+  		
+  		e.putPixel(i,j,((((e1.getPixel(i,j))/(e1.getPixel(i,j)))+offs).map( floor)));
+  		  		
+  		}
+  	}
+  
+  
 }
 
-RGB And::eval ( Env& e){
-	return op1()->eval(e) & op2()->eval(e);	
+void And::eval ( Env& e){
+	  int x=e.getX();
+  int y=e.getY();
+   
+  Env e1(x , y);
+  Env e2(x , y);
+  op1()->eval(e1); 
+  op2()->eval(e2);
+  
+  int i,j;
+  for (i = 0 ; i < x ; i++){
+  	for (j=0 ; j < y ; j++){
+  		
+  		e.putPixel(i,j,(e1.getPixel(i,j) & e2.getPixel(i,j)));
+  		  		
+  		}
+  	}	
 	
 	}
 	
-RGB Or::eval ( Env& e){
-	return op1()->eval(e) | op2()->eval(e);	
+void Or::eval ( Env& e){
+	  int x=e.getX();
+  int y=e.getY();
+   
+  Env e1(x , y);
+  Env e2(x , y);
+  op1()->eval(e1); 
+  op2()->eval(e2);
+  
+  int i,j;
+  for (i = 0 ; i < x ; i++){
+  	for (j=0 ; j < y ; j++){
+  		
+  		e.putPixel(i,j,(e1.getPixel(i,j) | e2.getPixel(i,j)));
+  		  		
+  		}
+  	}	
 	
 	}
 	
-RGB Xor::eval ( Env& e){
-	return op1()->eval(e) ^ op2()->eval(e);	
+void Xor::eval ( Env& e){
+	  int x=e.getX();
+  int y=e.getY();
+   
+  Env e1(x , y);
+  Env e2(x , y);
+  op1()->eval(e1); 
+  op2()->eval(e2);
+  
+  int i,j;
+  for (i = 0 ; i < x ; i++){
+  	for (j=0 ; j < y ; j++){
+  		
+  		e.putPixel(i,j,(e1.getPixel(i,j) ^ e2.getPixel(i,j)));
+  		  		
+  		}
+  	}	
 	
 	}
 
-RGB Sin::eval ( Env& e){
+void Sin::eval ( Env& e){
 	RGB p = op1() -> eval(e);
 	return p.map(sin);
 	}
 	
-RGB Cos::eval ( Env& e){
+void Cos::eval ( Env& e){
 	RGB p = op1() -> eval(e);
 	return p.map(cos);
 	}
 
-RGB Atan::eval(Env& e){
+void Atan::eval(Env& e){
   RGB p = op1() -> eval(e);
   RGB b = op2() -> eval(e);
 	return ( p.map2( atan2, b ));
 	
 	}
 
-RGB X::eval(Env& e) { 
-  return RGB(e.getX());
+void X::eval(Env& e) { 
+  return RGB(double(e.getX()));
 }
 
-RGB Y::eval(Env& e) { 
-  return RGB(e.getY());
+void Y::eval(Env& e) { 
+  return RGB(double(e.getY()));
 }
 
-RGB v_fix::eval(Env& e) {
+void v_fix::eval(Env& e) {
 	return RGB( p1, p2, p3);
 }
 
