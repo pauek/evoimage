@@ -1,31 +1,27 @@
 
 #include <iostream>
-#include <math.h>
-#include <vector>
-#include <stdio.h>
-#include <cstdlib>
-
+#include <cmath>
 
 #ifndef Node_h
 #define Node_h
 
-typedef double (*PFunction)(double);
-typedef double (*PFunction2)(double,double);
+typedef float (*PFunction)(float);
+typedef float (*PFunction2)(float,float);
 
 
 
 class RGB {
-  double _r, _g, _b;
+  float _r, _g, _b;
  public:
   
- RGB(double x=0.0) : _r(x), _g(x), _b(x) {}
+ RGB(float x=0.0) : _r(x), _g(x), _b(x) {}
  
- RGB(double r, double g, double b)
+ RGB(float r, float g, float b)
    : _r(r), _g(g), _b(b) {}
 
-  double getr() const { return _r; }
-  double getg() const { return _g; }
-  double getb() const { return _b; }
+  float getr() const { return _r; }
+  float getg() const { return _g; }
+  float getb() const { return _b; }
 
   RGB map(PFunction f);
   RGB map2(PFunction2 f, RGB o);
@@ -208,13 +204,13 @@ public:
 };
 
 class v_fix : public Node {
-	double p1, p2, p3;
+	float p1, p2, p3;
 	
 public:
 	void eval( Env& e);
 
-	v_fix( double _p1){	p1=_p1; p2=_p1; p3=_p1;	}
-	v_fix( double _p1, double _p2, double _p3) { p1=_p1; p2=_p2; p3=_p3; }
+	v_fix( float _p1){	p1=_p1; p2=_p1; p3=_p1;	}
+	v_fix( float _p1, float _p2, float _p3) { p1=_p1; p2=_p2; p3=_p3; }
 
 
 	void print(std::ostream& o) const;
@@ -224,7 +220,7 @@ public:
 
 
 std::string read_token( std::istream& i);
-double read_number (std::istream& i);
+float read_number (std::istream& i);
 Node* read_vec(std::istream& i);
 char getnext (std::istream& i);
 Node* read_list ( std::istream& i );

@@ -1,4 +1,7 @@
 
+#include <vector>
+#include <string>
+#include <cstdlib>
 #include "Node.h"
 using namespace std;
 
@@ -16,7 +19,7 @@ string read_token( std::istream& i) {
 	
 	}
 
-double read_number (std::istream& i){
+float read_number (std::istream& i){
 	std::string token = read_token ( i);
 	return (strtod (token.c_str(), NULL));	
 	}
@@ -28,11 +31,11 @@ Node* read_vec(std::istream& i) {
 	c = i.get();
 	//assert( c != 'c')
 	
-	double n1 = read_number(i);
+	float n1 = read_number(i);
 	 c = i.get();
-	double n2 = read_number(i);
+	float n2 = read_number(i);
 	c = i.get();
-	double n3 = read_number(i);
+	float n3 = read_number(i);
 	
 	
 	

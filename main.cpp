@@ -7,7 +7,7 @@
 
 using namespace std;
 
-int to255(double x) {
+int to255(float x) {
   int v = int(x*255);
   if (v > 255) v = 255;
   if (v < 0)   v = 0;
@@ -30,7 +30,7 @@ Node* root =  read ( sin);
 
      
      
-  double maxvalue = 0;
+  //float maxvalue = 0;
   
   int i,j;
     
@@ -47,14 +47,14 @@ Node* root =  read ( sin);
 	<< "255" << endl;
  
  
-     for(i = 0; i < m; i++) {
+   /*  for(i = 0; i < m; i++) {
       for(j = 0; j < n; j++) {
       	
       	if (e.getPixel ( i ,j ).getr() > maxvalue){ maxvalue=e.getPixel ( i ,j ).getr(); }
       	if (e.getPixel ( i ,j ).getg() > maxvalue){ maxvalue=e.getPixel ( i ,j ).getg(); }
       	if (e.getPixel ( i ,j ).getb() > maxvalue){ maxvalue=e.getPixel ( i ,j ).getb(); }
 		}
-	}
+	}*/
  
     
     for(i = 0; i < m; i++) {

@@ -1,4 +1,4 @@
-#include <string>
+
 #include "Node.h"
 using namespace std;
 
@@ -19,15 +19,15 @@ RGB RGB::operator/(const RGB& o) {
 }
 
 RGB RGB::operator&(const RGB& o) {
-  return RGB(double(int(_r) & int(o._r)), double(int(_g) & int(o._g)), double(int(_b) & int(o._b)));
+  return RGB(float(int(_r) & int(o._r)), float(int(_g) & int(o._g)), float(int(_b) & int(o._b)));
 }
 
 RGB RGB::operator|(const RGB& o) {
-  return RGB(double(int(_r) | int(o._r)), double(int(_g) | int(o._g)), double(int(_b) | int(o._b)));
+  return RGB(float(int(_r) | int(o._r)), float(int(_g) | int(o._g)), float(int(_b) | int(o._b)));
 }
 
 RGB RGB::operator^(const RGB& o){
-  return RGB(double(int(_r) ^ int(o._r)), double(int(_g) ^ int(o._g)), double(int(_b) ^ int(o._b)));
+  return RGB(float(int(_r) ^ int(o._r)), float(int(_g) ^ int(o._g)), float(int(_b) ^ int(o._b)));
 	}
 
 RGB RGB::map(PFunction f) {
@@ -325,7 +325,7 @@ void X::eval(Env& e) {
   for (i = 0 ; i < x ; i++){
   	for (j = 0 ; j < y ; j++){
   		
-  		e.putPixel(i,j,RGB(double(i)/double(x)));
+  		e.putPixel(i,j,RGB(float(i)/float(x)));
   		  		
   		}
   	}
@@ -341,7 +341,7 @@ void Y::eval(Env& e) {
   for (i = 0 ; i < x ; i++){
   	for (j = 0 ; j < y ; j++){
   		
-  		e.putPixel(i,j,RGB(double(j)/double(y)));
+  		e.putPixel(i,j,RGB(float(j)/float(y)));
   		  		
   		}
   	}
