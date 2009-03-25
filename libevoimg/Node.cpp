@@ -234,7 +234,7 @@ void Or::eval ( Env& e){
 	}
 	
 void Xor::eval ( Env& e){
-	  int x=e.getX();
+  int x=e.getX();
   int y=e.getY();
    
   Env e1(x , y);
@@ -254,32 +254,113 @@ void Xor::eval ( Env& e){
 	}
 
 void Sin::eval ( Env& e){
-	RGB p = op1() -> eval(e);
-	return p.map(sin);
+
+	
+	
+  int x=e.getX();
+  int y=e.getY();
+   
+  Env e1(x , y);
+  
+  op1()->eval(e1); 
+  
+  
+  int i,j;
+  for (i = 0 ; i < x ; i++){
+  	for (j=0 ; j < y ; j++){
+  		
+  		e.putPixel(i,j,(e1.getPixel(i,j)).map( sin ));
+  		  		
+  		}
+  	}	
+	
+	
 	}
 	
 void Cos::eval ( Env& e){
-	RGB p = op1() -> eval(e);
-	return p.map(cos);
+  int x=e.getX();
+  int y=e.getY();
+   
+  Env e1(x , y);
+  
+  op1()->eval(e1); 
+  
+  
+  int i,j;
+  for (i = 0 ; i < x ; i++){
+  	for (j=0 ; j < y ; j++){
+  		
+  		e.putPixel(i,j,(e1.getPixel(i,j)).map( cos ));
+  		  		
+  		}
+  	}
 	}
 
 void Atan::eval(Env& e){
-  RGB p = op1() -> eval(e);
-  RGB b = op2() -> eval(e);
-	return ( p.map2( atan2, b ));
+  int x=e.getX();
+  int y=e.getY();
+   
+  Env e1(x , y);
+  Env e2(x , y);
+  op1()->eval(e1); 
+  op2()->eval(e2);
+  
+  int i,j;
+  for (i = 0 ; i < x ; i++){
+  	for (j=0 ; j < y ; j++){
+  		
+  		e.putPixel(i,j,((e1.getPixel(i,j)).map2( atan2 ,  (e2.getPixel(i,j)))));
+  		  		
+  		}
+  	}
 	
 	}
 
 void X::eval(Env& e) { 
-  return RGB(double(e.getX()));
+ 
+  int x=e.getX();
+  int y=e.getY();
+  
+  int i,j;
+  for (i = 0 ; i < x ; i++){
+  	for (j = 0 ; j < y ; j++){
+  		
+  		e.putPixel(i,j,RGB(double(i)/double(x)));
+  		  		
+  		}
+  	}
+ 
 }
 
 void Y::eval(Env& e) { 
-  return RGB(double(e.getY()));
+  
+  int x=e.getX();
+  int y=e.getY();
+  
+  int i,j;
+  for (i = 0 ; i < x ; i++){
+  	for (j = 0 ; j < y ; j++){
+  		
+  		e.putPixel(i,j,RGB(double(j)/double(y)));
+  		  		
+  		}
+  	}
+  
 }
 
 void v_fix::eval(Env& e) {
-	return RGB( p1, p2, p3);
+	  
+  int x=e.getX();
+  int y=e.getY();
+	  
+  int i,j;
+  for (i = 0 ; i < x ; i++){
+  	for (j = 0 ; j < y ; j++){
+  		
+  		e.putPixel(i,j,RGB( p1 , p2 , p3 ));
+  		  		
+  		}
+  	}
 }
 
 void BinOp::print(ostream& o) const {
