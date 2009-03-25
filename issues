@@ -14,6 +14,12 @@ patrons donats. Per exemple aixi es poden fer gradients, sobel, blurs etc etc et
 Tenir MOLT en compte el tema d'afegir un borde a la imatge que ha de tenir valor exacte 
 del pixel perpendicular mes pròxim.
 
+-Respecte a aquest ultim punt la funcio de filtratge podria rebre l'entorn, i un codi prefixat que 
+indiqués quina matriu hauria de fer servir pel filtratge. Així estalviem una burrada de codi que no 
+t'imagines.
+
+-Fixar-se en aquest algorisme de conv  http://www.songho.ca/dsp/convolution/convolution.html#convolution_2d
+
 
 PROBLEMES DEL READER
 

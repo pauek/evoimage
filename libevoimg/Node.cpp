@@ -1,4 +1,4 @@
-
+#include <string>
 #include "Node.h"
 using namespace std;
 
@@ -39,6 +39,7 @@ RGB RGB::map2(PFunction2 f , RGB o) {
   
   return RGB( f(_r, o.getr()), f(_g, o.getg()), f(_b, o.getb()) );
 }
+
 
 
 void Sum::eval(Env& e) {
