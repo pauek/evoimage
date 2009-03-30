@@ -8,6 +8,48 @@
 typedef float (*PFunction)(float);
 typedef float (*PFunction2)(float,float);
 
+void filtraImatge(Env& e , string s){
+
+	// find center position of kernel (half of kernel size)
+int kCenter = 1;
+int rows = e.getX();
+int cols = e.getY();
+
+float kernel[2][2];
+
+
+int sum, i, j, mm, nn, m, n, ii, jj;
+for(i=0; i < rows; ++i)              // rows
+{
+    for(j=0; j < cols; ++j)          // columns
+    {
+        sum = 0;                     // init to 0 before sum
+
+        for(m=0; m < 2; ++m)     // kernel rows
+        {
+            mm = 1 - m;      // row index of flipped kernel
+
+            for(n=0; n < 2; ++n) // kernel columns
+            {
+                nn = 1 - n;  // column index of flipped kernel
+
+                // index of input signal, used for checking boundary
+                ii = i + (m - kCenter);
+                jj = j + (n - kCenter);
+
+                // ignore input samples which are out of bound
+                if( ii >= 0 && ii < rows && jj >= 0 && jj < cols ){
+                out[i][j] += in[ii][jj] * kernel[mm][nn];
+                e.putPixel(i,j,
+				}
+            }
+        }
+    }
+}
+
+	
+	
+	}
 
 
 class RGB {
