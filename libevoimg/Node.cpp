@@ -7,10 +7,13 @@ void Env::filtraImatge () {
 	//bool convolve2DSlow(unsigned char* in, unsigned char* out, int dataSizeX, int dataSizeY,
       //              float* kernel, int kernelSizeX, int kernelSizeY)
     int i, j, m, n, mm, nn;
-    int kCenterX, kCenterY, kernelSizeX, kernelSizeY;                         // center index of kernel
+    int kCenterX, kCenterY;
+    int kernelSizeX = 3;
+    int kernelSizeY = 3;                         // center index of kernel
     RGB sum;                                      // temp accumulation buffer
     int rowIndex, colIndex;
-    int dataSizeX, dataSizeY;
+    int dataSizeX = x; 
+    int dataSizeY = y;
 	float kernel[2][2];
 	kernel[0][0] = -1;
 	kernel[0][1] = -2;
@@ -419,6 +422,30 @@ void v_fix::eval(Env& e) {
   	}
 }
 
+
+
+void firGeneric::eval ( Env& e){
+  int x=e.getX();
+  int y=e.getY();
+   
+  Env e1(x , y);
+  
+  op1()->eval(e1); 
+  
+  e1.filtraImatge();
+  
+  int i,j;
+  for (i = 0 ; i < x ; i++){
+  	for (j=0 ; j < y ; j++){
+  		
+  		e.putPixel(i,j,(e1.getPixel(i,j)));
+  		  		
+  		}
+  	}
+	}
+
+
+
 void BinOp::print(ostream& o) const {
   o << "(" << head() << " ";
   op1()->print(o);
@@ -451,6 +478,7 @@ string Xor::head()  const { return "^"; }
 string Sin::head()  const { return "Sin"; }
 string Cos::head()  const { return "Cos"; }
 string Atan::head()  const { return "Atan"; }
+string firGeneric::head()  const { return "firGeneric"; }
 
 void Y::print(ostream& o) const { o << "y"; }
 void X::print(ostream& o) const { o << "x"; }

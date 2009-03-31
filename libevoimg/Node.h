@@ -221,6 +221,17 @@ public:
 	
 
 
+class firGeneric : public UnaryOp{
+	public:
+	firGeneric ( Node* p1) : UnaryOp( p1) {}
+	void eval ( Env& e);
+	std::string head() const;
+	
+	
+	
+    };
+
+
 std::string read_token( std::istream& i);
 float read_number (std::istream& i);
 Node* read_vec(std::istream& i);
