@@ -2,6 +2,61 @@
 #include "Node.h"
 using namespace std;
 
+
+void Env::filtraImatge () {
+	//bool convolve2DSlow(unsigned char* in, unsigned char* out, int dataSizeX, int dataSizeY,
+      //              float* kernel, int kernelSizeX, int kernelSizeY)
+    int i, j, m, n, mm, nn;
+    int kCenterX, kCenterY, kernelSizeX, kernelSizeY;                         // center index of kernel
+    RGB sum;                                      // temp accumulation buffer
+    int rowIndex, colIndex;
+    int dataSizeX, dataSizeY;
+	float kernel[2][2];
+	kernel[0][0] = -1;
+	kernel[0][1] = -2;
+	kernel[0][2] = -1;
+	kernel[1][0] = 0;
+	kernel[1][1] = 0;
+	kernel[1][2] = 0;
+	kernel[2][0] = -1;
+	kernel[2][1] = -2;
+	kernel[2][2] = -1;
+    
+
+    // find center position of kernel (half of kernel size)
+    kCenterX = kernelSizeX / 2;
+    kCenterY = kernelSizeY / 2;
+
+    for(i=0; i < dataSizeY; ++i)                // rows
+    {
+        for(j=0; j < dataSizeX; ++j)            // columns
+        {
+            sum = 0;                            // init to 0 before sum
+            for(m=0; m < kernelSizeY; ++m)      // kernel rows
+            {
+                mm = kernelSizeY - 1 - m;       // row index of flipped kernel
+
+                for(n=0; n < kernelSizeX; ++n)  // kernel columns
+                {
+                    nn = kernelSizeX - 1 - n;   // column index of flipped kernel
+
+                    // index of input signal, used for checking boundary
+                    rowIndex = i + m - kCenterY;
+                    colIndex = j + n - kCenterX;
+
+                    // ignore input samples which are out of bound
+                    if(rowIndex >= 0 && rowIndex < dataSizeY && colIndex >= 0 && colIndex < dataSizeX)
+                    	
+                        sum = sum + ( getPixel (rowIndex , colIndex ) * RGB(kernel[mm][nn]));
+                }
+            }
+            putPixel( i , j , (sum.map( fabs ) + 0.5f));
+        }
+    }	
+	
+	
+	}
+
 RGB RGB::operator+(const RGB& o) {
   return RGB(_r + o._r, _g + o._g, _b + o._b);
 }
