@@ -4,50 +4,50 @@ using namespace std;
 
 
 void Env::filtraImatge () {
-	//bool convolve2DSlow(unsigned char* in, unsigned char* out, int dataSizeX, int dataSizeY,
-      //              float* kernel, int kernelSizeX, int kernelSizeY)
+	
+	float* kernel, int kernelSizeX, int kernelSizeY)
     int i, j, m, n, mm, nn;
     int kCenterX, kCenterY;
     int kernelSizeX = 3;
-    int kernelSizeY = 3;                         // center index of kernel
-    RGB sum;                                      // temp accumulation buffer
+    int kernelSizeY = 3;                         
+    RGB sum;                                      
     int rowIndex, colIndex;
     int dataSizeX = x; 
     int dataSizeY = y;
 	float kernel[2][2];
-	kernel[0][0] = -1;
-	kernel[0][1] = -2;
-	kernel[0][2] = -1;
-	kernel[1][0] = 0;
-	kernel[1][1] = 0;
-	kernel[1][2] = 0;
-	kernel[2][0] = -1;
-	kernel[2][1] = -2;
-	kernel[2][2] = -1;
+	kernel[0][0] = -1.0;
+	kernel[0][1] = -2.0;
+	kernel[0][2] = -1.0;
+	kernel[1][0] = 0.0;
+	kernel[1][1] = 0.0;
+	kernel[1][2] = 0.0;
+	kernel[2][0] = -1.0;
+	kernel[2][1] = -2.0;
+	kernel[2][2] = -1.0;
     
 
-    // find center position of kernel (half of kernel size)
+    
     kCenterX = kernelSizeX / 2;
     kCenterY = kernelSizeY / 2;
 
-    for(i=0; i < dataSizeY; ++i)                // rows
+    for(i=0; i < dataSizeY; ++i)                
     {
-        for(j=0; j < dataSizeX; ++j)            // columns
+        for(j=0; j < dataSizeX; ++j)            
         {
-            sum = 0;                            // init to 0 before sum
-            for(m=0; m < kernelSizeY; ++m)      // kernel rows
+            sum = 0.0;                            
+            for(m=0; m < kernelSizeY; ++m)      
             {
-                mm = kernelSizeY - 1 - m;       // row index of flipped kernel
+                mm = kernelSizeY - 1 - m;       // index fila del kernel girat
 
-                for(n=0; n < kernelSizeX; ++n)  // kernel columns
+                for(n=0; n < kernelSizeX; ++n)  
                 {
-                    nn = kernelSizeX - 1 - n;   // column index of flipped kernel
+                    nn = kernelSizeX - 1 - n;   // index columna del kernel girat
 
-                    // index of input signal, used for checking boundary
+                    // index de  l'input per mirar dspres si estem treballant amb valors de fora d la img
                     rowIndex = i + m - kCenterY;
                     colIndex = j + n - kCenterX;
 
-                    // ignore input samples which are out of bound
+                    // ignorar els pixels que estan fora de la img. (hi ha altres mètodes tb)
                     if(rowIndex >= 0 && rowIndex < dataSizeY && colIndex >= 0 && colIndex < dataSizeX)
                     	
                         sum = sum + ( getPixel (rowIndex , colIndex ) * RGB(kernel[mm][nn]));

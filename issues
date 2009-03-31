@@ -3,23 +3,22 @@ OBJECTIUS A CURT TERMINI EN LA GUI
 Saber fer algo, gracies.
 
 
+---------------------------------------------------------------
+
+
 COSES A IMPLEMENTAR EN EL CORE
 
 -els deletes i mecanismes contra errors en el reader (asserts?)
 
--Funcions de regió i les que queden de les altres
+-Funcions de regió i les que queden de les altres. 
 
--IMPORTANT: fer una funcio general que faci tot el filtratge de la imatge amb diferents 
-patrons donats. Per exemple aixi es poden fer gradients, sobel, blurs etc etc etc etc
-Tenir MOLT en compte el tema d'afegir un borde a la imatge que ha de tenir valor exacte 
-del pixel perpendicular mes pròxim.
+-Com passem la matriu? S'ha de decidir entre passar un string i que hi 
+hagi una taula dins de la funcio mateixa de filtrar, o bé s'ha de passar 
+tota la matriu o un punter a ella desde la crida de l'eval. Jo soc 
+partidari del codi string, pero segur que implica menys rendiment o 
+coses per l'estil.
 
--Respecte a aquest ultim punt la funcio de filtratge podria rebre l'entorn, i un codi prefixat que 
-indiqués quina matriu hauria de fer servir pel filtratge. Així estalviem una burrada de codi que no 
-t'imagines.
-
--Fixar-se en aquest algorisme de conv  http://www.songho.ca/dsp/convolution/convolution.html#convolution_2d
-
+---------------------------------------------------------------
 
 PROBLEMES DEL READER
 
@@ -31,4 +30,22 @@ insolucionable.
 
 -Amb paràmetre de menys peta. S'ha de fer algo pq no sigui així o no 
 val la pena?
+
+----------------------------------------------------------------
+
+OBJECTIUS EN L'EVOSYSTEM
+
+-Que sigui una altra llibreria, és a dir , que no estigui dins de Node. 
+
+-L'objectiu principal és que rebi 2 funcions, i que les llegeixi 
+guardant-les en una espècie de vector o algo i que a partir d'aqui faci:
+
+--recombinació
+--augmenti en 1 grau el numero de funcions i que aquesta sigui aleatòria
+--que els v_fix d'algunes siguin parametres random. Algunes altres q es 
+quedin amb els valors heretats directament.
+
+-És important saber què torna. Segurament pugui ser un string a un mòdul 
+superior (el de python?) perquè faci l'execució. Tot i que també podria 
+generar ell el Node, encara que no té molt de sentit.
 

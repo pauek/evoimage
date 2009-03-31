@@ -30,7 +30,7 @@ Node* root =  read ( sin);
 
      
      
-  //float maxvalue = 0;
+  
   
   int i,j;
     
@@ -47,14 +47,7 @@ Node* root =  read ( sin);
 	<< "255" << endl;
  
  
-   /*  for(i = 0; i < m; i++) {
-      for(j = 0; j < n; j++) {
-      	
-      	if (e.getPixel ( i ,j ).getr() > maxvalue){ maxvalue=e.getPixel ( i ,j ).getr(); }
-      	if (e.getPixel ( i ,j ).getg() > maxvalue){ maxvalue=e.getPixel ( i ,j ).getg(); }
-      	if (e.getPixel ( i ,j ).getb() > maxvalue){ maxvalue=e.getPixel ( i ,j ).getb(); }
-		}
-	}*/
+   
  
     
     for(i = 0; i < m; i++) {
@@ -62,12 +55,7 @@ Node* root =  read ( sin);
 	out << to255(e.getPixel( i, j ).getr( )) << ' '
 	    << to255(e.getPixel( i, j ).getg( )) << ' '
 	    << to255(e.getPixel( i, j ).getb( )) << ' ';
-	//això comentat no és legal 
-	    
-	   /*out << int((e.getPixel( i, j ).getr( ))) << ' '
-	    << int((e.getPixel( i, j ).getg( ))) << ' '
-	    << int((e.getPixel( i, j ).getb( ))) << ' ';*/
-	    
+	
 	    
 	    
       }
