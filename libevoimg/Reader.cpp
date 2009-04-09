@@ -82,6 +82,7 @@ Node* read_list ( std::istream& i ){
 	else if ( head == "X" || head == "x") { return new X ( ); }
 	else if ( head == "Y" || head == "y") { return new Y ( ); }
 	else if ( head == "firGeneric" ) { return new firGeneric ( acum [0]);}
+	else if ( head == "warp" ) { return new warp ( acum [0]);}
 	else {return NULL;}
 	
 	

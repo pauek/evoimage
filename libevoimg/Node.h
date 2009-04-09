@@ -51,6 +51,7 @@ class Env {
       p = new RGB[x * y];
   }
   void filtraImatge ();
+  void warpGeneric();
   ~Env() { delete[] p; }
 };
 
@@ -226,11 +227,15 @@ class firGeneric : public UnaryOp{
 	firGeneric ( Node* p1) : UnaryOp( p1) {}
 	void eval ( Env& e);
 	std::string head() const;
-	
-	
-	
-    };
+	};
 
+class warp : public UnaryOp{
+	public:
+	warp ( Node* p1) : UnaryOp( p1) {}
+	void eval ( Env& e);
+	std::string head() const;
+
+	};
 
 std::string read_token( std::istream& i);
 float read_number (std::istream& i);

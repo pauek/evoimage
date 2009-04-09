@@ -5,7 +5,7 @@ using namespace std;
 
 void Env::filtraImatge () {
 	
-	float* kernel, int kernelSizeX, int kernelSizeY)
+
     int i, j, m, n, mm, nn;
     int kCenterX, kCenterY;
     int kernelSizeX = 3;
@@ -56,6 +56,35 @@ void Env::filtraImatge () {
             putPixel( i , j , (sum.map( fabs ) + 0.5f));
         }
     }	
+	
+	
+	}
+
+void Env::warpGeneric (){
+	
+	//De moment faré el warp amb aliasing i sense massa miraments, i només per l'eix x (que em sembla q de fet és l'y)
+	
+	int i,j;
+	int A = x/4;
+	int B = 3*x/4;
+	RGB *p2;
+	p2 = new RGB[x * y];
+	
+	for ( i = 0; i < x; i++){
+		for ( j = 0; j < y; j++){
+		
+			p2[j*x+i] = getPixel( i , j );
+			
+			}
+		}
+	
+	for ( i = 0; i < x; i++){
+		for ( j = 0; j < y; j++){
+		
+			putPixel( i , j , p2[j*(A + (i/(B - A)))+i]);
+			
+			}
+		}
 	
 	
 	}
@@ -444,7 +473,25 @@ void firGeneric::eval ( Env& e){
   	}
 	}
 
-
+void warp::eval ( Env& e){
+  int x=e.getX();
+  int y=e.getY();
+   
+  Env e1(x , y);
+  
+  op1()->eval(e1); 
+  
+  e1.warpGeneric();
+  
+  int i,j;
+  for (i = 0 ; i < x ; i++){
+  	for (j=0 ; j < y ; j++){
+  		
+  		e.putPixel(i,j,(e1.getPixel(i,j)));
+  		  		
+  		}
+  	}
+	}
 
 void BinOp::print(ostream& o) const {
   o << "(" << head() << " ";
@@ -479,6 +526,7 @@ string Sin::head()  const { return "Sin"; }
 string Cos::head()  const { return "Cos"; }
 string Atan::head()  const { return "Atan"; }
 string firGeneric::head()  const { return "firGeneric"; }
+string warp::head() const { return "warp";}
 
 void Y::print(ostream& o) const { o << "y"; }
 void X::print(ostream& o) const { o << "x"; }
