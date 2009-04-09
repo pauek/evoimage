@@ -493,6 +493,30 @@ void warp::eval ( Env& e){
   	}
 	}
 
+void blur::eval ( Env& e){
+  int x=e.getX();
+  int y=e.getY();
+   
+  Env e1(x , y);
+  
+  op1()->eval(e1); 
+  
+  
+  
+  int i,j;
+  for (i = 1 ; i < (x-1) ; i++){
+  	for (j = 1 ; j < (y-1) ; j++){
+  		RGB mitjana = ((e1.getPixel(i-1,j)) + (e1.getPixel(i,j-1)) + 
+  					  (e1.getPixel(i+1,j)) + (e1.getPixel(i,j+1)) +
+  					  (e1.getPixel(i-1,j-1)) + (e1.getPixel(i+1,j+1)) + 
+  					  (e1.getPixel(i-1,j+1)) + (e1.getPixel(i+1,j-1)) + 
+  					  (e1.getPixel(i,j)))/9;
+  		e.putPixel(i,j,mitjana);
+  		  		
+  		}
+  	}
+	}
+
 void BinOp::print(ostream& o) const {
   o << "(" << head() << " ";
   op1()->print(o);
@@ -527,6 +551,7 @@ string Cos::head()  const { return "Cos"; }
 string Atan::head()  const { return "Atan"; }
 string firGeneric::head()  const { return "firGeneric"; }
 string warp::head() const { return "warp";}
+string blur::head() const { return "blur";}
 
 void Y::print(ostream& o) const { o << "y"; }
 void X::print(ostream& o) const { o << "x"; }

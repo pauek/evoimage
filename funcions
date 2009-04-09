@@ -26,14 +26,14 @@ ____bw-noise
 ____color-noise
 ____warped-bw-noise
 ____warped-color-noise
-____blur
+blur DONE --> pero no provat
 ____band-pass
 ____grad-mag
 ____grad-dir
 ____bump
 ____ifs 
 ____warped-ifs
-____warp-abs
+____warp-abs 
 ____warp-reg
 ____warp-by-grad
 
