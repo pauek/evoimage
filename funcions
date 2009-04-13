@@ -5,7 +5,8 @@ n'hi ha cap que etfaci bé lo dels x arguments, així que suposo que
 s'haurà de definir una funcio especifica i poc eficient (xD) a partir 
 del min i max de dos parametres.
 ____max --> x arg, 1sort. Atencio al que explico a min.
-____abs --> num o vector. tenir en compte que si es vector ha de fer arrel 
+abs DONE --> num o vector. tenir en compte que si es vector ha de fer 
+arrel 
 de blabla Torna un unic numero clar
 ____expt --> 2 arg, el primer es el numero o vector base i el segon es 
 l'exponent. La funció que el defineix és b^x=e^x log b.....(no acabo de 
@@ -22,17 +23,19 @@ ____dissolve
 ____hsv-to-rgb
 ____vector
 ____transform-vector
-____bw-noise 
-____color-noise
-____warped-bw-noise
-____warped-color-noise
+bw-noise DONE --> fulla, com v_fix o x 
+color-noise DONE --> fulla, com v_fix o x
+____warped-bw-noise --> s'hauria de poder fer combinant el warp i el 
+noise
+____warped-color-noise --> idem q el de dalt
 blur DONE --> pero no provat
-____band-pass
+____band-pass --> aixo saconsegueix amb una matriu concreta i filtrant 
+amb la  funcio aquella que hem dissenyat
 ____grad-mag
 ____grad-dir
-____bump
-____ifs 
-____warped-ifs
+____bump --> SENSE INFO de com es fa
+____ifs --> NPI
+____warped-ifs --> NPI
 ____warp-abs 
 ____warp-reg
 ____warp-by-grad

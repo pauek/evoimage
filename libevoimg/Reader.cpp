@@ -86,6 +86,7 @@ Node* read_list ( std::istream& i ){
 	else if ( head == "blur" ) { return new blur ( acum [0]);}
 	else if ( head == "bwNoise" ) { return new bwNoise ( ); }
 	else if ( head == "colorNoise" ) { return new colorNoise ( ); }
+	else if ( head == "Abs" || head == "abs") { return new Abs ( acum [0]);}
 	else {return NULL;}
 	
 	

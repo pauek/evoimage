@@ -545,6 +545,30 @@ void colorNoise::eval(Env& e) {
   		}
   	}
 }
+
+void Abs::eval ( Env& e){
+
+	
+	
+  int x=e.getX();
+  int y=e.getY();
+   
+  Env e1(x , y);
+  
+  op1()->eval(e1); 
+  
+  
+  int i,j;
+  for (i = 0 ; i < x ; i++){
+  	for (j=0 ; j < y ; j++){
+  		
+  		e.putPixel(i,j,(e1.getPixel(i,j)).map( fabs ));
+  		  		
+  		}
+  	}	
+	
+	
+	}
 	
 
 void BinOp::print(ostream& o) const {
@@ -584,6 +608,7 @@ string warp::head() const { return "warp";}
 string blur::head() const { return "blur";}
 string bwNoise::head() const { return "bwNoise";}
 string colorNoise::head() const { return "colorNoise";}
+string Abs::head()  const { return "Abs"; }
 
 void Y::print(ostream& o) const { o << "y"; }
 void X::print(ostream& o) const { o << "x"; }
