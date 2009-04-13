@@ -262,6 +262,21 @@ public:
 
 };
 
+class colorNoise : public Node{
+	
+	int seed;
+	
+public:
+	void eval( Env& e);
+
+	colorNoise( int s){	seed=s;	}
+	colorNoise( ) { seed=-1;}
+
+
+	std::string head() const;
+
+};
+
 std::string read_token( std::istream& i);
 float read_number (std::istream& i);
 Node* read_vec(std::istream& i);

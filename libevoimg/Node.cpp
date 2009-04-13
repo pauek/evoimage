@@ -531,6 +531,20 @@ void bwNoise::eval(Env& e) {
   		}
   	}
 }
+
+void colorNoise::eval(Env& e) {
+	  
+  int x=e.getX();
+  int y=e.getY();
+  if ( seed!=-1 ){ srand(seed);  }
+  int i,j;
+  for (i = 0 ; i < x ; i++){
+  	for (j = 0 ; j < y ; j++){
+  		
+  		e.putPixel ( i, j, RGB ( float(rand( )), float(rand( )), float(rand( ))));
+  		}
+  	}
+}
 	
 
 void BinOp::print(ostream& o) const {
@@ -569,6 +583,7 @@ string firGeneric::head()  const { return "firGeneric"; }
 string warp::head() const { return "warp";}
 string blur::head() const { return "blur";}
 string bwNoise::head() const { return "bwNoise";}
+string colorNoise::head() const { return "colorNoise";}
 
 void Y::print(ostream& o) const { o << "y"; }
 void X::print(ostream& o) const { o << "x"; }
