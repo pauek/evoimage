@@ -283,6 +283,15 @@ class Abs : public UnaryOp {
 	void eval ( Env& e);
 	std::string head() const;
 	};
+	
+	
+class Expt : public BinOp {
+	public:
+	Expt ( Node* p1, Node* p2) : BinOp( p1, p2) {}
+	void eval ( Env& e);
+	std::string head() const;
+	
+	};
 
 
 std::string read_token( std::istream& i);

@@ -87,6 +87,7 @@ Node* read_list ( std::istream& i ){
 	else if ( head == "bwNoise" ) { return new bwNoise ( ); }
 	else if ( head == "colorNoise" ) { return new colorNoise ( ); }
 	else if ( head == "Abs" || head == "abs") { return new Abs ( acum [0]);}
+	else if ( head == "Expt" || head == "expt") { return new Expt ( acum [0], acum [1] ); }
 	else {return NULL;}
 	
 	

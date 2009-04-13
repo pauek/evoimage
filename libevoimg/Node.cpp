@@ -570,6 +570,27 @@ void Abs::eval ( Env& e){
 	
 	}
 	
+	
+void Expt::eval(Env& e){
+  int x=e.getX();
+  int y=e.getY();
+   
+  Env e1(x , y);
+  Env e2(x , y);
+  op1()->eval(e1); 
+  op2()->eval(e2);
+  
+  int i,j;
+  for (i = 0 ; i < x ; i++){
+  	for (j=0 ; j < y ; j++){
+  		
+  		e.putPixel(i,j,((e1.getPixel(i,j)).map2( pow ,  (e2.getPixel(i,j)))));
+  		  		
+  		}
+  	}
+	
+	}
+	
 
 void BinOp::print(ostream& o) const {
   o << "(" << head() << " ";
@@ -609,6 +630,7 @@ string blur::head() const { return "blur";}
 string bwNoise::head() const { return "bwNoise";}
 string colorNoise::head() const { return "colorNoise";}
 string Abs::head()  const { return "Abs"; }
+string Expt::head()  const { return "Expt"; }
 
 void Y::print(ostream& o) const { o << "y"; }
 void X::print(ostream& o) const { o << "x"; }
