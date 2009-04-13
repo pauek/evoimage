@@ -53,3 +53,24 @@ quedin amb els valors heretats directament.
 superior (el de python?) perquè faci l'execució. Tot i que també podria 
 generar ell el Node, encara que no té molt de sentit.
 
+-----------------------------------------------------------------
+
+-classe general que gestioni un vector de 16 (o X posicions) d'strings.
+-Ha de ser capaç d'anar recorrent l'arbre de 2 d'ells i generar els 
+altres 16. En alguns casos combinant primer, en altres mutant 
+primer..etc
+-És important que quan recorri larbre, es crei recursivament, com una 
+taula on hi hagi guardades aquestes funcions, cosa que ens servira per 
+després mutar-les o en tot cas, accedir-hi facilment.
+
+Mètodes mes importants:
+
+	-mapeja_funcio(string) aqui es on recorre l'arbre i va omplint 
+la taula amb les diferents funcions que conté
+	-muta(float)  on el float es amb la probabilitat amb la que ho 
+fa
+	-combina(string1, string2, float) el float es la prob de 
+combinacio
+	
+
+
