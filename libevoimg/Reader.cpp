@@ -84,6 +84,7 @@ Node* read_list ( std::istream& i ){
 	else if ( head == "firGeneric" ) { return new firGeneric ( acum [0]);}
 	else if ( head == "warp" ) { return new warp ( acum [0]);}
 	else if ( head == "blur" ) { return new blur ( acum [0]);}
+	else if ( head == "bwNoise" ) { return new bwNoise ( ); }
 	else {return NULL;}
 	
 	

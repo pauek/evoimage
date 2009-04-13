@@ -1,6 +1,7 @@
 
 #include <iostream>
 #include <cmath>
+#include <cstdlib>
 
 #ifndef Node_h
 #define Node_h
@@ -245,6 +246,21 @@ class blur : public UnaryOp{
 	std::string head() const;
 	
 	};
+	
+class bwNoise : public Node{
+	
+	int seed;
+	
+public:
+	void eval( Env& e);
+
+	bwNoise( int s){	seed=s;	}
+	bwNoise( ) { seed=-1;}
+
+
+	std::string head() const;
+
+};
 
 std::string read_token( std::istream& i);
 float read_number (std::istream& i);

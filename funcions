@@ -22,7 +22,7 @@ ____dissolve
 ____hsv-to-rgb
 ____vector
 ____transform-vector
-____bw-noise
+____bw-noise 
 ____color-noise
 ____warped-bw-noise
 ____warped-color-noise
