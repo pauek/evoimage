@@ -38,3 +38,5 @@
 ../evoimg "(warp (X))" "logic_test34.pgm"
 ../evoimg "(colorNoise)" "logic_test35.pgm"
 ../evoimg "(bwNoise)" "logic_test36.pgm"
+../evoimg "(blur X)" "logic_test37.pgm"
+

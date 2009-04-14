@@ -281,7 +281,7 @@ public:
 	bwNoise( ) { seed=-1;}
 	int getSeed(){ return seed; }
 
-	std::string head() const;
+	void print(std::ostream& o) const;
 
 };
 
@@ -296,7 +296,7 @@ public:
 	colorNoise( ) { seed=-1;}
 	int getSeed(){ return seed; }
 
-	std::string head() const;
+	void print(std::ostream& o) const;
 
 };
 

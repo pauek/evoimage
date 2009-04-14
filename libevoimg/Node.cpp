@@ -728,10 +728,10 @@ string emboss::head()  const { return "emboss"; }
 string sharpen::head()  const { return "sharpen"; }
 string warp::head() const { return "warp";}
 string blur::head() const { return "blur";}
-string bwNoise::head() const { return "bwNoise";}
-string colorNoise::head() const { return "colorNoise";}
 string Abs::head()  const { return "Abs"; }
 string Expt::head()  const { return "Expt"; }
 
 void Y::print(ostream& o) const { o << "y"; }
 void X::print(ostream& o) const { o << "x"; }
+void bwNoise::print(ostream& o) const { o << "bwNoise"; }
+void colorNoise::print(ostream& o) const { o << "colorNoise"; }

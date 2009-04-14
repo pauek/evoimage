@@ -19,7 +19,8 @@ sin DONE --> un argument
 cos DONE  -> (sin-doc)
 atan DONE -->  dos params 
 ____if --> NPI
-____dissolve
+____dissolve --> jo ho he substituit per emboss...ja que dissolve no he 
+trobat com ferla enlloc
 ____hsv-to-rgb
 ____vector
 ____transform-vector
