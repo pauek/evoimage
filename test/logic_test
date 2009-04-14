@@ -39,4 +39,7 @@
 ../evoimg "(colorNoise)" "logic_test35.pgm"
 ../evoimg "(bwNoise)" "logic_test36.pgm"
 ../evoimg "(blur X)" "logic_test37.pgm"
+../evoimg "(emboss bwNoise)" "logic_test38.pgm"
+../evoimg "(abs(emboss bwNoise))" "logic_test39.pgm"
+../evoimg "(expt X Y)" "logic_test40.pgm"
 

@@ -625,7 +625,7 @@ void bwNoise::eval(Env& e) {
   for (i = 0 ; i < x ; i++){
   	for (j = 0 ; j < y ; j++){
   		
-  		e.putPixel ( i, j, RGB ( float(rand( ))));
+  		e.putPixel ( i, j, RGB ( float(rand( )/128)));
   		}
   	}
 }
@@ -639,7 +639,7 @@ void colorNoise::eval(Env& e) {
   for (i = 0 ; i < x ; i++){
   	for (j = 0 ; j < y ; j++){
   		
-  		e.putPixel ( i, j, RGB ( float(rand( )), float(rand( )), float(rand( ))));
+  		e.putPixel ( i, j, RGB ( float(rand( )/128), float(rand( )/128), float(rand( )/128)));
   		}
   	}
 }
