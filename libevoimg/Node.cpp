@@ -3,7 +3,7 @@
 using namespace std;
 
 
-void Env::filtraImatge () {
+void Env::filtraImatge (float kernel[2][2]) {
 	
 
     int i, j, m, n, mm, nn;
@@ -14,7 +14,7 @@ void Env::filtraImatge () {
     int rowIndex, colIndex;
     int dataSizeX = x; 
     int dataSizeY = y;
-	float kernel[2][2];
+/*	float kernel[2][2];
 	kernel[0][0] = -1.0;
 	kernel[0][1] = -2.0;
 	kernel[0][2] = -1.0;
@@ -23,7 +23,7 @@ void Env::filtraImatge () {
 	kernel[1][2] = 0.0;
 	kernel[2][0] = -1.0;
 	kernel[2][1] = -2.0;
-	kernel[2][2] = -1.0;
+	kernel[2][2] = -1.0;*/
     
 
     
@@ -453,15 +453,113 @@ void v_fix::eval(Env& e) {
 
 
 
-void firGeneric::eval ( Env& e){
+
+	
+void gaussBlur::eval ( Env& e){
   int x=e.getX();
   int y=e.getY();
    
   Env e1(x , y);
   
   op1()->eval(e1); 
+  float kernel[2][2];
+  kernel[0][0]=1.0;
+  kernel[0][1]=2.0;
+  kernel[0][2]=1.0;
+  kernel[1][0]=2.0;
+  kernel[1][1]=4.0;
+  kernel[1][2]=2.0;
+  kernel[2][0]=1.0;
+  kernel[2][1]=2.0;
+  kernel[2][2]=1.0;
+  e1.filtraImatge(kernel);
   
-  e1.filtraImatge();
+  int i,j;
+  for (i = 0 ; i < x ; i++){
+  	for (j=0 ; j < y ; j++){
+  		
+  		e.putPixel(i,j,(e1.getPixel(i,j)));
+  		  		
+  		}
+  	}
+	}
+	
+void gradDir::eval ( Env& e){
+  int x=e.getX();
+  int y=e.getY();
+   
+  Env e1(x , y);
+  
+  op1()->eval(e1); 
+  float kernel[2][2];
+  kernel[0][0]=1.0;
+  kernel[0][1]=-2.0;
+  kernel[0][2]=1.0;
+  kernel[1][0]=-2.0;
+  kernel[1][1]=5.0;
+  kernel[1][2]=-2.0;
+  kernel[2][0]=1.0;
+  kernel[2][1]=-2.0;
+  kernel[2][2]=1.0;
+  e1.filtraImatge(kernel);
+  
+  int i,j;
+  for (i = 0 ; i < x ; i++){
+  	for (j=0 ; j < y ; j++){
+  		
+  		e.putPixel(i,j,(e1.getPixel(i,j)));
+  		  		
+  		}
+  	}
+	}
+	
+void emboss::eval ( Env& e){
+  int x=e.getX();
+  int y=e.getY();
+   
+  Env e1(x , y);
+  
+  op1()->eval(e1); 
+  float kernel[2][2];
+  kernel[0][0]=2.0;
+  kernel[0][1]=0.0;
+  kernel[0][2]=0.0;
+  kernel[1][0]=0.0;
+  kernel[1][1]=-1.0;
+  kernel[1][2]=0.0;
+  kernel[2][0]=0.0;
+  kernel[2][1]=0.0;
+  kernel[2][2]=-1.0;
+  e1.filtraImatge(kernel);
+  
+  int i,j;
+  for (i = 0 ; i < x ; i++){
+  	for (j=0 ; j < y ; j++){
+  		
+  		e.putPixel(i,j,(e1.getPixel(i,j)));
+  		  		
+  		}
+  	}
+	}
+
+void sharpen::eval ( Env& e){
+  int x=e.getX();
+  int y=e.getY();
+   
+  Env e1(x , y);
+  
+  op1()->eval(e1); 
+  float kernel[2][2];
+  kernel[0][0]=-1.0;
+  kernel[0][1]=-1.0;
+  kernel[0][2]=-1.0;
+  kernel[1][0]=-1.0;
+  kernel[1][1]=9.0;
+  kernel[1][2]=-1.0;
+  kernel[2][0]=-1.0;
+  kernel[2][1]=-1.0;
+  kernel[2][2]=-1.0;
+  e1.filtraImatge(kernel);
   
   int i,j;
   for (i = 0 ; i < x ; i++){
@@ -624,7 +722,10 @@ string Xor::head()  const { return "^"; }
 string Sin::head()  const { return "Sin"; }
 string Cos::head()  const { return "Cos"; }
 string Atan::head()  const { return "Atan"; }
-string firGeneric::head()  const { return "firGeneric"; }
+string gaussBlur::head()  const { return "gaussBlur"; }
+string gradDir::head()  const { return "gradDir"; }
+string emboss::head()  const { return "emboss"; }
+string sharpen::head()  const { return "sharpen"; }
 string warp::head() const { return "warp";}
 string blur::head() const { return "blur";}
 string bwNoise::head() const { return "bwNoise";}

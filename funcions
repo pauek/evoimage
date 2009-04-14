@@ -29,11 +29,12 @@ ____warped-bw-noise --> s'hauria de poder fer combinant el warp i el
 noise
 ____warped-color-noise --> idem q el de dalt
 blur DONE --> pero no provat
-____band-pass --> aixo saconsegueix amb una matriu concreta i filtrant 
+____band-pass --> aixo saconsegueix amb una matriu concreta i 
+filtrant 
 amb la  funcio aquella que hem dissenyat
-____grad-mag
-____grad-dir
-____bump --> SENSE INFO de com es fa
+grad-mag DONE --> amb el nom de sharpen
+grad-dir DONE --> gradDir
+bump DONE --> emboss, tot i que no es ben be el mateix
 ____ifs --> NPI
 ____warped-ifs --> NPI
 ____warp-abs 

@@ -81,7 +81,10 @@ Node* read_list ( std::istream& i ){
 	else if ( head == "Atan" || head == "atan") { return new Atan ( acum [0], acum [1] ); }
 	else if ( head == "X" || head == "x") { return new X ( ); }
 	else if ( head == "Y" || head == "y") { return new Y ( ); }
-	else if ( head == "firGeneric" ) { return new firGeneric ( acum [0]);}
+	else if ( head == "gradDir" ) { return new gradDir ( acum [0]);}
+	else if ( head == "gaussBlur" ) { return new gaussBlur ( acum [0]);}
+	else if ( head == "emboss" || head == "Emboss") { return new emboss ( acum [0]);}
+	else if ( head == "sharpen" || head == "Sharpen") { return new sharpen ( acum [0]);}
 	else if ( head == "warp" ) { return new warp ( acum [0]);}
 	else if ( head == "blur" ) { return new blur ( acum [0]);}
 	else if ( head == "bwNoise" ) { return new bwNoise ( ); }

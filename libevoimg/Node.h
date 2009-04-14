@@ -51,7 +51,7 @@ class Env {
       y = _y;
       p = new RGB[x * y];
   }
-  void filtraImatge ();
+  void filtraImatge (float kernel[2][2]);
   void warpGeneric();
   ~Env() { delete[] p; }
 };
@@ -223,9 +223,32 @@ public:
 	
 
 
-class firGeneric : public UnaryOp{
+
+
+class gaussBlur : public UnaryOp{
 	public:
-	firGeneric ( Node* p1) : UnaryOp( p1) {}
+	gaussBlur ( Node* p1) : UnaryOp( p1) {}
+	void eval ( Env& e);
+	std::string head() const;
+	};
+	
+class gradDir : public UnaryOp{
+	public:
+	gradDir ( Node* p1) : UnaryOp( p1) {}
+	void eval ( Env& e);
+	std::string head() const;
+	};
+	
+class emboss : public UnaryOp{
+	public:
+	emboss ( Node* p1) : UnaryOp( p1) {}
+	void eval ( Env& e);
+	std::string head() const;
+	};
+	
+class sharpen : public UnaryOp{
+	public:
+	sharpen ( Node* p1) : UnaryOp( p1) {}
 	void eval ( Env& e);
 	std::string head() const;
 	};
@@ -256,7 +279,7 @@ public:
 
 	bwNoise( int s){	seed=s;	}
 	bwNoise( ) { seed=-1;}
-
+	int getSeed(){ return seed; }
 
 	std::string head() const;
 
@@ -271,7 +294,7 @@ public:
 
 	colorNoise( int s){	seed=s;	}
 	colorNoise( ) { seed=-1;}
-
+	int getSeed(){ return seed; }
 
 	std::string head() const;
 
