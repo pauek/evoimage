@@ -15,7 +15,7 @@ int to255(float x) {
 }
 
 int main(int argc, char **argv) {
-  int m = 400, n = 400;
+  int m = 200, n = 200;
   string arg1 , arg2;
   
   if (argc > 0) {

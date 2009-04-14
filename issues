@@ -14,13 +14,10 @@ correcte? uhmm
 
 -els deletes i mecanismes contra errors en el reader (asserts?)
 
--Funcions de regió i les que queden de les altres. 
+-Alguna funció que no sé com és i millorar warp,bwnoise i colornoise 
+per exemple. 
 
--Com passem la matriu? S'ha de decidir entre passar un string i que hi 
-hagi una taula dins de la funcio mateixa de filtrar, o bé s'ha de passar 
-tota la matriu o un punter a ella desde la crida de l'eval. Jo soc 
-partidari del codi string, pero segur que implica menys rendiment o 
-coses per l'estil.
+-Problemes de RANG. Moltes coses donen negres
 
 ---------------------------------------------------------------
 
