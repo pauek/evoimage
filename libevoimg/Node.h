@@ -51,7 +51,7 @@ class Env {
       y = _y;
       p = new RGB[x * y];
   }
-  void filtraImatge (float kernel[2][2]);
+  void filtraImatge (float kernel[3][3]);
   void warpGeneric();
   ~Env() { delete[] p; }
 };

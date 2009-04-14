@@ -3,7 +3,7 @@
 using namespace std;
 
 
-void Env::filtraImatge (float kernel[2][2]) {
+void Env::filtraImatge (float kernel[3][3]) {
 	
 
     int i, j, m, n, mm, nn;
@@ -14,16 +14,7 @@ void Env::filtraImatge (float kernel[2][2]) {
     int rowIndex, colIndex;
     int dataSizeX = x; 
     int dataSizeY = y;
-/*	float kernel[2][2];
-	kernel[0][0] = -1.0;
-	kernel[0][1] = -2.0;
-	kernel[0][2] = -1.0;
-	kernel[1][0] = 0.0;
-	kernel[1][1] = 0.0;
-	kernel[1][2] = 0.0;
-	kernel[2][0] = -1.0;
-	kernel[2][1] = -2.0;
-	kernel[2][2] = -1.0;*/
+
     
 
     
@@ -462,7 +453,7 @@ void gaussBlur::eval ( Env& e){
   Env e1(x , y);
   
   op1()->eval(e1); 
-  float kernel[2][2];
+  float kernel[3][3];
   kernel[0][0]=1.0;
   kernel[0][1]=2.0;
   kernel[0][2]=1.0;
@@ -491,7 +482,7 @@ void gradDir::eval ( Env& e){
   Env e1(x , y);
   
   op1()->eval(e1); 
-  float kernel[2][2];
+  float kernel[3][3];
   kernel[0][0]=1.0;
   kernel[0][1]=-2.0;
   kernel[0][2]=1.0;
@@ -520,7 +511,7 @@ void emboss::eval ( Env& e){
   Env e1(x , y);
   
   op1()->eval(e1); 
-  float kernel[2][2];
+  float kernel[3][3];
   kernel[0][0]=2.0;
   kernel[0][1]=0.0;
   kernel[0][2]=0.0;
@@ -549,7 +540,7 @@ void sharpen::eval ( Env& e){
   Env e1(x , y);
   
   op1()->eval(e1); 
-  float kernel[2][2];
+  float kernel[3][3];
   kernel[0][0]=-1.0;
   kernel[0][1]=-1.0;
   kernel[0][2]=-1.0;

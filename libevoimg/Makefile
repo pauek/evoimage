@@ -1,4 +1,4 @@
-CXXFLAGS = -Wall -O2 -fPIC
+CXXFLAGS = -Wall -g3 -O2 -fPIC
 OBJECTS = Node.o Reader.o
 
 
