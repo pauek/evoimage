@@ -2,6 +2,29 @@
 #include "Node.h"
 using namespace std;
 
+Node* Node::randomNode(){
+	int selector = rand() % 23;
+	
+	if( selector == 0) {}
+	
+	
+	
+	
+	
+	}
+Node* Node::randomLeave(){
+	
+	int selector = rand() % 5;
+	if( selector == 0) {return new X ( );}
+	else if( selector == 1){return new Y ( );}
+	else if( selector == 2){return new v_fix ( float(rand() % 255), float(rand() % 255), float(rand() % 255));}
+	else if( selector == 3){return new bwNoise ( );}
+	else{return new colorNoise ( );}
+	
+	
+	
+	
+	}
 
 void Env::filtraImatge (float kernel[3][3]) {
 	
