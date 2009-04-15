@@ -2,6 +2,7 @@
 #include <iostream>
 #include <cmath>
 #include <cstdlib>
+#include <time.h>
 
 #ifndef Node_h
 #define Node_h

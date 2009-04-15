@@ -33,7 +33,8 @@ int main(int argc, char **argv) {
   */                //Aixo si que val que es el reader, pero de moment, comentat per provar el randomtree
   
   
-  int lcount = 3;
+  int lcount = 5;
+  srand(unsigned(time(0)));
   
   Node* root = Node::randomNode ( lcount);
   
@@ -46,7 +47,8 @@ int main(int argc, char **argv) {
 
 
   {
-    ofstream out(argv[2]);
+  //  ofstream out(argv[2]);   aixo val eh!!
+  ofstream out("1.pgm");
     
     out << "P3" << endl
 	<< n << " " << m << endl

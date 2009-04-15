@@ -3,7 +3,10 @@
 using namespace std;
 
 Node* Node::randomNode(int lcount){
-	int selector = rand() % 21;
+	int selector;
+   
+   selector = rand() % 21;
+	cout << selector;
 	
 	if( selector == 0) { 
 		if ( lcount > 2){
