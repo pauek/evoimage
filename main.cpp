@@ -15,21 +15,27 @@ int to255(float x) {
 }
 
 int main(int argc, char **argv) {
-  int m = 200, n = 200;
+  int m = 400, n = 400;
   string arg1 , arg2;
   
-  if (argc > 0) {
+  /*if (argc > 0) {
   	arg1 = string(argv[1]);
   	arg2 = string(argv[2]);
+
   }
     
 
-    stringstream sin(arg1);
-     
-Node* root =  read ( sin);
 
+
+    stringstream sin(arg1); 
+	Node* root =  read ( sin);
      
-     
+  */                //Aixo si que val que es el reader, pero de moment, comentat per provar el randomtree
+  
+  
+  int lcount = 3;
+  
+  Node* root = Node::randomNode ( lcount);
   
   
   int i,j;

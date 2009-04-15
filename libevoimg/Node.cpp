@@ -2,10 +2,287 @@
 #include "Node.h"
 using namespace std;
 
-Node* Node::randomNode(){
-	int selector = rand() % 23;
+Node* Node::randomNode(int lcount){
+	int selector = rand() % 21;
 	
-	if( selector == 0) {}
+	if( selector == 0) { 
+		if ( lcount > 2){
+			lcount = lcount - 1;
+			Node* _op1 = randomNode ( lcount);
+			Node* _op2 = randomNode ( lcount);
+			return new Sum ( _op1, _op2);
+			}
+		else{
+			Node* _op1 = randomLeave ();
+			Node* _op2 = randomLeave ();
+			return new Sum ( _op1, _op2);
+			}
+		}
+	
+	
+	else if( selector == 1) {  
+		if ( lcount > 2){
+			lcount = lcount - 1;
+			Node* _op1 = randomNode ( lcount);
+			Node* _op2 = randomNode ( lcount);
+			return new Rest ( _op1, _op2);
+			}
+		else{
+			Node* _op1 = randomLeave ();
+			Node* _op2 = randomLeave ();
+			return new Rest ( _op1, _op2);
+			}}
+	
+	
+	else if( selector == 2) {  
+		if ( lcount > 2){
+			lcount = lcount - 1;
+			Node* _op1 = randomNode ( lcount);
+			Node* _op2 = randomNode ( lcount);
+			return new Mult ( _op1, _op2);
+			}
+		else{
+			Node* _op1 = randomLeave ();
+			Node* _op2 = randomLeave ();
+			return new Mult ( _op1, _op2);
+			}}
+	
+	
+	else if( selector == 3) {  
+		if ( lcount > 2){
+			lcount = lcount - 1;
+			Node* _op1 = randomNode ( lcount);
+			Node* _op2 = randomNode ( lcount);
+			return new Div ( _op1, _op2);
+			}
+		else{
+			Node* _op1 = randomLeave ();
+			Node* _op2 = randomLeave ();
+			return new Div ( _op1, _op2);
+			}}
+	
+	
+	else if( selector == 4) {  
+		if ( lcount > 2){
+			lcount = lcount - 1;
+			Node* _op1 = randomNode ( lcount);
+			Node* _op2 = randomNode ( lcount);
+			return new Mod ( _op1, _op2);
+			}
+		else{
+			Node* _op1 = randomLeave ();
+			Node* _op2 = randomLeave ();
+			return new Mod ( _op1, _op2);
+			}}
+	
+		
+	else if( selector == 5) {  
+		if ( lcount > 2){
+			lcount = lcount - 1;
+			Node* _op1 = randomNode ( lcount);
+			Node* _op2 = randomNode ( lcount);
+			return new Log ( _op1, _op2);
+			}
+		else{
+			Node* _op1 = randomLeave ();
+			Node* _op2 = randomLeave ();
+			return new Log ( _op1, _op2);
+			}}
+	
+	
+	else if( selector == 6) {  
+		if ( lcount > 2){
+			lcount = lcount - 1;
+			Node* _op1 = randomNode ( lcount);
+			Node* _op2 = randomNode ( lcount);
+			return new Round ( _op1, _op2);
+			}
+		else{
+			Node* _op1 = randomLeave ();
+			Node* _op2 = randomLeave ();
+			return new Round ( _op1, _op2);
+			}}
+	
+	
+	else if( selector == 7) {  
+		if ( lcount > 2){
+			lcount = lcount - 1;
+			Node* _op1 = randomNode ( lcount);
+			Node* _op2 = randomNode ( lcount);
+			return new And ( _op1, _op2);
+			}
+		else{
+			Node* _op1 = randomLeave ();
+			Node* _op2 = randomLeave ();
+			return new And ( _op1, _op2);
+			}}
+	
+	
+	else if( selector == 8) {  
+		if ( lcount > 2){
+			lcount = lcount - 1;
+			Node* _op1 = randomNode ( lcount);
+			Node* _op2 = randomNode ( lcount);
+			return new Or ( _op1, _op2);
+			}
+		else{
+			Node* _op1 = randomLeave ();
+			Node* _op2 = randomLeave ();
+			return new Or ( _op1, _op2);
+			}}
+	
+	
+	else if( selector == 9) {  
+		if ( lcount > 2){
+			lcount = lcount - 1;
+			Node* _op1 = randomNode ( lcount);
+			Node* _op2 = randomNode ( lcount);
+			return new Xor ( _op1, _op2);
+			}
+		else{
+			Node* _op1 = randomLeave ();
+			Node* _op2 = randomLeave ();
+			return new Xor ( _op1, _op2);
+			}}
+	
+	
+	else if( selector == 10) {  
+		if ( lcount > 2){
+			lcount = lcount - 1;
+			Node* _op1 = randomNode ( lcount);
+			return new Sin ( _op1);
+			}
+		else{
+			Node* _op1 = randomLeave ();
+			return new Sin ( _op1);
+			}}
+	
+	
+	else if( selector == 11) {  
+		if ( lcount > 2){
+			lcount = lcount - 1;
+			Node* _op1 = randomNode ( lcount);
+			return new Cos ( _op1);
+			}
+		else{
+			Node* _op1 = randomLeave ();
+			return new Cos ( _op1);
+			}}
+	
+	
+	else if( selector == 12) {  
+		if ( lcount > 2){
+			lcount = lcount - 1;
+			Node* _op1 = randomNode ( lcount);
+			Node* _op2 = randomNode ( lcount);
+			return new Atan ( _op1, _op2);
+			}
+		else{
+			Node* _op1 = randomLeave ();
+			Node* _op2 = randomLeave ();
+			return new Atan ( _op1, _op2);
+			}}
+	
+	
+	else if( selector == 13) {  
+		if ( lcount > 2){
+			lcount = lcount - 1;
+			Node* _op1 = randomNode ( lcount);
+			return new gradDir ( _op1);
+			}
+		else{
+			Node* _op1 = randomLeave ();
+			return new gradDir ( _op1);
+			}}
+	
+	
+	else if( selector == 14) {  
+		if ( lcount > 2){
+			lcount = lcount - 1;
+			Node* _op1 = randomNode ( lcount);
+			return new gaussBlur ( _op1);
+			}
+		else{
+			Node* _op1 = randomLeave ();
+			return new gaussBlur ( _op1);
+			}}
+	
+	
+	else if( selector == 15) {  
+		if ( lcount > 2){
+			lcount = lcount - 1;
+			Node* _op1 = randomNode ( lcount);
+			return new emboss ( _op1);
+			}
+		else{
+			Node* _op1 = randomLeave ();
+			return new emboss ( _op1);
+			}}
+	
+	
+	else if( selector == 16) {  
+		if ( lcount > 2){
+			lcount = lcount - 1;
+			Node* _op1 = randomNode ( lcount);
+			return new sharpen ( _op1);
+			}
+		else{
+			Node* _op1 = randomLeave ();
+			return new sharpen ( _op1);
+			}}
+	
+	
+	else if( selector == 17) {  
+		if ( lcount > 2){
+			lcount = lcount - 1;
+			Node* _op1 = randomNode ( lcount);
+			return new warp ( _op1);
+			}
+		else{
+			Node* _op1 = randomLeave ();
+			return new warp ( _op1);
+			}}
+	
+	
+	else if( selector == 18) {  
+		if ( lcount > 2){
+			lcount = lcount - 1;
+			Node* _op1 = randomNode ( lcount);
+			return new blur ( _op1);
+			}
+		else{
+			Node* _op1 = randomLeave ();
+			return new blur ( _op1);
+			}}
+	
+	
+	else if( selector == 19) {  
+		if ( lcount > 2){
+			lcount = lcount - 1;
+			Node* _op1 = randomNode ( lcount);
+			return new Abs ( _op1);
+			}
+		else{
+			Node* _op1 = randomLeave ();
+			return new Abs ( _op1);
+			}}
+	
+	
+	else  {  
+		if ( lcount > 2){
+			lcount = lcount - 1;
+			Node* _op1 = randomNode ( lcount);
+			Node* _op2 = randomNode ( lcount);
+			return new Expt ( _op1, _op2);
+			}
+		else{
+			Node* _op1 = randomLeave ();
+			Node* _op2 = randomLeave ();
+			return new Expt ( _op1, _op2);
+			}}
+	
+	
+	
 	
 	
 	

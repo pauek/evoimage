@@ -60,7 +60,7 @@ class Node {
 public:
   virtual void eval(Env& e) = 0;
   virtual void print(std::ostream& o) const { o << "?"; }
-  static Node* randomNode();
+  static Node* randomNode(int lcount);
   static Node* randomLeave();
 };
 
