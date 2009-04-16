@@ -152,235 +152,104 @@ void Image::warpGeneric () {
       putPixel( i , j , p2[j*(A + (i/(B - A)))+i]);
     }
   }
-	
 }
 
-RGB RGB::map(PFunction f) {
-  return RGB( f(_r), f(_g), f(_b) );
+// BinaryOperations //////////////////////////////////////////////////
+
+void BinOp::eval(Image& I) {
+  const int x = I.getX(), y = I.getY();
+  Image i1(x, y), i2(x, y);
+  op1()->eval(i1); 
+  op2()->eval(i2);
+  do_op(I, i1, i2);
 }
 
-RGB RGB::map2(PFunction2 f , RGB o) {
-  return RGB( f(_r, o.getr()), f(_g, o.getg()), f(_b, o.getb()) );
+void Sum::do_op(Image& res, Image& op1, Image& op2) {
+  const int x = res.getX(), y = res.getY();
+  for (int i = 0; i < x; i++)
+    for (int j = 0; j < y; j++)
+      res.putPixel(i, j, (op1.getPixel(i,j) + op2.getPixel(i,j)));
 }
 
-
-
-void Sum::eval(Image& e) {
-  
-  int x=e.getX();
-  int y=e.getY();
-   
-  Image e1(x , y);
-  Image e2(x , y);
-  op1()->eval(e1); 
-  op2()->eval(e2);
-  
-  int i,j;
-  for (i = 0 ; i < x ; i++){
-    for (j=0 ; j < y ; j++){
-  		
-      e.putPixel(i,j,(e1.getPixel(i,j) + e2.getPixel(i,j)));
-  		  		
-    }
-  }
-  
-  
+void Rest::do_op(Image& res, Image& op1, Image& op2) {
+  const int x = res.getX(), y = res.getY();
+  for (int i = 0; i < x; i++)
+    for (int j = 0; j < y; j++)
+      res.putPixel(i, j, (op1.getPixel(i,j) - op2.getPixel(i,j)));
 }
 
-void Rest::eval(Image& e) {
-  int x=e.getX();
-  int y=e.getY();
-   
-  Image e1(x , y);
-  Image e2(x , y);
-  op1()->eval(e1); 
-  op2()->eval(e2);
-  
-  int i,j;
-  for (i = 0 ; i < x ; i++){
-    for (j=0 ; j < y ; j++){
-  		
-      e.putPixel(i,j,(e1.getPixel(i,j) - e2.getPixel(i,j)));
-  		  		
-    }
-  }
+void Mult::do_op(Image& res, Image& op1, Image& op2) {
+  const int x = res.getX(), y = res.getY();
+  for (int i = 0; i < x; i++)
+    for (int j = 0; j < y; j++)
+      res.putPixel(i, j, (op1.getPixel(i,j) * op2.getPixel(i,j)));
 }
 
-void Mult::eval(Image& e) {
-  int x=e.getX();
-  int y=e.getY();
-   
-  Image e1(x , y);
-  Image e2(x , y);
-  op1()->eval(e1); 
-  op2()->eval(e2);
-  
-  int i,j;
-  for (i = 0 ; i < x ; i++){
-    for (j=0 ; j < y ; j++){
-  		
-      e.putPixel(i,j,(e1.getPixel(i,j) * e2.getPixel(i,j)));
-  		  		
-    }
-  }
+void Div::do_op(Image& res, Image& op1, Image& op2) {
+  const int x = res.getX(), y = res.getY();
+  for (int i = 0; i < x; i++)
+    for (int j = 0; j < y; j++)
+      res.putPixel(i, j, (op1.getPixel(i,j) / op2.getPixel(i,j)));
 }
 
-void Div::eval(Image& e) {
-  int x=e.getX();
-  int y=e.getY();
-   
-  Image e1(x , y);
-  Image e2(x , y);
-  op1()->eval(e1); 
-  op2()->eval(e2);
-  
-  int i,j;
-  for (i = 0 ; i < x ; i++){
-    for (j=0 ; j < y ; j++){
-  		
-      e.putPixel(i,j,(e1.getPixel(i,j) / e2.getPixel(i,j)));
-  		  		
-    }
-  }
+void Mod::do_op(Image& res, Image& op1, Image& op2) {
+  const int x = res.getX(), y = res.getY();
+  for (int i = 0; i < x; i++)
+    for (int j = 0; j < y; j++)
+      res.putPixel(i, j, (op1.getPixel(i,j).map2(fmod, op2.getPixel(i,j))));
 }
 
-void Mod::eval(Image& e){
-
-	
-  int x=e.getX();
-  int y=e.getY();
-   
-  Image e1(x , y);
-  Image e2(x , y);
-  op1()->eval(e1); 
-  op2()->eval(e2);
-  
-  int i,j;
-  for (i = 0 ; i < x ; i++){
-    for (j=0 ; j < y ; j++){
-  		
-      e.putPixel(i,j,((e1.getPixel(i,j)).map2( fmod ,  (e2.getPixel(i,j)))));
-  		  		
-    }
-  }
-	
-	
+void Log::do_op(Image& res, Image& op1, Image& op2) {
+  const int x = res.getX(), y = res.getY();
+  for (int i = 0; i < x; i++)
+    for (int j = 0; j < y; j++)
+      res.putPixel(i, j, (op1.getPixel(i,j).map( log10 ) / op2.getPixel(i,j).map( log10 )));
 }
 
-void Log::eval(Image& e) {
-
-  
-  
-  int x=e.getX();
-  int y=e.getY();
-   
-  Image e1(x , y);
-  Image e2(x , y);
-  op1()->eval(e1); 
-  op2()->eval(e2);
-  
-  int i,j;
-  for (i = 0 ; i < x ; i++){
-    for (j=0 ; j < y ; j++){
-  		
-      e.putPixel(i,j,(((e1.getPixel(i,j)).map( log10 )) /  ((e2.getPixel(i,j)).map( log10))));
-  		  		
-    }
-  }
-  
-  
+void Round::do_op(Image& res, Image& op1, Image& op2) {
+  RGB offs = RGB(0.5, 0.5, 0.5);
+  const int x = res.getX(), y = res.getY();
+  for (int i = 0; i < x; i++)
+    for (int j = 0; j < y; j++)
+      res.putPixel(i, j, ((op1.getPixel(i,j) / op1.getPixel(i,j) + offs).map( floor )));
 }
 
-void Round::eval(Image& e) {
-
-  RGB offs = RGB( 0.5, 0.5, 0.5);
-  
-  
-  
-  int x=e.getX();
-  int y=e.getY();
-   
-  Image e1(x , y);
-  Image e2(x , y);
-  op1()->eval(e1); 
-  op2()->eval(e2);
-  
-  int i,j;
-  for (i = 0 ; i < x ; i++){
-    for (j=0 ; j < y ; j++){
-  		
-      e.putPixel(i,j,((((e1.getPixel(i,j))/(e1.getPixel(i,j)))+offs).map( floor)));
-  		  		
-    }
-  }
-  
-  
+void And::do_op(Image& res, Image& op1, Image& op2) {
+  const int x = res.getX(), y = res.getY();
+  for (int i = 0; i < x; i++)
+    for (int j = 0; j < y; j++)
+      res.putPixel(i, j, (op1.getPixel(i,j) & op2.getPixel(i,j)));
 }
 
-void And::eval ( Image& e){
-  int x=e.getX();
-  int y=e.getY();
-   
-  Image e1(x , y);
-  Image e2(x , y);
-  op1()->eval(e1); 
-  op2()->eval(e2);
-  
-  int i,j;
-  for (i = 0 ; i < x ; i++){
-    for (j=0 ; j < y ; j++){
-  		
-      e.putPixel(i,j,(e1.getPixel(i,j) & e2.getPixel(i,j)));
-  		  		
-    }
-  }	
-	
+void Or::do_op(Image& res, Image& op1, Image& op2) {
+  const int x = res.getX(), y = res.getY();
+  for (int i = 0; i < x; i++)
+    for (int j = 0; j < y; j++)
+      res.putPixel(i, j, (op1.getPixel(i,j) | op2.getPixel(i,j)));
 }
-	
-void Or::eval ( Image& e){
-  int x=e.getX();
-  int y=e.getY();
-   
-  Image e1(x , y);
-  Image e2(x , y);
-  op1()->eval(e1); 
-  op2()->eval(e2);
-  
-  int i,j;
-  for (i = 0 ; i < x ; i++){
-    for (j=0 ; j < y ; j++){
-  		
-      e.putPixel(i,j,(e1.getPixel(i,j) | e2.getPixel(i,j)));
-  		  		
-    }
-  }	
-	
+
+void Xor::do_op(Image& res, Image& op1, Image& op2) {
+  const int x = res.getX(), y = res.getY();
+  for (int i = 0; i < x; i++)
+    for (int j = 0; j < y; j++)
+      res.putPixel(i, j, (op1.getPixel(i,j) ^ op2.getPixel(i,j)));
 }
-	
-void Xor::eval ( Image& e){
-  int x=e.getX();
-  int y=e.getY();
-   
-  Image e1(x , y);
-  Image e2(x , y);
-  op1()->eval(e1); 
-  op2()->eval(e2);
-  
-  int i,j;
-  for (i = 0 ; i < x ; i++){
-    for (j=0 ; j < y ; j++){
-  		
-      e.putPixel(i,j,(e1.getPixel(i,j) ^ e2.getPixel(i,j)));
-  		  		
-    }
-  }	
-	
+
+void Atan::do_op(Image& res, Image& op1, Image& op2) {
+  const int x = res.getX(), y = res.getY();
+  for (int i = 0; i < x; i++)
+    for (int j = 0; j < y; j++)
+      res.putPixel(i, j, (op1.getPixel(i,j).map2( atan2, op2.getPixel(i,j) )));
+}
+
+void Expt::do_op(Image& res, Image& op1, Image& op2) {
+  const int x = res.getX(), y = res.getY();
+  for (int i = 0; i < x; i++)
+    for (int j = 0; j < y; j++)
+      res.putPixel(i, j, op1.getPixel(i,j).map2(pow, op2.getPixel(i,j)));
 }
 
 void Sin::eval ( Image& e){
-
-	
-	
   int x=e.getX();
   int y=e.getY();
    
@@ -392,13 +261,9 @@ void Sin::eval ( Image& e){
   int i,j;
   for (i = 0 ; i < x ; i++){
     for (j=0 ; j < y ; j++){
-  		
       e.putPixel(i,j,(e1.getPixel(i,j)).map( sin ));
-  		  		
     }
   }	
-	
-	
 }
 	
 void Cos::eval ( Image& e){
@@ -420,25 +285,6 @@ void Cos::eval ( Image& e){
   }
 }
 
-void Atan::eval(Image& e){
-  int x=e.getX();
-  int y=e.getY();
-   
-  Image e1(x , y);
-  Image e2(x , y);
-  op1()->eval(e1); 
-  op2()->eval(e2);
-  
-  int i,j;
-  for (i = 0 ; i < x ; i++){
-    for (j=0 ; j < y ; j++){
-  		
-      e.putPixel(i,j,((e1.getPixel(i,j)).map2( atan2 ,  (e2.getPixel(i,j)))));
-  		  		
-    }
-  }
-	
-}
 
 void X::eval(Image& e) { 
  
@@ -705,25 +551,6 @@ void Abs::eval ( Image& e){
 }
 	
 	
-void Expt::eval(Image& e){
-  int x=e.getX();
-  int y=e.getY();
-   
-  Image e1(x , y);
-  Image e2(x , y);
-  op1()->eval(e1); 
-  op2()->eval(e2);
-  
-  int i,j;
-  for (i = 0 ; i < x ; i++){
-    for (j=0 ; j < y ; j++){
-  		
-      e.putPixel(i,j,((e1.getPixel(i,j)).map2( pow ,  (e2.getPixel(i,j)))));
-  		  		
-    }
-  }
-	
-}
 
 void BinOp::print(ostream& o) const {
   o << "(" << head() << " ";

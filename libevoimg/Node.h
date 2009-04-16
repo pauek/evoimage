@@ -193,6 +193,8 @@ public:
     p2 = _p2;
   }
 
+  void eval(Image& I);
+  virtual void do_op(Image& res, Image& op1, Image& op2) = 0;
   void print(std::ostream& o) const;
 };
 
@@ -200,7 +202,7 @@ public:
   class Name : public BinOp {				\
   public:						\
     Name (Node* p1, Node* p2): BinOp(p1, p2) {}		\
-    void eval(Image& e);				\
+    void do_op(Image& res, Image& op1, Image& op2);	\
     std::string head() const;				\
   }
 
