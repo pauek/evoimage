@@ -240,13 +240,13 @@ void gaussBlur::eval(Image& I) {
 }
 
 void gradDir::eval(Image& I){
-  static const float k_gradDir[3][3] = {
+  static const float kernel[3][3] = {
     {  1., -2.,  1. },
     { -2.,  5., -2. },
     {  1., -2.,  1. }
   };
   op1()->eval(I); 
-  I.filtraImatge(k_gradDir);
+  I.filtraImatge(kernel);
 }
 
 void sharpen::eval(Image& I){
