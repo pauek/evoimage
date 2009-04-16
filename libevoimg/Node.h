@@ -26,15 +26,39 @@ class RGB {
   RGB map(PFunction f);
   RGB map2(PFunction2 f, RGB o);
 
-  RGB operator+(const RGB& o);
-  RGB operator-(const RGB& o);  
-  RGB operator*(const RGB& o);
-  RGB operator/(const RGB& o);
-  RGB operator&(const RGB& o);
-  RGB operator|(const RGB& o);
-  RGB operator^(const RGB& o);
+  RGB operator+(const RGB& o) {
+    return RGB(_r + o._r, _g + o._g, _b + o._b);
+  }
+
+  RGB operator-(const RGB& o) {
+    return RGB(_r - o._r, _g - o._g, _b - o._b);
+  }
+
+  RGB operator*(const RGB& o) {
+    return RGB(_r * o._r, _g * o._g, _b * o._b);
+  }
+
+  RGB operator/(const RGB& o) {
+    return RGB(_r / o._r, _g / o._g, _b / o._b);
+  }
   
+  RGB operator&(const RGB& o) {
+    return RGB(float(int(_r) & int(o._r)), 
+	       float(int(_g) & int(o._g)),
+	       float(int(_b) & int(o._b)));
+  }
   
+  RGB operator|(const RGB& o) {
+    return RGB(float(int(_r) | int(o._r)), 
+	       float(int(_g) | int(o._g)), 
+	       float(int(_b) | int(o._b)));
+  }
+
+  RGB operator^(const RGB& o) {
+    return RGB(float(int(_r) ^ int(o._r)), 
+	       float(int(_g) ^ int(o._g)), 
+	       float(int(_b) ^ int(o._b)));
+  }
 };
 
 class Image {

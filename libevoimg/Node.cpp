@@ -155,41 +155,11 @@ void Image::warpGeneric () {
 	
 }
 
-RGB RGB::operator+(const RGB& o) {
-  return RGB(_r + o._r, _g + o._g, _b + o._b);
-}
-
-RGB RGB::operator-(const RGB& o) {
-  return RGB(_r - o._r, _g - o._g, _b - o._b);
-}
-
-RGB RGB::operator*(const RGB& o) {
-  return RGB(_r * o._r, _g * o._g, _b * o._b);
-}
-
-RGB RGB::operator/(const RGB& o) {
-  return RGB(_r / o._r, _g / o._g, _b / o._b);
-}
-
-RGB RGB::operator&(const RGB& o) {
-  return RGB(float(int(_r) & int(o._r)), float(int(_g) & int(o._g)), float(int(_b) & int(o._b)));
-}
-
-RGB RGB::operator|(const RGB& o) {
-  return RGB(float(int(_r) | int(o._r)), float(int(_g) | int(o._g)), float(int(_b) | int(o._b)));
-}
-
-RGB RGB::operator^(const RGB& o){
-  return RGB(float(int(_r) ^ int(o._r)), float(int(_g) ^ int(o._g)), float(int(_b) ^ int(o._b)));
-}
-
 RGB RGB::map(PFunction f) {
   return RGB( f(_r), f(_g), f(_b) );
 }
 
 RGB RGB::map2(PFunction2 f , RGB o) {
-  
-  
   return RGB( f(_r, o.getr()), f(_g, o.getg()), f(_b, o.getb()) );
 }
 
