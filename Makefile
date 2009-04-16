@@ -2,25 +2,25 @@ CXXFLAGS = -g3 -Wall -O2 -Ilibevoimg
 
 all: evoimg eval random
 
-evoimg: main.o libevoimg
+evoimg: libevoimg main.o
 	g++ $(CXXFLAGS) -o evoimg main.o -Llibevoimg -levoimg -lstdc++ -lm
+
+eval: libevoimg eval.o
+	g++ $(CXXFLAGS) -o eval eval.o -Llibevoimg -levoimg -lstdc++ -lm
+
+random: libevoimg random.o
+	g++ $(CXXFLAGS) -o random random.o -Llibevoimg -levoimg -lstdc++ -lm
 
 libevoimg: 
 	make -C libevoimg
 
 .cpp.o:
 	g++ $(CXXFLAGS) -c -o $@ $<
-	
-eval: eval.o libevoimg
-	g++ $(CXXFLAGS) -o eval eval.o -Llibevoimg -levoimg -lstdc++ -lm
-
-random: random.o libevoimg
-	g++ $(CXXFLAGS) -o random random.o -Llibevoimg -levoimg -lstdc++ -lm
-
-cleanlib:
-	make -C libevoimg clean
 
 clean: cleanlib
 	rm -f *.o evoimg
+
+cleanlib:
+	make -C libevoimg clean
 
 .PHONY: libevoimg cleanlib
