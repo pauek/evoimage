@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
     Image I(width, height);
     root->eval(I);  
     stringstream sout;
-    sout << prefix << k << ".pgm";
+    sout << prefix << k << ".pnm";
     I.save_pnm(sout.str());
   }
 }
