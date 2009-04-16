@@ -3,276 +3,70 @@
 using namespace std;
 
 Node* Node::randomNode(int level) {
-  int selector;
-  
-  selector = rand() % 21;
+  Node *_op1, *_op2;
+  int selector = rand() % 21;
   cout << selector;
   
-  if( selector == 0) { 
-    if ( level > 2){
-      level = level - 1;
-      Node* _op1 = randomNode ( level);
-      Node* _op2 = randomNode ( level);
-      return new Sum ( _op1, _op2);
+  if (selector < 12) { 
+    // Operacions binàries
+    if (level > 2) {
+      _op1 = randomNode(level - 1);
+      _op2 = randomNode(level - 1);
     }
-    else{
-      Node* _op1 = randomLeave ();
-      Node* _op2 = randomLeave ();
-      return new Sum ( _op1, _op2);
+    else {
+      _op1 = randomLeave();
+      _op2 = randomLeave();
     }
-  }
-  else if( selector == 1) {  
-    if ( level > 2){
-      level = level - 1;
-      Node* _op1 = randomNode ( level);
-      Node* _op2 = randomNode ( level);
-      return new Rest ( _op1, _op2);
-    }
-    else{
-      Node* _op1 = randomLeave ();
-      Node* _op2 = randomLeave ();
-      return new Rest ( _op1, _op2);
-    }
-  }
-  else if( selector == 2) {  
-    if ( level > 2){
-      level = level - 1;
-      Node* _op1 = randomNode ( level);
-      Node* _op2 = randomNode ( level);
-      return new Mult ( _op1, _op2);
-    }
-    else{
-      Node* _op1 = randomLeave ();
-      Node* _op2 = randomLeave ();
-      return new Mult ( _op1, _op2);
+    switch (selector) {
+    case 0: return new Sum(_op1, _op2);
+    case 1: return new Rest(_op1, _op2);
+    case 2: return new Mult(_op1, _op2);
+    case 3: return new Div(_op1, _op2);
+    case 4: return new Mod(_op1, _op2);
+    case 5: return new Log(_op1, _op2);
+    case 6: return new Round(_op1, _op2);
+    case 7: return new And(_op1, _op2);
+    case 8: return new Or(_op1, _op2);
+    case 9: return new Xor(_op1, _op2);
+    case 10: return new Atan(_op1, _op2);
+    case 11: 
+    default:
+      return new Expt(_op1, _op2);
     }
   }
-  else if( selector == 3) {  
-    if ( level > 2){
-      level = level - 1;
-      Node* _op1 = randomNode ( level);
-      Node* _op2 = randomNode ( level);
-      return new Div ( _op1, _op2);
-    }
-    else{
-      Node* _op1 = randomLeave ();
-      Node* _op2 = randomLeave ();
-      return new Div ( _op1, _op2);
-    }
-  }
-  else if( selector == 4) {  
-    if ( level > 2){
-      level = level - 1;
-      Node* _op1 = randomNode ( level);
-      Node* _op2 = randomNode ( level);
-      return new Mod ( _op1, _op2);
-    }
-    else{
-      Node* _op1 = randomLeave ();
-      Node* _op2 = randomLeave ();
-      return new Mod ( _op1, _op2);
-    }
-  }
-  else if( selector == 5) {  
-    if ( level > 2){
-      level = level - 1;
-      Node* _op1 = randomNode ( level);
-      Node* _op2 = randomNode ( level);
-      return new Log ( _op1, _op2);
-    }
-    else{
-      Node* _op1 = randomLeave ();
-      Node* _op2 = randomLeave ();
-      return new Log ( _op1, _op2);
-    }
-  }
-  else if( selector == 6) {  
-    if ( level > 2){
-      level = level - 1;
-      Node* _op1 = randomNode ( level);
-      Node* _op2 = randomNode ( level);
-      return new Round ( _op1, _op2);
-    }
-    else{
-      Node* _op1 = randomLeave ();
-      Node* _op2 = randomLeave ();
-      return new Round ( _op1, _op2);
-    }
-  }
-  else if( selector == 7) {  
-    if ( level > 2){
-      level = level - 1;
-      Node* _op1 = randomNode ( level);
-      Node* _op2 = randomNode ( level);
-      return new And ( _op1, _op2);
-    }
-    else{
-      Node* _op1 = randomLeave ();
-      Node* _op2 = randomLeave ();
-      return new And ( _op1, _op2);
-    }
-  }
-  else if( selector == 8) {  
-    if ( level > 2){
-      level = level - 1;
-      Node* _op1 = randomNode ( level);
-      Node* _op2 = randomNode ( level);
-      return new Or ( _op1, _op2);
-    }
-    else{
-      Node* _op1 = randomLeave ();
-      Node* _op2 = randomLeave ();
-      return new Or ( _op1, _op2);
-    }
-  }
-  else if( selector == 9) {  
-    if ( level > 2){
-      level = level - 1;
-      Node* _op1 = randomNode ( level);
-      Node* _op2 = randomNode ( level);
-      return new Xor ( _op1, _op2);
-    }
-    else{
-      Node* _op1 = randomLeave ();
-      Node* _op2 = randomLeave ();
-      return new Xor ( _op1, _op2);
-    }
-  }
-  else if( selector == 10) {  
-    if ( level > 2){
-      level = level - 1;
-      Node* _op1 = randomNode ( level);
-      return new Sin ( _op1);
-    }
-    else{
-      Node* _op1 = randomLeave ();
-      return new Sin ( _op1);
-    }
-  }
-  else if( selector == 11) {  
-    if ( level > 2){
-      level = level - 1;
-      Node* _op1 = randomNode ( level);
-      return new Cos ( _op1);
-    }
-    else{
-      Node* _op1 = randomLeave ();
-      return new Cos ( _op1);
-    }
-  }
-  else if( selector == 12) {  
-    if ( level > 2){
-      level = level - 1;
-      Node* _op1 = randomNode ( level);
-      Node* _op2 = randomNode ( level);
-      return new Atan ( _op1, _op2);
-    }
-    else{
-      Node* _op1 = randomLeave ();
-      Node* _op2 = randomLeave ();
-      return new Atan ( _op1, _op2);
-    }
-  }
-  else if( selector == 13) {  
-    if ( level > 2){
-      level = level - 1;
-      Node* _op1 = randomNode ( level);
-      return new gradDir ( _op1);
-    }
-    else{
-      Node* _op1 = randomLeave ();
-      return new gradDir ( _op1);
-    }
-  }
-  else if( selector == 14) {  
-    if ( level > 2){
-      level = level - 1;
-      Node* _op1 = randomNode ( level);
-      return new gaussBlur ( _op1);
-    }
-    else{
-      Node* _op1 = randomLeave ();
-      return new gaussBlur ( _op1);
-    }
-  }
-  else if( selector == 15) {  
-    if ( level > 2){
-      level = level - 1;
-      Node* _op1 = randomNode ( level);
-      return new emboss ( _op1);
-    }
-    else{
-      Node* _op1 = randomLeave ();
-      return new emboss ( _op1);
-    }
-  }
-  else if( selector == 16) {  
-    if ( level > 2){
-      level = level - 1;
-      Node* _op1 = randomNode ( level);
-      return new sharpen ( _op1);
-    }
-    else{
-      Node* _op1 = randomLeave ();
-      return new sharpen ( _op1);
-    }
-  }
-  else if( selector == 17) {  
-    if ( level > 2){
-      level = level - 1;
-      Node* _op1 = randomNode ( level);
-      return new warp ( _op1);
-    }
-    else{
-      Node* _op1 = randomLeave ();
-      return new warp ( _op1);
-    }
-  }
-  else if( selector == 18) {  
-    if ( level > 2){
-      level = level - 1;
-      Node* _op1 = randomNode ( level);
-      return new blur ( _op1);
-    }
-    else{
-      Node* _op1 = randomLeave ();
-      return new blur ( _op1);
-    }
-  }
-  else if( selector == 19) {  
-    if ( level > 2){
-      level = level - 1;
-      Node* _op1 = randomNode ( level);
-      return new Abs ( _op1);
-    }
-    else{
-      Node* _op1 = randomLeave ();
-      return new Abs ( _op1);
-    }
-  }
-  else  {  
-    if ( level > 2){
-      level = level - 1;
-      Node* _op1 = randomNode ( level);
-      Node* _op2 = randomNode ( level);
-      return new Expt ( _op1, _op2);
-    }
-    else{
-      Node* _op1 = randomLeave ();
-      Node* _op2 = randomLeave ();
-      return new Expt ( _op1, _op2);
+  else {   
+    // Operacions unàries
+    if (level > 2)
+      _op1 = randomNode (level - 1);
+    else
+      _op1 = randomLeave ();
+
+    switch (selector) {
+    case 12: return new Sin(_op1);
+    case 13: return new Cos(_op1);
+    case 14: return new gradDir(_op1);
+    case 15: return new gaussBlur(_op1);
+    case 16: return new emboss(_op1);
+    case 17: return new sharpen(_op1);
+    case 18: return new warp(_op1);
+    case 19: return new blur(_op1);
+    case 20: 
+    default:
+      return new Abs(_op1);
     }
   }
 }
 
 Node* Node::randomLeave() {
   int selector = rand() % 5;
-  if( selector == 0) {return new X ( );}
-  else if( selector == 1){return new Y ( );}
-  else if( selector == 2){return new v_fix ( float(rand() % 255), float(rand() % 255), float(rand() % 255));}
-  else if( selector == 3){return new bwNoise ( );}
-  else{
-    return new colorNoise ( );
+  switch (selector) {
+  case 0: return new X();
+  case 1: return new Y();
+  case 2: return new v_fix(rand() % 255, rand() % 255, rand() % 255);
+  case 3: return new bwNoise();
+  case 4: 
+  default:
+    return new colorNoise();
   }
 }
 
