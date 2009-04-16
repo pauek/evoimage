@@ -23,9 +23,14 @@ public:
   float getg() const { return _g; }
   float getb() const { return _b; }
   
-  RGB map(PFunction f);
-  RGB map2(PFunction2 f, RGB o);
+  RGB map(PFunction f) {
+    return RGB( f(_r), f(_g), f(_b) );
+  }
   
+  RGB map2(PFunction2 f , RGB o) {
+    return RGB( f(_r, o.getr()), f(_g, o.getg()), f(_b, o.getb()) );
+  }
+
   RGB operator+(const RGB& o) {
     return RGB(_r + o._r, _g + o._g, _b + o._b);
   }
