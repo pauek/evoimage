@@ -14,6 +14,9 @@ libevoimg:
 eval: eval.o libevoimg
 	g++ $(CXXFLAGS) -o eval eval.o -Llibevoimg -levoimg -lstdc++ -lm
 
+random: random.o libevoimg
+	g++ $(CXXFLAGS) -o random random.o -Llibevoimg -levoimg -lstdc++ -lm
+
 cleanlib:
 	make -C libevoimg clean
 
