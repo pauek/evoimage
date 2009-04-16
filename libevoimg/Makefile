@@ -11,4 +11,4 @@ libevoimg.a: $(OBJECTS)
 	g++ $(CXXFLAGS) -c -o $@ $<
 
 clean:
-	rm $(OBJECTS) libevoimg.a
+	rm -f $(OBJECTS) libevoimg.a
