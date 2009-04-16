@@ -1,7 +1,5 @@
 
-#include <cstdlib>
 #include <iostream>
-#include <fstream>
 #include <sstream>
 #include <vector>
 #include <Node.h>
@@ -15,7 +13,7 @@ string prefix = "img"; // Prefix del nom de fitxer
 
 int str2int(string s) {
   double d;
-  stringstream sin(argv[++k]);
+  stringstream sin(s);
   sin >> d;
   return d;
 }
