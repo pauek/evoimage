@@ -44,7 +44,7 @@ int clamp(float x) {
   return v;
 }
 
-void save_pnm(Env& e, string name) {
+void save_pnm(Image& e, string name) {
   ofstream out(name.c_str());
   int X = e.getX(), Y = e.getY();
   out << "P3" << endl
@@ -79,7 +79,7 @@ int main(int argc, char *argv[]) {
   for (int k = 0; k < (int)args.size(); k++) {
     stringstream sin(args[k]); 
     Node* root = read(sin);
-    Env e(width, height);
+    Image e(width, height);
     root->eval(e);  
     stringstream sout;
     sout << prefix << k << ".pgm";

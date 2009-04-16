@@ -42,7 +42,7 @@ int main(int argc, char **argv) {
   int i,j;
     
 
-      Env e(m,n);
+      Image e(m,n);
       root->eval(e);      
 
 

@@ -1,3 +1,4 @@
+
 #include <string>
 #include "Node.h"
 using namespace std;
@@ -70,7 +71,7 @@ Node* Node::randomLeave() {
   }
 }
 
-void Env::filtraImatge (float kernel[3][3]) {
+void Image::filtraImatge (float kernel[3][3]) {
   int i, j, m, n, mm, nn;
   int kCenterX, kCenterY;
   int kernelSizeX = 3;
@@ -107,7 +108,7 @@ void Env::filtraImatge (float kernel[3][3]) {
   }	
 }
 
-void Env::warpGeneric () {
+void Image::warpGeneric () {
   //De moment faré el warp amb aliasing i sense massa miraments, i només per l'eix x (que em sembla q de fet és l'y)
 	
   int i,j;
@@ -170,13 +171,13 @@ RGB RGB::map2(PFunction2 f , RGB o) {
 
 
 
-void Sum::eval(Env& e) {
+void Sum::eval(Image& e) {
   
   int x=e.getX();
   int y=e.getY();
    
-  Env e1(x , y);
-  Env e2(x , y);
+  Image e1(x , y);
+  Image e2(x , y);
   op1()->eval(e1); 
   op2()->eval(e2);
   
@@ -192,12 +193,12 @@ void Sum::eval(Env& e) {
   
 }
 
-void Rest::eval(Env& e) {
+void Rest::eval(Image& e) {
   int x=e.getX();
   int y=e.getY();
    
-  Env e1(x , y);
-  Env e2(x , y);
+  Image e1(x , y);
+  Image e2(x , y);
   op1()->eval(e1); 
   op2()->eval(e2);
   
@@ -211,12 +212,12 @@ void Rest::eval(Env& e) {
   }
 }
 
-void Mult::eval(Env& e) {
+void Mult::eval(Image& e) {
   int x=e.getX();
   int y=e.getY();
    
-  Env e1(x , y);
-  Env e2(x , y);
+  Image e1(x , y);
+  Image e2(x , y);
   op1()->eval(e1); 
   op2()->eval(e2);
   
@@ -230,12 +231,12 @@ void Mult::eval(Env& e) {
   }
 }
 
-void Div::eval(Env& e) {
+void Div::eval(Image& e) {
   int x=e.getX();
   int y=e.getY();
    
-  Env e1(x , y);
-  Env e2(x , y);
+  Image e1(x , y);
+  Image e2(x , y);
   op1()->eval(e1); 
   op2()->eval(e2);
   
@@ -249,14 +250,14 @@ void Div::eval(Env& e) {
   }
 }
 
-void Mod::eval(Env& e){
+void Mod::eval(Image& e){
 
 	
   int x=e.getX();
   int y=e.getY();
    
-  Env e1(x , y);
-  Env e2(x , y);
+  Image e1(x , y);
+  Image e2(x , y);
   op1()->eval(e1); 
   op2()->eval(e2);
   
@@ -272,15 +273,15 @@ void Mod::eval(Env& e){
 	
 }
 
-void Log::eval(Env& e) {
+void Log::eval(Image& e) {
 
   
   
   int x=e.getX();
   int y=e.getY();
    
-  Env e1(x , y);
-  Env e2(x , y);
+  Image e1(x , y);
+  Image e2(x , y);
   op1()->eval(e1); 
   op2()->eval(e2);
   
@@ -296,7 +297,7 @@ void Log::eval(Env& e) {
   
 }
 
-void Round::eval(Env& e) {
+void Round::eval(Image& e) {
 
   RGB offs = RGB( 0.5, 0.5, 0.5);
   
@@ -305,8 +306,8 @@ void Round::eval(Env& e) {
   int x=e.getX();
   int y=e.getY();
    
-  Env e1(x , y);
-  Env e2(x , y);
+  Image e1(x , y);
+  Image e2(x , y);
   op1()->eval(e1); 
   op2()->eval(e2);
   
@@ -322,12 +323,12 @@ void Round::eval(Env& e) {
   
 }
 
-void And::eval ( Env& e){
+void And::eval ( Image& e){
   int x=e.getX();
   int y=e.getY();
    
-  Env e1(x , y);
-  Env e2(x , y);
+  Image e1(x , y);
+  Image e2(x , y);
   op1()->eval(e1); 
   op2()->eval(e2);
   
@@ -342,12 +343,12 @@ void And::eval ( Env& e){
 	
 }
 	
-void Or::eval ( Env& e){
+void Or::eval ( Image& e){
   int x=e.getX();
   int y=e.getY();
    
-  Env e1(x , y);
-  Env e2(x , y);
+  Image e1(x , y);
+  Image e2(x , y);
   op1()->eval(e1); 
   op2()->eval(e2);
   
@@ -362,12 +363,12 @@ void Or::eval ( Env& e){
 	
 }
 	
-void Xor::eval ( Env& e){
+void Xor::eval ( Image& e){
   int x=e.getX();
   int y=e.getY();
    
-  Env e1(x , y);
-  Env e2(x , y);
+  Image e1(x , y);
+  Image e2(x , y);
   op1()->eval(e1); 
   op2()->eval(e2);
   
@@ -382,14 +383,14 @@ void Xor::eval ( Env& e){
 	
 }
 
-void Sin::eval ( Env& e){
+void Sin::eval ( Image& e){
 
 	
 	
   int x=e.getX();
   int y=e.getY();
    
-  Env e1(x , y);
+  Image e1(x , y);
   
   op1()->eval(e1); 
   
@@ -406,11 +407,11 @@ void Sin::eval ( Env& e){
 	
 }
 	
-void Cos::eval ( Env& e){
+void Cos::eval ( Image& e){
   int x=e.getX();
   int y=e.getY();
    
-  Env e1(x , y);
+  Image e1(x , y);
   
   op1()->eval(e1); 
   
@@ -425,12 +426,12 @@ void Cos::eval ( Env& e){
   }
 }
 
-void Atan::eval(Env& e){
+void Atan::eval(Image& e){
   int x=e.getX();
   int y=e.getY();
    
-  Env e1(x , y);
-  Env e2(x , y);
+  Image e1(x , y);
+  Image e2(x , y);
   op1()->eval(e1); 
   op2()->eval(e2);
   
@@ -445,7 +446,7 @@ void Atan::eval(Env& e){
 	
 }
 
-void X::eval(Env& e) { 
+void X::eval(Image& e) { 
  
   int x=e.getX();
   int y=e.getY();
@@ -461,7 +462,7 @@ void X::eval(Env& e) {
  
 }
 
-void Y::eval(Env& e) { 
+void Y::eval(Image& e) { 
   
   int x=e.getX();
   int y=e.getY();
@@ -477,7 +478,7 @@ void Y::eval(Env& e) {
   
 }
 
-void v_fix::eval(Env& e) {
+void v_fix::eval(Image& e) {
 	  
   int x=e.getX();
   int y=e.getY();
@@ -496,11 +497,11 @@ void v_fix::eval(Env& e) {
 
 
 	
-void gaussBlur::eval ( Env& e){
+void gaussBlur::eval ( Image& e){
   int x=e.getX();
   int y=e.getY();
    
-  Env e1(x , y);
+  Image e1(x , y);
   
   op1()->eval(e1); 
   float kernel[3][3];
@@ -525,11 +526,11 @@ void gaussBlur::eval ( Env& e){
   }
 }
 	
-void gradDir::eval ( Env& e){
+void gradDir::eval ( Image& e){
   int x=e.getX();
   int y=e.getY();
    
-  Env e1(x , y);
+  Image e1(x , y);
   
   op1()->eval(e1); 
   float kernel[3][3];
@@ -554,11 +555,11 @@ void gradDir::eval ( Env& e){
   }
 }
 	
-void emboss::eval ( Env& e){
+void emboss::eval ( Image& e){
   int x=e.getX();
   int y=e.getY();
    
-  Env e1(x , y);
+  Image e1(x , y);
   
   op1()->eval(e1); 
   float kernel[3][3];
@@ -583,11 +584,11 @@ void emboss::eval ( Env& e){
   }
 }
 
-void sharpen::eval ( Env& e){
+void sharpen::eval ( Image& e){
   int x=e.getX();
   int y=e.getY();
    
-  Env e1(x , y);
+  Image e1(x , y);
   
   op1()->eval(e1); 
   float kernel[3][3];
@@ -612,11 +613,11 @@ void sharpen::eval ( Env& e){
   }
 }
 
-void warp::eval ( Env& e){
+void warp::eval ( Image& e){
   int x=e.getX();
   int y=e.getY();
    
-  Env e1(x , y);
+  Image e1(x , y);
   
   op1()->eval(e1); 
   
@@ -632,11 +633,11 @@ void warp::eval ( Env& e){
   }
 }
 
-void blur::eval ( Env& e){
+void blur::eval ( Image& e){
   int x=e.getX();
   int y=e.getY();
    
-  Env e1(x , y);
+  Image e1(x , y);
   
   op1()->eval(e1); 
   
@@ -657,7 +658,7 @@ void blur::eval ( Env& e){
 }
 	
 	
-void bwNoise::eval(Env& e) {
+void bwNoise::eval(Image& e) {
 	  
   int x=e.getX();
   int y=e.getY();
@@ -671,7 +672,7 @@ void bwNoise::eval(Env& e) {
   }
 }
 
-void colorNoise::eval(Env& e) {
+void colorNoise::eval(Image& e) {
 	  
   int x=e.getX();
   int y=e.getY();
@@ -685,14 +686,14 @@ void colorNoise::eval(Env& e) {
   }
 }
 
-void Abs::eval ( Env& e){
+void Abs::eval ( Image& e){
 
 	
 	
   int x=e.getX();
   int y=e.getY();
    
-  Env e1(x , y);
+  Image e1(x , y);
   
   op1()->eval(e1); 
   
@@ -710,12 +711,12 @@ void Abs::eval ( Env& e){
 }
 	
 	
-void Expt::eval(Env& e){
+void Expt::eval(Image& e){
   int x=e.getX();
   int y=e.getY();
    
-  Env e1(x , y);
-  Env e2(x , y);
+  Image e1(x , y);
+  Image e2(x , y);
   op1()->eval(e1); 
   op2()->eval(e2);
   
@@ -729,7 +730,6 @@ void Expt::eval(Env& e){
   }
 	
 }
-	
 
 void BinOp::print(ostream& o) const {
   o << "(" << head() << " ";

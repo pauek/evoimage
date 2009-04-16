@@ -10,8 +10,6 @@
 typedef float (*PFunction)(float);
 typedef float (*PFunction2)(float,float);
 
-
-
 class RGB {
   float _r, _g, _b;
  public:
@@ -39,27 +37,27 @@ class RGB {
   
 };
 
-class Env {
+class Image {
   int x,y;
   RGB *p;
- public:
+public:
   int getX () { return x; }
   int getY () { return y; }
   RGB getPixel (int i, int j) { return p[j*x+i]; }
   void putPixel ( int i , int j , RGB v) { p[j*x+i] = v; }
-  Env ( int _x , int _y) {
+  Image ( int _x , int _y) {
       x = _x;
       y = _y;
       p = new RGB[x * y];
   }
   void filtraImatge (float kernel[3][3]);
   void warpGeneric();
-  ~Env() { delete[] p; }
+  ~Image() { delete[] p; }
 };
 
 class Node {
 public:
-  virtual void eval(Env& e) = 0;
+  virtual void eval(Image& e) = 0;
   virtual void print(std::ostream& o) const { o << "?"; }
   static Node* randomNode(int lcount);
   static Node* randomLeave();
@@ -100,14 +98,14 @@ public:
 class Sum : public BinOp {
 public:
   Sum(Node* p1, Node* p2): BinOp(p1, p2) {}
-  void eval( Env& e);
+  void eval( Image& e);
   std::string head() const;
 };
 
 class Rest : public BinOp {
 public:
   Rest(Node* p1, Node* p2): BinOp(p1, p2) {}
-  void eval( Env& e);
+  void eval( Image& e);
   std::string head() const;
 };
 
@@ -115,7 +113,7 @@ class Mult : public BinOp {
  public:
  Mult(Node* p1, Node* p2): BinOp(p1, p2) {}
 
-  void eval(Env& e);
+  void eval(Image& e);
   std::string head() const;
 };
 
@@ -123,7 +121,7 @@ class Div : public BinOp {
  public:
  Div(Node* p1, Node* p2): BinOp(p1, p2) {}
 
-  void eval(Env& e);
+  void eval(Image& e);
   std::string head() const;
 };
 
@@ -131,7 +129,7 @@ class Mod : public BinOp {
 	public:
 	Mod( Node* p1, Node* p2) : BinOp( p1, p2) {}
 	
-	void eval ( Env& e);
+	void eval ( Image& e);
 	std::string head() const;
 };
 
@@ -139,7 +137,7 @@ class Log : public BinOp {
  public:
  Log(Node* p1 , Node* p2): BinOp( p1, p2) {}
 
-  void eval(Env& e);
+  void eval(Image& e);
   std::string head() const;
 };
 
@@ -147,7 +145,7 @@ class Round : public BinOp {
  public:
  Round(Node* p1 , Node* p2): BinOp( p1, p2) {}
 
-  void eval(Env& e);	
+  void eval(Image& e);	
   std::string head() const;
 	
 	};
@@ -155,7 +153,7 @@ class Round : public BinOp {
 class And : public BinOp {
 	public:
 	And ( Node* p1, Node* p2) : BinOp ( p1, p2) {}
-	void eval ( Env& e);
+	void eval ( Image& e);
 	std::string head() const;
 	
 	};
@@ -163,7 +161,7 @@ class And : public BinOp {
 class Or : public BinOp {
 	public:
 	Or ( Node* p1, Node* p2) : BinOp ( p1, p2) {}
-	void eval ( Env& e);
+	void eval ( Image& e);
 	std::string head() const;
 	
 	};
@@ -171,7 +169,7 @@ class Or : public BinOp {
 class Xor : public BinOp {
 	public:
 	Xor ( Node* p1, Node* p2) : BinOp ( p1, p2) {}
-	void eval ( Env& e);
+	void eval ( Image& e);
 	std::string head() const;
 	
 	};
@@ -179,34 +177,34 @@ class Xor : public BinOp {
 class Sin : public UnaryOp {
 	public:
 	Sin ( Node* p1) : UnaryOp( p1) {}
-	void eval ( Env& e);
+	void eval ( Image& e);
 	std::string head() const;
 	};
 	
 class Cos : public UnaryOp {
 	public:
 	Cos ( Node* p1) : UnaryOp( p1) {}
-	void eval ( Env& e);
+	void eval ( Image& e);
 	std::string head() const;
 	};
 
 class Atan : public BinOp {
 	public:
 	Atan ( Node* p1, Node* p2) : BinOp( p1, p2) {}
-	void eval ( Env& e);
+	void eval ( Image& e);
 	std::string head() const;
 	
 	};
 
 class X : public Node {
 public:
-  void eval( Env& e);
+  void eval( Image& e);
   void print(std::ostream& o) const;
 };
 
 class Y : public Node {
 public:
-  void eval( Env& e);
+  void eval( Image& e);
   void print(std::ostream& o) const;
 };
 
@@ -214,7 +212,7 @@ class v_fix : public Node {
 	float p1, p2, p3;
 	
 public:
-	void eval( Env& e);
+	void eval( Image& e);
 
 	v_fix( float _p1){	p1=_p1; p2=_p1; p3=_p1;	}
 	v_fix( float _p1, float _p2, float _p3) { p1=_p1; p2=_p2; p3=_p3; }
@@ -231,35 +229,35 @@ public:
 class gaussBlur : public UnaryOp{
 	public:
 	gaussBlur ( Node* p1) : UnaryOp( p1) {}
-	void eval ( Env& e);
+	void eval ( Image& e);
 	std::string head() const;
 	};
 	
 class gradDir : public UnaryOp{
 	public:
 	gradDir ( Node* p1) : UnaryOp( p1) {}
-	void eval ( Env& e);
+	void eval ( Image& e);
 	std::string head() const;
 	};
 	
 class emboss : public UnaryOp{
 	public:
 	emboss ( Node* p1) : UnaryOp( p1) {}
-	void eval ( Env& e);
+	void eval ( Image& e);
 	std::string head() const;
 	};
 	
 class sharpen : public UnaryOp{
 	public:
 	sharpen ( Node* p1) : UnaryOp( p1) {}
-	void eval ( Env& e);
+	void eval ( Image& e);
 	std::string head() const;
 	};
 
 class warp : public UnaryOp{
 	public:
 	warp ( Node* p1) : UnaryOp( p1) {}
-	void eval ( Env& e);
+	void eval ( Image& e);
 	std::string head() const;
 
 	};
@@ -268,7 +266,7 @@ class blur : public UnaryOp{
 	
 	public:
 	blur (Node* p1) : UnaryOp( p1) {}
-	void eval ( Env& e);
+	void eval ( Image& e);
 	std::string head() const;
 	
 	};
@@ -278,7 +276,7 @@ class bwNoise : public Node{
 	int seed;
 	
 public:
-	void eval( Env& e);
+	void eval( Image& e);
 
 	bwNoise( int s){	seed=s;	}
 	bwNoise( ) { seed=-1;}
@@ -293,7 +291,7 @@ class colorNoise : public Node{
 	int seed;
 	
 public:
-	void eval( Env& e);
+	void eval( Image& e);
 
 	colorNoise( int s){	seed=s;	}
 	colorNoise( ) { seed=-1;}
@@ -306,7 +304,7 @@ public:
 class Abs : public UnaryOp {
 	public:
 	Abs ( Node* p1) : UnaryOp( p1) {}
-	void eval ( Env& e);
+	void eval ( Image& e);
 	std::string head() const;
 	};
 	
@@ -314,7 +312,7 @@ class Abs : public UnaryOp {
 class Expt : public BinOp {
 	public:
 	Expt ( Node* p1, Node* p2) : BinOp( p1, p2) {}
-	void eval ( Env& e);
+	void eval ( Image& e);
 	std::string head() const;
 	
 	};
