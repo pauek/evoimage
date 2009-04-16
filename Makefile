@@ -11,7 +11,7 @@ libevoimg:
 .cpp.o:
 	g++ $(CXXFLAGS) -c -o $@ $<
 	
-eval: eval.o
+eval: eval.o libevoimg
 	g++ $(CXXFLAGS) -o eval eval.o -Llibevoimg -levoimg -lstdc++ -lm
 
 cleanlib:
