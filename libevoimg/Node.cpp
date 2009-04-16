@@ -2,386 +2,339 @@
 #include "Node.h"
 using namespace std;
 
-Node* Node::randomNode(int lcount){
-	int selector;
-   
-   selector = rand() % 21;
-	cout << selector;
-	
-	if( selector == 0) { 
-		if ( lcount > 2){
-			lcount = lcount - 1;
-			Node* _op1 = randomNode ( lcount);
-			Node* _op2 = randomNode ( lcount);
-			return new Sum ( _op1, _op2);
-			}
-		else{
-			Node* _op1 = randomLeave ();
-			Node* _op2 = randomLeave ();
-			return new Sum ( _op1, _op2);
-			}
-		}
-	
-	
-	else if( selector == 1) {  
-		if ( lcount > 2){
-			lcount = lcount - 1;
-			Node* _op1 = randomNode ( lcount);
-			Node* _op2 = randomNode ( lcount);
-			return new Rest ( _op1, _op2);
-			}
-		else{
-			Node* _op1 = randomLeave ();
-			Node* _op2 = randomLeave ();
-			return new Rest ( _op1, _op2);
-			}}
-	
-	
-	else if( selector == 2) {  
-		if ( lcount > 2){
-			lcount = lcount - 1;
-			Node* _op1 = randomNode ( lcount);
-			Node* _op2 = randomNode ( lcount);
-			return new Mult ( _op1, _op2);
-			}
-		else{
-			Node* _op1 = randomLeave ();
-			Node* _op2 = randomLeave ();
-			return new Mult ( _op1, _op2);
-			}}
-	
-	
-	else if( selector == 3) {  
-		if ( lcount > 2){
-			lcount = lcount - 1;
-			Node* _op1 = randomNode ( lcount);
-			Node* _op2 = randomNode ( lcount);
-			return new Div ( _op1, _op2);
-			}
-		else{
-			Node* _op1 = randomLeave ();
-			Node* _op2 = randomLeave ();
-			return new Div ( _op1, _op2);
-			}}
-	
-	
-	else if( selector == 4) {  
-		if ( lcount > 2){
-			lcount = lcount - 1;
-			Node* _op1 = randomNode ( lcount);
-			Node* _op2 = randomNode ( lcount);
-			return new Mod ( _op1, _op2);
-			}
-		else{
-			Node* _op1 = randomLeave ();
-			Node* _op2 = randomLeave ();
-			return new Mod ( _op1, _op2);
-			}}
-	
-		
-	else if( selector == 5) {  
-		if ( lcount > 2){
-			lcount = lcount - 1;
-			Node* _op1 = randomNode ( lcount);
-			Node* _op2 = randomNode ( lcount);
-			return new Log ( _op1, _op2);
-			}
-		else{
-			Node* _op1 = randomLeave ();
-			Node* _op2 = randomLeave ();
-			return new Log ( _op1, _op2);
-			}}
-	
-	
-	else if( selector == 6) {  
-		if ( lcount > 2){
-			lcount = lcount - 1;
-			Node* _op1 = randomNode ( lcount);
-			Node* _op2 = randomNode ( lcount);
-			return new Round ( _op1, _op2);
-			}
-		else{
-			Node* _op1 = randomLeave ();
-			Node* _op2 = randomLeave ();
-			return new Round ( _op1, _op2);
-			}}
-	
-	
-	else if( selector == 7) {  
-		if ( lcount > 2){
-			lcount = lcount - 1;
-			Node* _op1 = randomNode ( lcount);
-			Node* _op2 = randomNode ( lcount);
-			return new And ( _op1, _op2);
-			}
-		else{
-			Node* _op1 = randomLeave ();
-			Node* _op2 = randomLeave ();
-			return new And ( _op1, _op2);
-			}}
-	
-	
-	else if( selector == 8) {  
-		if ( lcount > 2){
-			lcount = lcount - 1;
-			Node* _op1 = randomNode ( lcount);
-			Node* _op2 = randomNode ( lcount);
-			return new Or ( _op1, _op2);
-			}
-		else{
-			Node* _op1 = randomLeave ();
-			Node* _op2 = randomLeave ();
-			return new Or ( _op1, _op2);
-			}}
-	
-	
-	else if( selector == 9) {  
-		if ( lcount > 2){
-			lcount = lcount - 1;
-			Node* _op1 = randomNode ( lcount);
-			Node* _op2 = randomNode ( lcount);
-			return new Xor ( _op1, _op2);
-			}
-		else{
-			Node* _op1 = randomLeave ();
-			Node* _op2 = randomLeave ();
-			return new Xor ( _op1, _op2);
-			}}
-	
-	
-	else if( selector == 10) {  
-		if ( lcount > 2){
-			lcount = lcount - 1;
-			Node* _op1 = randomNode ( lcount);
-			return new Sin ( _op1);
-			}
-		else{
-			Node* _op1 = randomLeave ();
-			return new Sin ( _op1);
-			}}
-	
-	
-	else if( selector == 11) {  
-		if ( lcount > 2){
-			lcount = lcount - 1;
-			Node* _op1 = randomNode ( lcount);
-			return new Cos ( _op1);
-			}
-		else{
-			Node* _op1 = randomLeave ();
-			return new Cos ( _op1);
-			}}
-	
-	
-	else if( selector == 12) {  
-		if ( lcount > 2){
-			lcount = lcount - 1;
-			Node* _op1 = randomNode ( lcount);
-			Node* _op2 = randomNode ( lcount);
-			return new Atan ( _op1, _op2);
-			}
-		else{
-			Node* _op1 = randomLeave ();
-			Node* _op2 = randomLeave ();
-			return new Atan ( _op1, _op2);
-			}}
-	
-	
-	else if( selector == 13) {  
-		if ( lcount > 2){
-			lcount = lcount - 1;
-			Node* _op1 = randomNode ( lcount);
-			return new gradDir ( _op1);
-			}
-		else{
-			Node* _op1 = randomLeave ();
-			return new gradDir ( _op1);
-			}}
-	
-	
-	else if( selector == 14) {  
-		if ( lcount > 2){
-			lcount = lcount - 1;
-			Node* _op1 = randomNode ( lcount);
-			return new gaussBlur ( _op1);
-			}
-		else{
-			Node* _op1 = randomLeave ();
-			return new gaussBlur ( _op1);
-			}}
-	
-	
-	else if( selector == 15) {  
-		if ( lcount > 2){
-			lcount = lcount - 1;
-			Node* _op1 = randomNode ( lcount);
-			return new emboss ( _op1);
-			}
-		else{
-			Node* _op1 = randomLeave ();
-			return new emboss ( _op1);
-			}}
-	
-	
-	else if( selector == 16) {  
-		if ( lcount > 2){
-			lcount = lcount - 1;
-			Node* _op1 = randomNode ( lcount);
-			return new sharpen ( _op1);
-			}
-		else{
-			Node* _op1 = randomLeave ();
-			return new sharpen ( _op1);
-			}}
-	
-	
-	else if( selector == 17) {  
-		if ( lcount > 2){
-			lcount = lcount - 1;
-			Node* _op1 = randomNode ( lcount);
-			return new warp ( _op1);
-			}
-		else{
-			Node* _op1 = randomLeave ();
-			return new warp ( _op1);
-			}}
-	
-	
-	else if( selector == 18) {  
-		if ( lcount > 2){
-			lcount = lcount - 1;
-			Node* _op1 = randomNode ( lcount);
-			return new blur ( _op1);
-			}
-		else{
-			Node* _op1 = randomLeave ();
-			return new blur ( _op1);
-			}}
-	
-	
-	else if( selector == 19) {  
-		if ( lcount > 2){
-			lcount = lcount - 1;
-			Node* _op1 = randomNode ( lcount);
-			return new Abs ( _op1);
-			}
-		else{
-			Node* _op1 = randomLeave ();
-			return new Abs ( _op1);
-			}}
-	
-	
-	else  {  
-		if ( lcount > 2){
-			lcount = lcount - 1;
-			Node* _op1 = randomNode ( lcount);
-			Node* _op2 = randomNode ( lcount);
-			return new Expt ( _op1, _op2);
-			}
-		else{
-			Node* _op1 = randomLeave ();
-			Node* _op2 = randomLeave ();
-			return new Expt ( _op1, _op2);
-			}}
-	
-	
-	
-	
-	
-	
-	
-	
-	}
-Node* Node::randomLeave(){
-	
-	int selector = rand() % 5;
-	if( selector == 0) {return new X ( );}
-	else if( selector == 1){return new Y ( );}
-	else if( selector == 2){return new v_fix ( float(rand() % 255), float(rand() % 255), float(rand() % 255));}
-	else if( selector == 3){return new bwNoise ( );}
-	else{return new colorNoise ( );}
-	
-	
-	
-	
-	}
+Node* Node::randomNode(int lcount) {
+  int selector;
+  
+  selector = rand() % 21;
+  cout << selector;
+  
+  if( selector == 0) { 
+    if ( lcount > 2){
+      lcount = lcount - 1;
+      Node* _op1 = randomNode ( lcount);
+      Node* _op2 = randomNode ( lcount);
+      return new Sum ( _op1, _op2);
+    }
+    else{
+      Node* _op1 = randomLeave ();
+      Node* _op2 = randomLeave ();
+      return new Sum ( _op1, _op2);
+    }
+  }
+  else if( selector == 1) {  
+    if ( lcount > 2){
+      lcount = lcount - 1;
+      Node* _op1 = randomNode ( lcount);
+      Node* _op2 = randomNode ( lcount);
+      return new Rest ( _op1, _op2);
+    }
+    else{
+      Node* _op1 = randomLeave ();
+      Node* _op2 = randomLeave ();
+      return new Rest ( _op1, _op2);
+    }
+  }
+  else if( selector == 2) {  
+    if ( lcount > 2){
+      lcount = lcount - 1;
+      Node* _op1 = randomNode ( lcount);
+      Node* _op2 = randomNode ( lcount);
+      return new Mult ( _op1, _op2);
+    }
+    else{
+      Node* _op1 = randomLeave ();
+      Node* _op2 = randomLeave ();
+      return new Mult ( _op1, _op2);
+    }
+  }
+  else if( selector == 3) {  
+    if ( lcount > 2){
+      lcount = lcount - 1;
+      Node* _op1 = randomNode ( lcount);
+      Node* _op2 = randomNode ( lcount);
+      return new Div ( _op1, _op2);
+    }
+    else{
+      Node* _op1 = randomLeave ();
+      Node* _op2 = randomLeave ();
+      return new Div ( _op1, _op2);
+    }
+  }
+  else if( selector == 4) {  
+    if ( lcount > 2){
+      lcount = lcount - 1;
+      Node* _op1 = randomNode ( lcount);
+      Node* _op2 = randomNode ( lcount);
+      return new Mod ( _op1, _op2);
+    }
+    else{
+      Node* _op1 = randomLeave ();
+      Node* _op2 = randomLeave ();
+      return new Mod ( _op1, _op2);
+    }
+  }
+  else if( selector == 5) {  
+    if ( lcount > 2){
+      lcount = lcount - 1;
+      Node* _op1 = randomNode ( lcount);
+      Node* _op2 = randomNode ( lcount);
+      return new Log ( _op1, _op2);
+    }
+    else{
+      Node* _op1 = randomLeave ();
+      Node* _op2 = randomLeave ();
+      return new Log ( _op1, _op2);
+    }
+  }
+  else if( selector == 6) {  
+    if ( lcount > 2){
+      lcount = lcount - 1;
+      Node* _op1 = randomNode ( lcount);
+      Node* _op2 = randomNode ( lcount);
+      return new Round ( _op1, _op2);
+    }
+    else{
+      Node* _op1 = randomLeave ();
+      Node* _op2 = randomLeave ();
+      return new Round ( _op1, _op2);
+    }
+  }
+  else if( selector == 7) {  
+    if ( lcount > 2){
+      lcount = lcount - 1;
+      Node* _op1 = randomNode ( lcount);
+      Node* _op2 = randomNode ( lcount);
+      return new And ( _op1, _op2);
+    }
+    else{
+      Node* _op1 = randomLeave ();
+      Node* _op2 = randomLeave ();
+      return new And ( _op1, _op2);
+    }
+  }
+  else if( selector == 8) {  
+    if ( lcount > 2){
+      lcount = lcount - 1;
+      Node* _op1 = randomNode ( lcount);
+      Node* _op2 = randomNode ( lcount);
+      return new Or ( _op1, _op2);
+    }
+    else{
+      Node* _op1 = randomLeave ();
+      Node* _op2 = randomLeave ();
+      return new Or ( _op1, _op2);
+    }
+  }
+  else if( selector == 9) {  
+    if ( lcount > 2){
+      lcount = lcount - 1;
+      Node* _op1 = randomNode ( lcount);
+      Node* _op2 = randomNode ( lcount);
+      return new Xor ( _op1, _op2);
+    }
+    else{
+      Node* _op1 = randomLeave ();
+      Node* _op2 = randomLeave ();
+      return new Xor ( _op1, _op2);
+    }
+  }
+  else if( selector == 10) {  
+    if ( lcount > 2){
+      lcount = lcount - 1;
+      Node* _op1 = randomNode ( lcount);
+      return new Sin ( _op1);
+    }
+    else{
+      Node* _op1 = randomLeave ();
+      return new Sin ( _op1);
+    }
+  }
+  else if( selector == 11) {  
+    if ( lcount > 2){
+      lcount = lcount - 1;
+      Node* _op1 = randomNode ( lcount);
+      return new Cos ( _op1);
+    }
+    else{
+      Node* _op1 = randomLeave ();
+      return new Cos ( _op1);
+    }
+  }
+  else if( selector == 12) {  
+    if ( lcount > 2){
+      lcount = lcount - 1;
+      Node* _op1 = randomNode ( lcount);
+      Node* _op2 = randomNode ( lcount);
+      return new Atan ( _op1, _op2);
+    }
+    else{
+      Node* _op1 = randomLeave ();
+      Node* _op2 = randomLeave ();
+      return new Atan ( _op1, _op2);
+    }
+  }
+  else if( selector == 13) {  
+    if ( lcount > 2){
+      lcount = lcount - 1;
+      Node* _op1 = randomNode ( lcount);
+      return new gradDir ( _op1);
+    }
+    else{
+      Node* _op1 = randomLeave ();
+      return new gradDir ( _op1);
+    }
+  }
+  else if( selector == 14) {  
+    if ( lcount > 2){
+      lcount = lcount - 1;
+      Node* _op1 = randomNode ( lcount);
+      return new gaussBlur ( _op1);
+    }
+    else{
+      Node* _op1 = randomLeave ();
+      return new gaussBlur ( _op1);
+    }
+  }
+  else if( selector == 15) {  
+    if ( lcount > 2){
+      lcount = lcount - 1;
+      Node* _op1 = randomNode ( lcount);
+      return new emboss ( _op1);
+    }
+    else{
+      Node* _op1 = randomLeave ();
+      return new emboss ( _op1);
+    }
+  }
+  else if( selector == 16) {  
+    if ( lcount > 2){
+      lcount = lcount - 1;
+      Node* _op1 = randomNode ( lcount);
+      return new sharpen ( _op1);
+    }
+    else{
+      Node* _op1 = randomLeave ();
+      return new sharpen ( _op1);
+    }
+  }
+  else if( selector == 17) {  
+    if ( lcount > 2){
+      lcount = lcount - 1;
+      Node* _op1 = randomNode ( lcount);
+      return new warp ( _op1);
+    }
+    else{
+      Node* _op1 = randomLeave ();
+      return new warp ( _op1);
+    }
+  }
+  else if( selector == 18) {  
+    if ( lcount > 2){
+      lcount = lcount - 1;
+      Node* _op1 = randomNode ( lcount);
+      return new blur ( _op1);
+    }
+    else{
+      Node* _op1 = randomLeave ();
+      return new blur ( _op1);
+    }
+  }
+  else if( selector == 19) {  
+    if ( lcount > 2){
+      lcount = lcount - 1;
+      Node* _op1 = randomNode ( lcount);
+      return new Abs ( _op1);
+    }
+    else{
+      Node* _op1 = randomLeave ();
+      return new Abs ( _op1);
+    }
+  }
+  else  {  
+    if ( lcount > 2){
+      lcount = lcount - 1;
+      Node* _op1 = randomNode ( lcount);
+      Node* _op2 = randomNode ( lcount);
+      return new Expt ( _op1, _op2);
+    }
+    else{
+      Node* _op1 = randomLeave ();
+      Node* _op2 = randomLeave ();
+      return new Expt ( _op1, _op2);
+    }
+  }
+}
+
+Node* Node::randomLeave() {
+  int selector = rand() % 5;
+  if( selector == 0) {return new X ( );}
+  else if( selector == 1){return new Y ( );}
+  else if( selector == 2){return new v_fix ( float(rand() % 255), float(rand() % 255), float(rand() % 255));}
+  else if( selector == 3){return new bwNoise ( );}
+  else{
+    return new colorNoise ( );
+  }
+}
 
 void Env::filtraImatge (float kernel[3][3]) {
-	
-
-    int i, j, m, n, mm, nn;
-    int kCenterX, kCenterY;
-    int kernelSizeX = 3;
-    int kernelSizeY = 3;                         
-    RGB sum;                                      
-    int rowIndex, colIndex;
-    int dataSizeX = x; 
-    int dataSizeY = y;
-
+  int i, j, m, n, mm, nn;
+  int kCenterX, kCenterY;
+  int kernelSizeX = 3;
+  int kernelSizeY = 3;                         
+  RGB sum;                                      
+  int rowIndex, colIndex;
+  int dataSizeX = x; 
+  int dataSizeY = y;
     
+  kCenterX = kernelSizeX / 2;
+  kCenterY = kernelSizeY / 2;
 
-    
-    kCenterX = kernelSizeX / 2;
-    kCenterY = kernelSizeY / 2;
-
-    for(i=0; i < dataSizeY; ++i)                
-    {
-        for(j=0; j < dataSizeX; ++j)            
-        {
-            sum = 0.0;                            
-            for(m=0; m < kernelSizeY; ++m)      
-            {
-                mm = kernelSizeY - 1 - m;       // index fila del kernel girat
-
-                for(n=0; n < kernelSizeX; ++n)  
-                {
-                    nn = kernelSizeX - 1 - n;   // index columna del kernel girat
-
-                    // index de  l'input per mirar dspres si estem treballant amb valors de fora d la img
-                    rowIndex = i + m - kCenterY;
-                    colIndex = j + n - kCenterX;
-
-                    // ignorar els pixels que estan fora de la img. (hi ha altres mètodes tb)
-                    if(rowIndex >= 0 && rowIndex < dataSizeY && colIndex >= 0 && colIndex < dataSizeX)
-                    	
-                        sum = sum + ( getPixel (rowIndex , colIndex ) * RGB(kernel[mm][nn]));
-                }
-            }
-            putPixel( i , j , (sum.map( fabs ) + 0.5f));
-        }
-    }	
+  for(i=0; i < dataSizeY; ++i) {
+    for(j=0; j < dataSizeX; ++j) {
+      sum = 0.0;                            
+      for(m=0; m < kernelSizeY; ++m) {
+	mm = kernelSizeY - 1 - m;       // index fila del kernel girat
 	
-	
+	for(n=0; n < kernelSizeX; ++n) {
+	  nn = kernelSizeX - 1 - n;   // index columna del kernel girat
+	  
+	  // index de  l'input per mirar dspres si estem treballant amb valors de fora d la img
+	  rowIndex = i + m - kCenterY;
+	  colIndex = j + n - kCenterX;
+	  
+	  // ignorar els pixels que estan fora de la img. (hi ha altres mètodes tb)
+	  if(rowIndex >= 0 && rowIndex < dataSizeY && colIndex >= 0 && colIndex < dataSizeX)
+	    
+	    sum = sum + ( getPixel (rowIndex , colIndex ) * RGB(kernel[mm][nn]));
 	}
+      }
+      putPixel( i , j , (sum.map( fabs ) + 0.5f));
+    }
+  }	
+}
 
-void Env::warpGeneric (){
+void Env::warpGeneric () {
+  //De moment faré el warp amb aliasing i sense massa miraments, i només per l'eix x (que em sembla q de fet és l'y)
 	
-	//De moment faré el warp amb aliasing i sense massa miraments, i només per l'eix x (que em sembla q de fet és l'y)
+  int i,j;
+  int A = x/4;
+  int B = 3*x/4;
+  RGB *p2;
+  p2 = new RGB[x * y];
 	
-	int i,j;
-	int A = x/4;
-	int B = 3*x/4;
-	RGB *p2;
-	p2 = new RGB[x * y];
+  for ( i = 0; i < x; i++){
+    for ( j = 0; j < y; j++){
+      p2[j*x+i] = getPixel( i , j );
+    }
+  }
 	
-	for ( i = 0; i < x; i++){
-		for ( j = 0; j < y; j++){
-		
-			p2[j*x+i] = getPixel( i , j );
-			
-			}
-		}
+  for ( i = 0; i < x; i++){
+    for ( j = 0; j < y; j++){
+      putPixel( i , j , p2[j*(A + (i/(B - A)))+i]);
+    }
+  }
 	
-	for ( i = 0; i < x; i++){
-		for ( j = 0; j < y; j++){
-		
-			putPixel( i , j , p2[j*(A + (i/(B - A)))+i]);
-			
-			}
-		}
-	
-	
-	}
+}
 
 RGB RGB::operator+(const RGB& o) {
   return RGB(_r + o._r, _g + o._g, _b + o._b);
@@ -409,7 +362,7 @@ RGB RGB::operator|(const RGB& o) {
 
 RGB RGB::operator^(const RGB& o){
   return RGB(float(int(_r) ^ int(o._r)), float(int(_g) ^ int(o._g)), float(int(_b) ^ int(o._b)));
-	}
+}
 
 RGB RGB::map(PFunction f) {
   return RGB( f(_r), f(_g), f(_b) );
@@ -435,18 +388,18 @@ void Sum::eval(Env& e) {
   
   int i,j;
   for (i = 0 ; i < x ; i++){
-  	for (j=0 ; j < y ; j++){
+    for (j=0 ; j < y ; j++){
   		
-  		e.putPixel(i,j,(e1.getPixel(i,j) + e2.getPixel(i,j)));
+      e.putPixel(i,j,(e1.getPixel(i,j) + e2.getPixel(i,j)));
   		  		
-  		}
-  	}
+    }
+  }
   
   
 }
 
 void Rest::eval(Env& e) {
-    int x=e.getX();
+  int x=e.getX();
   int y=e.getY();
    
   Env e1(x , y);
@@ -456,16 +409,16 @@ void Rest::eval(Env& e) {
   
   int i,j;
   for (i = 0 ; i < x ; i++){
-  	for (j=0 ; j < y ; j++){
+    for (j=0 ; j < y ; j++){
   		
-  		e.putPixel(i,j,(e1.getPixel(i,j) - e2.getPixel(i,j)));
+      e.putPixel(i,j,(e1.getPixel(i,j) - e2.getPixel(i,j)));
   		  		
-  		}
-  	}
+    }
+  }
 }
 
 void Mult::eval(Env& e) {
-    int x=e.getX();
+  int x=e.getX();
   int y=e.getY();
    
   Env e1(x , y);
@@ -475,16 +428,16 @@ void Mult::eval(Env& e) {
   
   int i,j;
   for (i = 0 ; i < x ; i++){
-  	for (j=0 ; j < y ; j++){
+    for (j=0 ; j < y ; j++){
   		
-  		e.putPixel(i,j,(e1.getPixel(i,j) * e2.getPixel(i,j)));
+      e.putPixel(i,j,(e1.getPixel(i,j) * e2.getPixel(i,j)));
   		  		
-  		}
-  	}
+    }
+  }
 }
 
 void Div::eval(Env& e) {
-    int x=e.getX();
+  int x=e.getX();
   int y=e.getY();
    
   Env e1(x , y);
@@ -494,12 +447,12 @@ void Div::eval(Env& e) {
   
   int i,j;
   for (i = 0 ; i < x ; i++){
-  	for (j=0 ; j < y ; j++){
+    for (j=0 ; j < y ; j++){
   		
-  		e.putPixel(i,j,(e1.getPixel(i,j) / e2.getPixel(i,j)));
+      e.putPixel(i,j,(e1.getPixel(i,j) / e2.getPixel(i,j)));
   		  		
-  		}
-  	}
+    }
+  }
 }
 
 void Mod::eval(Env& e){
@@ -515,15 +468,15 @@ void Mod::eval(Env& e){
   
   int i,j;
   for (i = 0 ; i < x ; i++){
-  	for (j=0 ; j < y ; j++){
+    for (j=0 ; j < y ; j++){
   		
-  		e.putPixel(i,j,((e1.getPixel(i,j)).map2( fmod ,  (e2.getPixel(i,j)))));
+      e.putPixel(i,j,((e1.getPixel(i,j)).map2( fmod ,  (e2.getPixel(i,j)))));
   		  		
-  		}
-  	}
+    }
+  }
 	
 	
-	}
+}
 
 void Log::eval(Env& e) {
 
@@ -539,12 +492,12 @@ void Log::eval(Env& e) {
   
   int i,j;
   for (i = 0 ; i < x ; i++){
-  	for (j=0 ; j < y ; j++){
+    for (j=0 ; j < y ; j++){
   		
-  		e.putPixel(i,j,(((e1.getPixel(i,j)).map( log10 )) /  ((e2.getPixel(i,j)).map( log10))));
+      e.putPixel(i,j,(((e1.getPixel(i,j)).map( log10 )) /  ((e2.getPixel(i,j)).map( log10))));
   		  		
-  		}
-  	}
+    }
+  }
   
   
 }
@@ -565,18 +518,18 @@ void Round::eval(Env& e) {
   
   int i,j;
   for (i = 0 ; i < x ; i++){
-  	for (j=0 ; j < y ; j++){
+    for (j=0 ; j < y ; j++){
   		
-  		e.putPixel(i,j,((((e1.getPixel(i,j))/(e1.getPixel(i,j)))+offs).map( floor)));
+      e.putPixel(i,j,((((e1.getPixel(i,j))/(e1.getPixel(i,j)))+offs).map( floor)));
   		  		
-  		}
-  	}
+    }
+  }
   
   
 }
 
 void And::eval ( Env& e){
-	  int x=e.getX();
+  int x=e.getX();
   int y=e.getY();
    
   Env e1(x , y);
@@ -586,17 +539,17 @@ void And::eval ( Env& e){
   
   int i,j;
   for (i = 0 ; i < x ; i++){
-  	for (j=0 ; j < y ; j++){
+    for (j=0 ; j < y ; j++){
   		
-  		e.putPixel(i,j,(e1.getPixel(i,j) & e2.getPixel(i,j)));
+      e.putPixel(i,j,(e1.getPixel(i,j) & e2.getPixel(i,j)));
   		  		
-  		}
-  	}	
+    }
+  }	
 	
-	}
+}
 	
 void Or::eval ( Env& e){
-	  int x=e.getX();
+  int x=e.getX();
   int y=e.getY();
    
   Env e1(x , y);
@@ -606,14 +559,14 @@ void Or::eval ( Env& e){
   
   int i,j;
   for (i = 0 ; i < x ; i++){
-  	for (j=0 ; j < y ; j++){
+    for (j=0 ; j < y ; j++){
   		
-  		e.putPixel(i,j,(e1.getPixel(i,j) | e2.getPixel(i,j)));
+      e.putPixel(i,j,(e1.getPixel(i,j) | e2.getPixel(i,j)));
   		  		
-  		}
-  	}	
+    }
+  }	
 	
-	}
+}
 	
 void Xor::eval ( Env& e){
   int x=e.getX();
@@ -626,14 +579,14 @@ void Xor::eval ( Env& e){
   
   int i,j;
   for (i = 0 ; i < x ; i++){
-  	for (j=0 ; j < y ; j++){
+    for (j=0 ; j < y ; j++){
   		
-  		e.putPixel(i,j,(e1.getPixel(i,j) ^ e2.getPixel(i,j)));
+      e.putPixel(i,j,(e1.getPixel(i,j) ^ e2.getPixel(i,j)));
   		  		
-  		}
-  	}	
+    }
+  }	
 	
-	}
+}
 
 void Sin::eval ( Env& e){
 
@@ -649,15 +602,15 @@ void Sin::eval ( Env& e){
   
   int i,j;
   for (i = 0 ; i < x ; i++){
-  	for (j=0 ; j < y ; j++){
+    for (j=0 ; j < y ; j++){
   		
-  		e.putPixel(i,j,(e1.getPixel(i,j)).map( sin ));
+      e.putPixel(i,j,(e1.getPixel(i,j)).map( sin ));
   		  		
-  		}
-  	}	
+    }
+  }	
 	
 	
-	}
+}
 	
 void Cos::eval ( Env& e){
   int x=e.getX();
@@ -670,13 +623,13 @@ void Cos::eval ( Env& e){
   
   int i,j;
   for (i = 0 ; i < x ; i++){
-  	for (j=0 ; j < y ; j++){
+    for (j=0 ; j < y ; j++){
   		
-  		e.putPixel(i,j,(e1.getPixel(i,j)).map( cos ));
+      e.putPixel(i,j,(e1.getPixel(i,j)).map( cos ));
   		  		
-  		}
-  	}
-	}
+    }
+  }
+}
 
 void Atan::eval(Env& e){
   int x=e.getX();
@@ -689,14 +642,14 @@ void Atan::eval(Env& e){
   
   int i,j;
   for (i = 0 ; i < x ; i++){
-  	for (j=0 ; j < y ; j++){
+    for (j=0 ; j < y ; j++){
   		
-  		e.putPixel(i,j,((e1.getPixel(i,j)).map2( atan2 ,  (e2.getPixel(i,j)))));
+      e.putPixel(i,j,((e1.getPixel(i,j)).map2( atan2 ,  (e2.getPixel(i,j)))));
   		  		
-  		}
-  	}
+    }
+  }
 	
-	}
+}
 
 void X::eval(Env& e) { 
  
@@ -705,12 +658,12 @@ void X::eval(Env& e) {
   
   int i,j;
   for (i = 0 ; i < x ; i++){
-  	for (j = 0 ; j < y ; j++){
+    for (j = 0 ; j < y ; j++){
   		
-  		e.putPixel(i,j,RGB(float(i)/float(x)));
+      e.putPixel(i,j,RGB(float(i)/float(x)));
   		  		
-  		}
-  	}
+    }
+  }
  
 }
 
@@ -721,12 +674,12 @@ void Y::eval(Env& e) {
   
   int i,j;
   for (i = 0 ; i < x ; i++){
-  	for (j = 0 ; j < y ; j++){
+    for (j = 0 ; j < y ; j++){
   		
-  		e.putPixel(i,j,RGB(float(j)/float(y)));
+      e.putPixel(i,j,RGB(float(j)/float(y)));
   		  		
-  		}
-  	}
+    }
+  }
   
 }
 
@@ -737,12 +690,12 @@ void v_fix::eval(Env& e) {
 	  
   int i,j;
   for (i = 0 ; i < x ; i++){
-  	for (j = 0 ; j < y ; j++){
+    for (j = 0 ; j < y ; j++){
   		
-  		e.putPixel(i,j,RGB( p1 , p2 , p3 ));
+      e.putPixel(i,j,RGB( p1 , p2 , p3 ));
   		  		
-  		}
-  	}
+    }
+  }
 }
 
 
@@ -770,13 +723,13 @@ void gaussBlur::eval ( Env& e){
   
   int i,j;
   for (i = 0 ; i < x ; i++){
-  	for (j=0 ; j < y ; j++){
+    for (j=0 ; j < y ; j++){
   		
-  		e.putPixel(i,j,(e1.getPixel(i,j)));
+      e.putPixel(i,j,(e1.getPixel(i,j)));
   		  		
-  		}
-  	}
-	}
+    }
+  }
+}
 	
 void gradDir::eval ( Env& e){
   int x=e.getX();
@@ -799,13 +752,13 @@ void gradDir::eval ( Env& e){
   
   int i,j;
   for (i = 0 ; i < x ; i++){
-  	for (j=0 ; j < y ; j++){
+    for (j=0 ; j < y ; j++){
   		
-  		e.putPixel(i,j,(e1.getPixel(i,j)));
+      e.putPixel(i,j,(e1.getPixel(i,j)));
   		  		
-  		}
-  	}
-	}
+    }
+  }
+}
 	
 void emboss::eval ( Env& e){
   int x=e.getX();
@@ -828,13 +781,13 @@ void emboss::eval ( Env& e){
   
   int i,j;
   for (i = 0 ; i < x ; i++){
-  	for (j=0 ; j < y ; j++){
+    for (j=0 ; j < y ; j++){
   		
-  		e.putPixel(i,j,(e1.getPixel(i,j)));
+      e.putPixel(i,j,(e1.getPixel(i,j)));
   		  		
-  		}
-  	}
-	}
+    }
+  }
+}
 
 void sharpen::eval ( Env& e){
   int x=e.getX();
@@ -857,13 +810,13 @@ void sharpen::eval ( Env& e){
   
   int i,j;
   for (i = 0 ; i < x ; i++){
-  	for (j=0 ; j < y ; j++){
+    for (j=0 ; j < y ; j++){
   		
-  		e.putPixel(i,j,(e1.getPixel(i,j)));
+      e.putPixel(i,j,(e1.getPixel(i,j)));
   		  		
-  		}
-  	}
-	}
+    }
+  }
+}
 
 void warp::eval ( Env& e){
   int x=e.getX();
@@ -877,13 +830,13 @@ void warp::eval ( Env& e){
   
   int i,j;
   for (i = 0 ; i < x ; i++){
-  	for (j=0 ; j < y ; j++){
+    for (j=0 ; j < y ; j++){
   		
-  		e.putPixel(i,j,(e1.getPixel(i,j)));
+      e.putPixel(i,j,(e1.getPixel(i,j)));
   		  		
-  		}
-  	}
-	}
+    }
+  }
+}
 
 void blur::eval ( Env& e){
   int x=e.getX();
@@ -897,17 +850,17 @@ void blur::eval ( Env& e){
   
   int i,j;
   for (i = 1 ; i < (x-1) ; i++){
-  	for (j = 1 ; j < (y-1) ; j++){
-  		RGB mitjana = ((e1.getPixel(i-1,j)) + (e1.getPixel(i,j-1)) + 
-  					  (e1.getPixel(i+1,j)) + (e1.getPixel(i,j+1)) +
-  					  (e1.getPixel(i-1,j-1)) + (e1.getPixel(i+1,j+1)) + 
-  					  (e1.getPixel(i-1,j+1)) + (e1.getPixel(i+1,j-1)) + 
-  					  (e1.getPixel(i,j)))/9;
-  		e.putPixel(i,j,mitjana);
+    for (j = 1 ; j < (y-1) ; j++){
+      RGB mitjana = ((e1.getPixel(i-1,j)) + (e1.getPixel(i,j-1)) + 
+		     (e1.getPixel(i+1,j)) + (e1.getPixel(i,j+1)) +
+		     (e1.getPixel(i-1,j-1)) + (e1.getPixel(i+1,j+1)) + 
+		     (e1.getPixel(i-1,j+1)) + (e1.getPixel(i+1,j-1)) + 
+		     (e1.getPixel(i,j)))/9;
+      e.putPixel(i,j,mitjana);
   		  		
-  		}
-  	}
-	}
+    }
+  }
+}
 	
 	
 void bwNoise::eval(Env& e) {
@@ -917,11 +870,11 @@ void bwNoise::eval(Env& e) {
   if ( seed!=-1 ){ srand(seed);  }
   int i,j;
   for (i = 0 ; i < x ; i++){
-  	for (j = 0 ; j < y ; j++){
+    for (j = 0 ; j < y ; j++){
   		
-  		e.putPixel ( i, j, RGB ( float(rand( )/128)));
-  		}
-  	}
+      e.putPixel ( i, j, RGB ( float(rand( )/128)));
+    }
+  }
 }
 
 void colorNoise::eval(Env& e) {
@@ -931,11 +884,11 @@ void colorNoise::eval(Env& e) {
   if ( seed!=-1 ){ srand(seed);  }
   int i,j;
   for (i = 0 ; i < x ; i++){
-  	for (j = 0 ; j < y ; j++){
+    for (j = 0 ; j < y ; j++){
   		
-  		e.putPixel ( i, j, RGB ( float(rand( )/128), float(rand( )/128), float(rand( )/128)));
-  		}
-  	}
+      e.putPixel ( i, j, RGB ( float(rand( )/128), float(rand( )/128), float(rand( )/128)));
+    }
+  }
 }
 
 void Abs::eval ( Env& e){
@@ -952,15 +905,15 @@ void Abs::eval ( Env& e){
   
   int i,j;
   for (i = 0 ; i < x ; i++){
-  	for (j=0 ; j < y ; j++){
+    for (j=0 ; j < y ; j++){
   		
-  		e.putPixel(i,j,(e1.getPixel(i,j)).map( fabs ));
+      e.putPixel(i,j,(e1.getPixel(i,j)).map( fabs ));
   		  		
-  		}
-  	}	
+    }
+  }	
 	
 	
-	}
+}
 	
 	
 void Expt::eval(Env& e){
@@ -974,14 +927,14 @@ void Expt::eval(Env& e){
   
   int i,j;
   for (i = 0 ; i < x ; i++){
-  	for (j=0 ; j < y ; j++){
+    for (j=0 ; j < y ; j++){
   		
-  		e.putPixel(i,j,((e1.getPixel(i,j)).map2( pow ,  (e2.getPixel(i,j)))));
+      e.putPixel(i,j,((e1.getPixel(i,j)).map2( pow ,  (e2.getPixel(i,j)))));
   		  		
-  		}
-  	}
+    }
+  }
 	
-	}
+}
 	
 
 void BinOp::print(ostream& o) const {
@@ -996,11 +949,11 @@ void UnaryOp::print(ostream& o) const {
   o << "(" << head() << " ";
   op1()->print(o);
   o << ")";
-  }
+}
 
 void v_fix::print(ostream& o) const {
-	if( p1 == p2 || p2 == p3) { o << p1; } 
-	else{ o << "#(" << p1 << " " << p2 << " " << p3 << ")"; }
+  if( p1 == p2 || p2 == p3) { o << p1; } 
+  else{ o << "#(" << p1 << " " << p2 << " " << p3 << ")"; }
 }
 
 string Sum::head()  const { return "+"; }
