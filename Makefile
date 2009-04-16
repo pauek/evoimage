@@ -8,12 +8,15 @@ evoimg: main.o libevoimg
 libevoimg: 
 	make -C libevoimg
 
-cleanlib:
-	make -C libevoimg clean
-
 .cpp.o:
 	g++ $(CXXFLAGS) -c -o $@ $<
 	
+eval: eval.o
+	g++ $(CXXFLAGS) -o eval eval.o -Llibevoimg -levoimg -lstdc++ -lm
+
+cleanlib:
+	make -C libevoimg clean
+
 clean: cleanlib
 	rm -f *.o evoimg
 
