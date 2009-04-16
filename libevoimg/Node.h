@@ -10,6 +10,11 @@
 typedef float (*PFunction)(float);
 typedef float (*PFunction2)(float,float);
 
+union long_float {
+  long l;
+  float f;
+};
+
 class RGB {
   float _r, _g, _b;
 
@@ -27,7 +32,7 @@ public:
     return RGB( f(_r), f(_g), f(_b) );
   }
   
-  RGB map2(PFunction2 f , RGB o) {
+  RGB map2(PFunction2 f, RGB o) {
     return RGB( f(_r, o.getr()), f(_g, o.getg()), f(_b, o.getb()) );
   }
 
@@ -48,21 +53,27 @@ public:
   }
   
   RGB operator&(const RGB& o) {
-    return RGB(float(int(_r) & int(o._r)), 
-	       float(int(_g) & int(o._g)),
-	       float(int(_b) & int(o._b)));
+    long_float r1, r2, g1, g2, b1, b2;
+    r1.f = _r; r2.f = o._r; r1.l &= r2.l;
+    g1.f = _g; g2.f = o._g; g1.l &= g2.l;
+    b1.f = _b; b2.f = o._b; b1.l &= b2.l;
+    return RGB(r1.f, g1.f, b1.f);
   }
   
   RGB operator|(const RGB& o) {
-    return RGB(float(int(_r) | int(o._r)), 
-	       float(int(_g) | int(o._g)), 
-	       float(int(_b) | int(o._b)));
+    long_float r1, r2, g1, g2, b1, b2;
+    r1.f = _r; r2.f = o._r; r1.l |= r2.l;
+    g1.f = _g; g2.f = o._g; g1.l |= g2.l;
+    b1.f = _b; b2.f = o._b; b1.l |= b2.l;
+    return RGB(r1.f, g1.f, b1.f);
   }
   
   RGB operator^(const RGB& o) {
-    return RGB(float(int(_r) ^ int(o._r)), 
-	       float(int(_g) ^ int(o._g)), 
-	       float(int(_b) ^ int(o._b)));
+    long_float r1, r2, g1, g2, b1, b2;
+    r1.f = _r; r2.f = o._r; r1.l ^= r2.l;
+    g1.f = _g; g2.f = o._g; g1.l ^= g2.l;
+    b1.f = _b; b2.f = o._b; b1.l ^= b2.l;
+    return RGB(r1.f, g1.f, b1.f);
   }
 };
 
@@ -70,7 +81,7 @@ class Image {
   int x,y;
   RGB *p;
 public:
-  Image ( int _x , int _y) {
+  Image (int _x , int _y) {
       x = _x;
       y = _y;
       p = new RGB[x * y];
@@ -96,16 +107,15 @@ public:
 };
 
 
-
 class X : public Node {
 public:
-  void eval( Image& e);
+  void eval(Image& e);
   void print(std::ostream& o) const;
 };
 
 class Y : public Node {
 public:
-  void eval( Image& e);
+  void eval(Image& e);
   void print(std::ostream& o) const;
 };
 
@@ -115,7 +125,7 @@ public:
   v_fix(float _p1) { p1=_p1; p2=_p1; p3=_p1; }
   v_fix(float _p1, float _p2, float _p3) { p1=_p1; p2=_p2; p3=_p3; }
   
-  void eval( Image& e);
+  void eval(Image& e);
   void print(std::ostream& o) const;
 };
 
@@ -123,11 +133,11 @@ class bwNoise : public Node {
   int seed;
   
 public:
-  bwNoise( ) { seed=-1;}
+  bwNoise() { seed=-1;}
   bwNoise(int s) { seed=s; }
   
   int getSeed(){ return seed; }
-  void eval( Image& e);
+  void eval(Image& e);
   void print(std::ostream& o) const;
 };
 
@@ -135,11 +145,11 @@ class colorNoise : public Node {
   int seed;
   
 public:
-  colorNoise( int s){	seed=s;	}
-  colorNoise( ) { seed=-1;}
+  colorNoise(int s){	seed=s;	}
+  colorNoise() { seed=-1;}
   int getSeed(){ return seed; }
 
-  void eval( Image& e);
+  void eval(Image& e);
   void print(std::ostream& o) const;
 };
 

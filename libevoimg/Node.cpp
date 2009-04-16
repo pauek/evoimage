@@ -160,14 +160,14 @@ void X::eval(Image& e) {
   const int x = e.getX(), y = e.getY();
   for (int i = 0 ; i < x ; i++)
     for (int j = 0 ; j < y ; j++)
-      e.putPixel(i, j, RGB(float(i)/float(x)));
+      e.putPixel(i, j, RGB(2.*float(i - x/2)/float(x)));
 }
 
 void Y::eval(Image& e) { 
   const int x = e.getX(), y = e.getY();
   for (int i = 0 ; i < x ; i++)
     for (int j = 0 ; j < y ; j++)
-      e.putPixel(i, j, RGB(float(j)/float(y)));
+      e.putPixel(i, j, RGB(2.*float(j - y/2)/float(y)));
 }
 
 void v_fix::eval(Image& e) {
