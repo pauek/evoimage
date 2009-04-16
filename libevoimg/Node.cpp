@@ -1,5 +1,6 @@
 
 #include <string>
+#include <fstream>
 #include "Node.h"
 using namespace std;
 
@@ -68,6 +69,29 @@ Node* Node::randomLeave() {
   case 4: 
   default:
     return new colorNoise();
+  }
+}
+
+inline int clamp(float x) {
+  int v = int(x*255);
+  if (v > 255) v = 255;
+  if (v < 0)   v = 0;
+  return v;
+}
+
+void Image::save_pnm(string name) const {
+  ofstream out(name.c_str());
+  int X = getX(), Y = getY();
+  out << "P3" << endl
+      << X << " " << Y << endl
+      << "255" << endl;
+  for (int j = 0; j < Y; j++) {
+    for (int i = 0; i < X; i++) {
+      out << clamp(getPixel( i, j ).getr( )) << ' '
+	  << clamp(getPixel( i, j ).getg( )) << ' '
+	  << clamp(getPixel( i, j ).getb( )) << ' ';
+    }
+    out << endl;
   }
 }
 

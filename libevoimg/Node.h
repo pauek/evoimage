@@ -41,9 +41,9 @@ class Image {
   int x,y;
   RGB *p;
 public:
-  int getX () { return x; }
-  int getY () { return y; }
-  RGB getPixel (int i, int j) { return p[j*x+i]; }
+  int getX () const { return x; }
+  int getY () const { return y; }
+  RGB getPixel (int i, int j) const { return p[j*x+i]; }
   void putPixel ( int i , int j , RGB v) { p[j*x+i] = v; }
   Image ( int _x , int _y) {
       x = _x;
@@ -53,6 +53,8 @@ public:
   void filtraImatge (float kernel[3][3]);
   void warpGeneric();
   ~Image() { delete[] p; }
+
+  void save_pnm(std::string filename) const;
 };
 
 class Node {

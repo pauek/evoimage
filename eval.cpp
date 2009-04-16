@@ -37,29 +37,6 @@ void parseArgs(int argc, char *argv[],
   }
 }
 
-int clamp(float x) {
-  int v = int(x*255);
-  if (v > 255) v = 255;
-  if (v < 0)   v = 0;
-  return v;
-}
-
-void save_pnm(Image& e, string name) {
-  ofstream out(name.c_str());
-  int X = e.getX(), Y = e.getY();
-  out << "P3" << endl
-      << X << " " << Y << endl
-      << "255" << endl;
-  for (int j = 0; j < Y; j++) {
-    for (int i = 0; i < X; i++) {
-      out << clamp(e.getPixel( i, j ).getr( )) << ' '
-	  << clamp(e.getPixel( i, j ).getg( )) << ' '
-	  << clamp(e.getPixel( i, j ).getb( )) << ' ';
-    }
-    out << endl;
-  }
-}
-
 void usage() {
   cout << "usage: eval [options] <expr>..." << endl;
   cout << endl;
@@ -79,10 +56,10 @@ int main(int argc, char *argv[]) {
   for (int k = 0; k < (int)args.size(); k++) {
     stringstream sin(args[k]); 
     Node* root = read(sin);
-    Image e(width, height);
-    root->eval(e);  
+    Image I(width, height);
+    root->eval(I);  
     stringstream sout;
     sout << prefix << k << ".pgm";
-    save_pnm(e, sout.str());
+    I.save_pnm(sout.str());
   }
 }
