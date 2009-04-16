@@ -1,6 +1,6 @@
 CXXFLAGS = -g3 -Wall -O2 -Ilibevoimg
 
-all: evoimg
+all: evoimg eval random
 
 evoimg: main.o libevoimg
 	g++ $(CXXFLAGS) -o evoimg main.o -Llibevoimg -levoimg -lstdc++ -lm
