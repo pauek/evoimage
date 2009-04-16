@@ -2,17 +2,17 @@
 #include "Node.h"
 using namespace std;
 
-Node* Node::randomNode(int lcount) {
+Node* Node::randomNode(int level) {
   int selector;
   
   selector = rand() % 21;
   cout << selector;
   
   if( selector == 0) { 
-    if ( lcount > 2){
-      lcount = lcount - 1;
-      Node* _op1 = randomNode ( lcount);
-      Node* _op2 = randomNode ( lcount);
+    if ( level > 2){
+      level = level - 1;
+      Node* _op1 = randomNode ( level);
+      Node* _op2 = randomNode ( level);
       return new Sum ( _op1, _op2);
     }
     else{
@@ -22,10 +22,10 @@ Node* Node::randomNode(int lcount) {
     }
   }
   else if( selector == 1) {  
-    if ( lcount > 2){
-      lcount = lcount - 1;
-      Node* _op1 = randomNode ( lcount);
-      Node* _op2 = randomNode ( lcount);
+    if ( level > 2){
+      level = level - 1;
+      Node* _op1 = randomNode ( level);
+      Node* _op2 = randomNode ( level);
       return new Rest ( _op1, _op2);
     }
     else{
@@ -35,10 +35,10 @@ Node* Node::randomNode(int lcount) {
     }
   }
   else if( selector == 2) {  
-    if ( lcount > 2){
-      lcount = lcount - 1;
-      Node* _op1 = randomNode ( lcount);
-      Node* _op2 = randomNode ( lcount);
+    if ( level > 2){
+      level = level - 1;
+      Node* _op1 = randomNode ( level);
+      Node* _op2 = randomNode ( level);
       return new Mult ( _op1, _op2);
     }
     else{
@@ -48,10 +48,10 @@ Node* Node::randomNode(int lcount) {
     }
   }
   else if( selector == 3) {  
-    if ( lcount > 2){
-      lcount = lcount - 1;
-      Node* _op1 = randomNode ( lcount);
-      Node* _op2 = randomNode ( lcount);
+    if ( level > 2){
+      level = level - 1;
+      Node* _op1 = randomNode ( level);
+      Node* _op2 = randomNode ( level);
       return new Div ( _op1, _op2);
     }
     else{
@@ -61,10 +61,10 @@ Node* Node::randomNode(int lcount) {
     }
   }
   else if( selector == 4) {  
-    if ( lcount > 2){
-      lcount = lcount - 1;
-      Node* _op1 = randomNode ( lcount);
-      Node* _op2 = randomNode ( lcount);
+    if ( level > 2){
+      level = level - 1;
+      Node* _op1 = randomNode ( level);
+      Node* _op2 = randomNode ( level);
       return new Mod ( _op1, _op2);
     }
     else{
@@ -74,10 +74,10 @@ Node* Node::randomNode(int lcount) {
     }
   }
   else if( selector == 5) {  
-    if ( lcount > 2){
-      lcount = lcount - 1;
-      Node* _op1 = randomNode ( lcount);
-      Node* _op2 = randomNode ( lcount);
+    if ( level > 2){
+      level = level - 1;
+      Node* _op1 = randomNode ( level);
+      Node* _op2 = randomNode ( level);
       return new Log ( _op1, _op2);
     }
     else{
@@ -87,10 +87,10 @@ Node* Node::randomNode(int lcount) {
     }
   }
   else if( selector == 6) {  
-    if ( lcount > 2){
-      lcount = lcount - 1;
-      Node* _op1 = randomNode ( lcount);
-      Node* _op2 = randomNode ( lcount);
+    if ( level > 2){
+      level = level - 1;
+      Node* _op1 = randomNode ( level);
+      Node* _op2 = randomNode ( level);
       return new Round ( _op1, _op2);
     }
     else{
@@ -100,10 +100,10 @@ Node* Node::randomNode(int lcount) {
     }
   }
   else if( selector == 7) {  
-    if ( lcount > 2){
-      lcount = lcount - 1;
-      Node* _op1 = randomNode ( lcount);
-      Node* _op2 = randomNode ( lcount);
+    if ( level > 2){
+      level = level - 1;
+      Node* _op1 = randomNode ( level);
+      Node* _op2 = randomNode ( level);
       return new And ( _op1, _op2);
     }
     else{
@@ -113,10 +113,10 @@ Node* Node::randomNode(int lcount) {
     }
   }
   else if( selector == 8) {  
-    if ( lcount > 2){
-      lcount = lcount - 1;
-      Node* _op1 = randomNode ( lcount);
-      Node* _op2 = randomNode ( lcount);
+    if ( level > 2){
+      level = level - 1;
+      Node* _op1 = randomNode ( level);
+      Node* _op2 = randomNode ( level);
       return new Or ( _op1, _op2);
     }
     else{
@@ -126,10 +126,10 @@ Node* Node::randomNode(int lcount) {
     }
   }
   else if( selector == 9) {  
-    if ( lcount > 2){
-      lcount = lcount - 1;
-      Node* _op1 = randomNode ( lcount);
-      Node* _op2 = randomNode ( lcount);
+    if ( level > 2){
+      level = level - 1;
+      Node* _op1 = randomNode ( level);
+      Node* _op2 = randomNode ( level);
       return new Xor ( _op1, _op2);
     }
     else{
@@ -139,9 +139,9 @@ Node* Node::randomNode(int lcount) {
     }
   }
   else if( selector == 10) {  
-    if ( lcount > 2){
-      lcount = lcount - 1;
-      Node* _op1 = randomNode ( lcount);
+    if ( level > 2){
+      level = level - 1;
+      Node* _op1 = randomNode ( level);
       return new Sin ( _op1);
     }
     else{
@@ -150,9 +150,9 @@ Node* Node::randomNode(int lcount) {
     }
   }
   else if( selector == 11) {  
-    if ( lcount > 2){
-      lcount = lcount - 1;
-      Node* _op1 = randomNode ( lcount);
+    if ( level > 2){
+      level = level - 1;
+      Node* _op1 = randomNode ( level);
       return new Cos ( _op1);
     }
     else{
@@ -161,10 +161,10 @@ Node* Node::randomNode(int lcount) {
     }
   }
   else if( selector == 12) {  
-    if ( lcount > 2){
-      lcount = lcount - 1;
-      Node* _op1 = randomNode ( lcount);
-      Node* _op2 = randomNode ( lcount);
+    if ( level > 2){
+      level = level - 1;
+      Node* _op1 = randomNode ( level);
+      Node* _op2 = randomNode ( level);
       return new Atan ( _op1, _op2);
     }
     else{
@@ -174,9 +174,9 @@ Node* Node::randomNode(int lcount) {
     }
   }
   else if( selector == 13) {  
-    if ( lcount > 2){
-      lcount = lcount - 1;
-      Node* _op1 = randomNode ( lcount);
+    if ( level > 2){
+      level = level - 1;
+      Node* _op1 = randomNode ( level);
       return new gradDir ( _op1);
     }
     else{
@@ -185,9 +185,9 @@ Node* Node::randomNode(int lcount) {
     }
   }
   else if( selector == 14) {  
-    if ( lcount > 2){
-      lcount = lcount - 1;
-      Node* _op1 = randomNode ( lcount);
+    if ( level > 2){
+      level = level - 1;
+      Node* _op1 = randomNode ( level);
       return new gaussBlur ( _op1);
     }
     else{
@@ -196,9 +196,9 @@ Node* Node::randomNode(int lcount) {
     }
   }
   else if( selector == 15) {  
-    if ( lcount > 2){
-      lcount = lcount - 1;
-      Node* _op1 = randomNode ( lcount);
+    if ( level > 2){
+      level = level - 1;
+      Node* _op1 = randomNode ( level);
       return new emboss ( _op1);
     }
     else{
@@ -207,9 +207,9 @@ Node* Node::randomNode(int lcount) {
     }
   }
   else if( selector == 16) {  
-    if ( lcount > 2){
-      lcount = lcount - 1;
-      Node* _op1 = randomNode ( lcount);
+    if ( level > 2){
+      level = level - 1;
+      Node* _op1 = randomNode ( level);
       return new sharpen ( _op1);
     }
     else{
@@ -218,9 +218,9 @@ Node* Node::randomNode(int lcount) {
     }
   }
   else if( selector == 17) {  
-    if ( lcount > 2){
-      lcount = lcount - 1;
-      Node* _op1 = randomNode ( lcount);
+    if ( level > 2){
+      level = level - 1;
+      Node* _op1 = randomNode ( level);
       return new warp ( _op1);
     }
     else{
@@ -229,9 +229,9 @@ Node* Node::randomNode(int lcount) {
     }
   }
   else if( selector == 18) {  
-    if ( lcount > 2){
-      lcount = lcount - 1;
-      Node* _op1 = randomNode ( lcount);
+    if ( level > 2){
+      level = level - 1;
+      Node* _op1 = randomNode ( level);
       return new blur ( _op1);
     }
     else{
@@ -240,9 +240,9 @@ Node* Node::randomNode(int lcount) {
     }
   }
   else if( selector == 19) {  
-    if ( lcount > 2){
-      lcount = lcount - 1;
-      Node* _op1 = randomNode ( lcount);
+    if ( level > 2){
+      level = level - 1;
+      Node* _op1 = randomNode ( level);
       return new Abs ( _op1);
     }
     else{
@@ -251,10 +251,10 @@ Node* Node::randomNode(int lcount) {
     }
   }
   else  {  
-    if ( lcount > 2){
-      lcount = lcount - 1;
-      Node* _op1 = randomNode ( lcount);
-      Node* _op2 = randomNode ( lcount);
+    if ( level > 2){
+      level = level - 1;
+      Node* _op1 = randomNode ( level);
+      Node* _op2 = randomNode ( level);
       return new Expt ( _op1, _op2);
     }
     else{
