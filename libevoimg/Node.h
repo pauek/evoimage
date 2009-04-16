@@ -82,7 +82,7 @@ public:
   RGB  getPixel (int i, int j) const  { return p[j*x+i]; }
   void putPixel (int i, int j, RGB v) { p[j*x+i] = v; }
 
-  void filtraImatge(float kernel[3][3]);
+  void filtraImatge(const float kernel[3][3]);
   void warpGeneric();
   void save_pnm(std::string filename) const;
 };
@@ -163,7 +163,7 @@ public:
   class Name : public UnaryOp {			\
   public:					\
     Name (Node* p1) : UnaryOp(p1) {}		\
-    void eval(Image& e);			\
+    void eval(Image& I);			\
     std::string head() const;			\
   }
 

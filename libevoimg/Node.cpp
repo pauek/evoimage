@@ -87,15 +87,15 @@ void Image::save_pnm(string name) const {
       << "255" << endl;
   for (int j = 0; j < Y; j++) {
     for (int i = 0; i < X; i++) {
-      out << clamp(getPixel( i, j ).getr( )) << ' '
-	  << clamp(getPixel( i, j ).getg( )) << ' '
-	  << clamp(getPixel( i, j ).getb( )) << ' ';
+      out << clamp(getPixel( i, j ).getr()) << ' '
+	  << clamp(getPixel( i, j ).getg()) << ' '
+	  << clamp(getPixel( i, j ).getb()) << ' ';
     }
     out << endl;
   }
 }
 
-void Image::filtraImatge (float kernel[3][3]) {
+void Image::filtraImatge (const float kernel[3][3]) {
   int i, j, m, n, mm, nn;
   int kCenterX, kCenterY;
   int kernelSizeX = 3;
@@ -152,6 +152,132 @@ void Image::warpGeneric () {
       putPixel( i , j , p2[j*(A + (i/(B - A)))+i]);
     }
   }
+}
+
+// Leaf Operations ///////////////////////////////////////////////////
+
+void X::eval(Image& e) { 
+  const int x = e.getX(), y = e.getY();
+  for (int i = 0 ; i < x ; i++)
+    for (int j = 0 ; j < y ; j++)
+      e.putPixel(i, j, RGB(float(i)/float(x)));
+}
+
+void Y::eval(Image& e) { 
+  const int x = e.getX(), y = e.getY();
+  for (int i = 0 ; i < x ; i++)
+    for (int j = 0 ; j < y ; j++)
+      e.putPixel(i, j, RGB(float(j)/float(y)));
+}
+
+void v_fix::eval(Image& e) {
+  const int x = e.getX(), y = e.getY();
+  for (int i = 0 ; i < x ; i++)
+    for (int j = 0 ; j < y ; j++)
+      e.putPixel(i, j, RGB( p1 , p2 , p3 ));
+}
+
+void bwNoise::eval(Image& e) {
+  const int x = e.getX(), y = e.getY();
+  if (seed != -1) {
+    srand(seed);
+  }
+  for (int i = 0 ; i < x ; i++)
+    for (int j = 0 ; j < y ; j++)
+      e.putPixel ( i, j, RGB ( float(rand( )/128)));
+}
+
+void colorNoise::eval(Image& e) {
+  const int x = e.getX(), y = e.getY();
+  if (seed != -1) { 
+    srand(seed);  
+  }
+  for (int i = 0 ; i < x ; i++)
+    for (int j = 0 ; j < y ; j++)
+      e.putPixel(i, j, RGB (float(rand()/128), 
+			    float(rand()/128), 
+			    float(rand()/128)));
+}
+
+// Unary Operations //////////////////////////////////////////////////
+
+void Abs::eval(Image& I) {
+  op1()->eval(I);
+  const int x = I.getX(), y = I.getY();
+  for (int i = 0; i < x; i++)
+    for (int j = 0; j < y; j++)
+      I.putPixel(i, j, I.getPixel(i,j).map( fabs ));
+}
+
+void Sin::eval(Image& I) {
+  op1()->eval(I);
+  const int x = I.getX(), y = I.getY();
+  for (int i = 0; i < x; i++)
+    for (int j = 0; j < y; j++)
+      I.putPixel(i, j, I.getPixel(i,j).map( sin ));
+}
+
+void Cos::eval(Image& I) {
+  op1()->eval(I);
+  const int x = I.getX(), y = I.getY();
+  for (int i = 0; i < x; i++)
+    for (int j = 0; j < y; j++)
+      I.putPixel(i, j, I.getPixel(i,j).map( cos ));
+}
+
+void gaussBlur::eval(Image& I) {
+  static const float kernel[3][3] = {
+    {  1.,  2.,  1. },
+    {  2.,  4.,  2. },
+    {  1.,  2.,  1. }
+  };
+  op1()->eval(I); 
+  I.filtraImatge(kernel);
+}
+
+void gradDir::eval(Image& I){
+  static const float k_gradDir[3][3] = {
+    {  1., -2.,  1. },
+    { -2.,  5., -2. },
+    {  1., -2.,  1. }
+  };
+  op1()->eval(I); 
+  I.filtraImatge(k_gradDir);
+}
+
+void sharpen::eval(Image& I){
+  static const float kernel[3][3] = {
+    { -1., -1., -1. },
+    { -1.,  9., -1. },
+    { -1., -1., -1. }
+  };
+  op1()->eval(I); 
+  I.filtraImatge(kernel);
+}
+
+void emboss::eval(Image& I){
+  static const float kernel[3][3] = {
+    {  2.,  0.,  0. },
+    {  0., -1.,  0. },
+    {  0.,  0., -1. }
+  };
+  op1()->eval(I); 
+  I.filtraImatge(kernel);
+}
+
+void warp::eval(Image& I) {
+  op1()->eval(I); 
+  I.warpGeneric();
+}
+
+void blur::eval (Image& I){
+  static const float kernel[3][3] = {
+    { 1./9., 1./9., 1./9. },
+    { 1./9., 1./9., 1./9. },
+    { 1./9., 1./9., 1./9. }
+  };
+  op1()->eval(I); 
+  I.filtraImatge(kernel);
 }
 
 // BinaryOperations //////////////////////////////////////////////////
@@ -249,308 +375,6 @@ void Expt::do_op(Image& res, Image& op1, Image& op2) {
       res.putPixel(i, j, op1.getPixel(i,j).map2(pow, op2.getPixel(i,j)));
 }
 
-void Sin::eval ( Image& e){
-  int x=e.getX();
-  int y=e.getY();
-   
-  Image e1(x , y);
-  
-  op1()->eval(e1); 
-  
-  
-  int i,j;
-  for (i = 0 ; i < x ; i++){
-    for (j=0 ; j < y ; j++){
-      e.putPixel(i,j,(e1.getPixel(i,j)).map( sin ));
-    }
-  }	
-}
-	
-void Cos::eval ( Image& e){
-  int x=e.getX();
-  int y=e.getY();
-   
-  Image e1(x , y);
-  
-  op1()->eval(e1); 
-  
-  
-  int i,j;
-  for (i = 0 ; i < x ; i++){
-    for (j=0 ; j < y ; j++){
-  		
-      e.putPixel(i,j,(e1.getPixel(i,j)).map( cos ));
-  		  		
-    }
-  }
-}
-
-
-void X::eval(Image& e) { 
- 
-  int x=e.getX();
-  int y=e.getY();
-  
-  int i,j;
-  for (i = 0 ; i < x ; i++){
-    for (j = 0 ; j < y ; j++){
-  		
-      e.putPixel(i,j,RGB(float(i)/float(x)));
-  		  		
-    }
-  }
- 
-}
-
-void Y::eval(Image& e) { 
-  
-  int x=e.getX();
-  int y=e.getY();
-  
-  int i,j;
-  for (i = 0 ; i < x ; i++){
-    for (j = 0 ; j < y ; j++){
-  		
-      e.putPixel(i,j,RGB(float(j)/float(y)));
-  		  		
-    }
-  }
-  
-}
-
-void v_fix::eval(Image& e) {
-	  
-  int x=e.getX();
-  int y=e.getY();
-	  
-  int i,j;
-  for (i = 0 ; i < x ; i++){
-    for (j = 0 ; j < y ; j++){
-  		
-      e.putPixel(i,j,RGB( p1 , p2 , p3 ));
-  		  		
-    }
-  }
-}
-
-
-
-
-	
-void gaussBlur::eval ( Image& e){
-  int x=e.getX();
-  int y=e.getY();
-   
-  Image e1(x , y);
-  
-  op1()->eval(e1); 
-  float kernel[3][3];
-  kernel[0][0]=1.0;
-  kernel[0][1]=2.0;
-  kernel[0][2]=1.0;
-  kernel[1][0]=2.0;
-  kernel[1][1]=4.0;
-  kernel[1][2]=2.0;
-  kernel[2][0]=1.0;
-  kernel[2][1]=2.0;
-  kernel[2][2]=1.0;
-  e1.filtraImatge(kernel);
-  
-  int i,j;
-  for (i = 0 ; i < x ; i++){
-    for (j=0 ; j < y ; j++){
-  		
-      e.putPixel(i,j,(e1.getPixel(i,j)));
-  		  		
-    }
-  }
-}
-	
-void gradDir::eval ( Image& e){
-  int x=e.getX();
-  int y=e.getY();
-   
-  Image e1(x , y);
-  
-  op1()->eval(e1); 
-  float kernel[3][3];
-  kernel[0][0]=1.0;
-  kernel[0][1]=-2.0;
-  kernel[0][2]=1.0;
-  kernel[1][0]=-2.0;
-  kernel[1][1]=5.0;
-  kernel[1][2]=-2.0;
-  kernel[2][0]=1.0;
-  kernel[2][1]=-2.0;
-  kernel[2][2]=1.0;
-  e1.filtraImatge(kernel);
-  
-  int i,j;
-  for (i = 0 ; i < x ; i++){
-    for (j=0 ; j < y ; j++){
-  		
-      e.putPixel(i,j,(e1.getPixel(i,j)));
-  		  		
-    }
-  }
-}
-	
-void emboss::eval ( Image& e){
-  int x=e.getX();
-  int y=e.getY();
-   
-  Image e1(x , y);
-  
-  op1()->eval(e1); 
-  float kernel[3][3];
-  kernel[0][0]=2.0;
-  kernel[0][1]=0.0;
-  kernel[0][2]=0.0;
-  kernel[1][0]=0.0;
-  kernel[1][1]=-1.0;
-  kernel[1][2]=0.0;
-  kernel[2][0]=0.0;
-  kernel[2][1]=0.0;
-  kernel[2][2]=-1.0;
-  e1.filtraImatge(kernel);
-  
-  int i,j;
-  for (i = 0 ; i < x ; i++){
-    for (j=0 ; j < y ; j++){
-  		
-      e.putPixel(i,j,(e1.getPixel(i,j)));
-  		  		
-    }
-  }
-}
-
-void sharpen::eval ( Image& e){
-  int x=e.getX();
-  int y=e.getY();
-   
-  Image e1(x , y);
-  
-  op1()->eval(e1); 
-  float kernel[3][3];
-  kernel[0][0]=-1.0;
-  kernel[0][1]=-1.0;
-  kernel[0][2]=-1.0;
-  kernel[1][0]=-1.0;
-  kernel[1][1]=9.0;
-  kernel[1][2]=-1.0;
-  kernel[2][0]=-1.0;
-  kernel[2][1]=-1.0;
-  kernel[2][2]=-1.0;
-  e1.filtraImatge(kernel);
-  
-  int i,j;
-  for (i = 0 ; i < x ; i++){
-    for (j=0 ; j < y ; j++){
-  		
-      e.putPixel(i,j,(e1.getPixel(i,j)));
-  		  		
-    }
-  }
-}
-
-void warp::eval ( Image& e){
-  int x=e.getX();
-  int y=e.getY();
-   
-  Image e1(x , y);
-  
-  op1()->eval(e1); 
-  
-  e1.warpGeneric();
-  
-  int i,j;
-  for (i = 0 ; i < x ; i++){
-    for (j=0 ; j < y ; j++){
-  		
-      e.putPixel(i,j,(e1.getPixel(i,j)));
-  		  		
-    }
-  }
-}
-
-void blur::eval ( Image& e){
-  int x=e.getX();
-  int y=e.getY();
-   
-  Image e1(x , y);
-  
-  op1()->eval(e1); 
-  
-  
-  
-  int i,j;
-  for (i = 1 ; i < (x-1) ; i++){
-    for (j = 1 ; j < (y-1) ; j++){
-      RGB mitjana = ((e1.getPixel(i-1,j)) + (e1.getPixel(i,j-1)) + 
-		     (e1.getPixel(i+1,j)) + (e1.getPixel(i,j+1)) +
-		     (e1.getPixel(i-1,j-1)) + (e1.getPixel(i+1,j+1)) + 
-		     (e1.getPixel(i-1,j+1)) + (e1.getPixel(i+1,j-1)) + 
-		     (e1.getPixel(i,j)))/9;
-      e.putPixel(i,j,mitjana);
-  		  		
-    }
-  }
-}
-	
-	
-void bwNoise::eval(Image& e) {
-	  
-  int x=e.getX();
-  int y=e.getY();
-  if ( seed!=-1 ){ srand(seed);  }
-  int i,j;
-  for (i = 0 ; i < x ; i++){
-    for (j = 0 ; j < y ; j++){
-  		
-      e.putPixel ( i, j, RGB ( float(rand( )/128)));
-    }
-  }
-}
-
-void colorNoise::eval(Image& e) {
-	  
-  int x=e.getX();
-  int y=e.getY();
-  if ( seed!=-1 ){ srand(seed);  }
-  int i,j;
-  for (i = 0 ; i < x ; i++){
-    for (j = 0 ; j < y ; j++){
-  		
-      e.putPixel ( i, j, RGB ( float(rand( )/128), float(rand( )/128), float(rand( )/128)));
-    }
-  }
-}
-
-void Abs::eval ( Image& e){
-
-	
-	
-  int x=e.getX();
-  int y=e.getY();
-   
-  Image e1(x , y);
-  
-  op1()->eval(e1); 
-  
-  
-  int i,j;
-  for (i = 0 ; i < x ; i++){
-    for (j=0 ; j < y ; j++){
-  		
-      e.putPixel(i,j,(e1.getPixel(i,j)).map( fabs ));
-  		  		
-    }
-  }	
-	
-	
-}
-	
-	
 
 void BinOp::print(ostream& o) const {
   o << "(" << head() << " ";
