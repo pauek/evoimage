@@ -1,4 +1,5 @@
 
+#include <cstdlib>
 #include <string>
 #include <fstream>
 #include "Node.h"
@@ -127,7 +128,8 @@ void Image::filtraImatge (const float kernel[3][3]) {
 	    sum = sum + ( getPixel (rowIndex , colIndex ) * RGB(kernel[mm][nn]));
 	}
       }
-      putPixel( i , j , (sum.map( fabs ) + 0.5f));
+      putPixel(i, j, sum); 
+      // Perquè això?: (sum.map( fabs ) + 0.5f));
     }
   }	
 }
@@ -177,6 +179,10 @@ void v_fix::eval(Image& e) {
       e.putPixel(i, j, RGB( p1 , p2 , p3 ));
 }
 
+inline float frand() { 
+  return float(rand()) / float(RAND_MAX); 
+}
+
 void bwNoise::eval(Image& e) {
   const int x = e.getX(), y = e.getY();
   if (seed != -1) {
@@ -184,7 +190,7 @@ void bwNoise::eval(Image& e) {
   }
   for (int i = 0 ; i < x ; i++)
     for (int j = 0 ; j < y ; j++)
-      e.putPixel ( i, j, RGB ( float(rand( )/128)));
+      e.putPixel(i, j, RGB(frand()));
 }
 
 void colorNoise::eval(Image& e) {
@@ -194,9 +200,7 @@ void colorNoise::eval(Image& e) {
   }
   for (int i = 0 ; i < x ; i++)
     for (int j = 0 ; j < y ; j++)
-      e.putPixel(i, j, RGB (float(rand()/128), 
-			    float(rand()/128), 
-			    float(rand()/128)));
+      e.putPixel(i, j, RGB(frand(), frand(), frand()));
 }
 
 // Unary Operations //////////////////////////////////////////////////
