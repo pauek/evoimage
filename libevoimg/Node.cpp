@@ -365,8 +365,16 @@ void BinOp::eval(Image& I) {
 	res.putPixel(i, j, (expr));				     \
   }
 
-float _fmod(float x, float y) {
+inline float _fmod(float x, float y) {
   return (x > 0.0 ? fmod(x, y) : y - fmod(-x, y));
+}
+
+inline RGB _max(const RGB& c1, const RGB& c2) {
+  return (c1.getr() > c2.getr() ? c1 : c2);
+}
+
+inline RGB _min(const RGB& c1, const RGB& c2) {
+  return (c1.getr() < c2.getr() ? c1 : c2);
 }
 
 const RGB offs(0.5, 0.5, 0.5);
@@ -383,6 +391,8 @@ DO_OP(Mod,   op1.getPixel(i,j).map2(_fmod, op2.getPixel(i,j)))
 DO_OP(Atan,  op1.getPixel(i,j).map2( atan2, op2.getPixel(i,j) ))
 DO_OP(Expt,  op1.getPixel(i,j).map2( pow, op2.getPixel(i,j) ))
 DO_OP(Round, (op1.getPixel(i,j) / op1.getPixel(i,j) + offs).map( floor ))
+DO_OP(Min,   _min(op1.getPixel(i, j), op2.getPixel(i, j)))
+DO_OP(Max,   _max(op1.getPixel(i, j), op2.getPixel(i, j)))
 
 void BinOp::print(ostream& o) const {
   o << "(" << head() << " ";
@@ -424,6 +434,8 @@ string warp::head() const { return "warp";}
 string blur::head() const { return "blur";}
 string Abs::head()  const { return "Abs"; }
 string Expt::head()  const { return "Expt"; }
+string Max::head()  const { return "Max"; }
+string Min::head()  const { return "Min"; }
 
 void Y::print(ostream& o) const { o << "y"; }
 void X::print(ostream& o) const { o << "x"; }

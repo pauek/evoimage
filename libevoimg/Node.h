@@ -253,6 +253,8 @@ DEF_BINARY_OP(Or);
 DEF_BINARY_OP(Xor);
 DEF_BINARY_OP(Atan);
 DEF_BINARY_OP(Expt);
+DEF_BINARY_OP(Min);
+DEF_BINARY_OP(Max);
 
 // Reader ////////////////////////////////////////////////////////////
 

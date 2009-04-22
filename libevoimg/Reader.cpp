@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <cstdlib>
+#include <cassert>
 #include "Node.h"
 using namespace std;
 
@@ -55,47 +56,47 @@ char getnext (std::istream& i) {
 	return c;
 	}
 
-Node* read_list ( std::istream& i ){
-	
-	vector <Node*> acum;
-	char c = i.get();
-	Node* n;
-	string head = read_token ( i);
-	while ( c != ')' ) {
-		n = read ( i);
-		if ( n != NULL) {acum.push_back ( n);}
-		c = i.get ();  // aqui no seria get_next?
-		}
-	if ( head == "+" || head == "Sum" || head == "sum") { return new Sum ( acum [0], acum [1] ); }
-	else if ( head == "-"  || head == "Rest" || head == "rest") { return new Rest ( acum [0] , acum [1] ); }
-	else if ( head == "*" || head == "Mult" || head == "mult") { return new Mult ( acum [0], acum [1] ); }
-	else if ( head == "/" || head == "Div" || head == "div") { return new Div ( acum [0], acum [1] ); }
-	else if ( head == "%" || head == "Mod" || head == "mod") { return new Mod ( acum [0], acum [1] ); }
-	else if ( head == "Log" || head == "log") { return new Log ( acum [0], acum [1] ); }
-	else if ( head == "Round" || head == "round") { return new Round ( acum [0], acum [1] ); }
-	else if ( head == "&" || head == "And" || head == "and") { return new And ( acum [0], acum [1] ); }
-	else if ( head == "|" || head == "Or" || head == "or") { return new Or ( acum [0], acum [1] ); }
-	else if ( head == "^" || head == "Xor" || head == "xor") { return new Xor ( acum [0], acum [1] ); }
-	else if ( head == "Sin" || head == "sin") { return new Sin ( acum [0]);}
-	else if ( head == "Cos" || head == "cos") { return new Cos ( acum [0]);}
-	else if ( head == "Atan" || head == "atan") { return new Atan ( acum [0], acum [1] ); }
-	else if ( head == "X" || head == "x") { return new X ( ); }
-	else if ( head == "Y" || head == "y") { return new Y ( ); }
-	else if ( head == "gradDir" ) { return new gradDir ( acum [0]);}
-	else if ( head == "gaussBlur" ) { return new gaussBlur ( acum [0]);}
-	else if ( head == "emboss" || head == "Emboss") { return new emboss ( acum [0]);}
-	else if ( head == "sharpen" || head == "Sharpen") { return new sharpen ( acum [0]);}
-	else if ( head == "warp" ) { return new Warp(acum [0], acum[1], acum[2]);}
-	else if ( head == "blur" ) { return new blur ( acum [0]);}
-	else if ( head == "bwNoise" ) { return new bwNoise ( ); }
-	else if ( head == "colorNoise" ) { return new colorNoise ( ); }
-	else if ( head == "Abs" || head == "abs") { return new Abs ( acum [0]);}
-	else if ( head == "Expt" || head == "expt") { return new Expt ( acum [0], acum [1] ); }
-	else {return NULL;}
-	
-	
-	}
-
+Node* read_list(std::istream& i ) {
+  vector <Node*> acum;
+  char c = i.get();
+  Node* n;
+  string head = read_token ( i);
+  while ( c != ')' ) {
+    n = read ( i);
+    if ( n != NULL) {acum.push_back ( n);}
+    c = i.get ();  // aqui no seria get_next?
+  }
+  if ( head == "+" || head == "Sum" || head == "sum") { return new Sum ( acum [0], acum [1] ); }
+  else if ( head == "-"  || head == "Rest" || head == "rest") { return new Rest ( acum [0] , acum [1] ); }
+  else if ( head == "*" || head == "Mult" || head == "mult") { return new Mult ( acum [0], acum [1] ); }
+  else if ( head == "/" || head == "Div" || head == "div") { return new Div ( acum [0], acum [1] ); }
+  else if ( head == "%" || head == "Mod" || head == "mod") { return new Mod ( acum [0], acum [1] ); }
+  else if ( head == "Log" || head == "log") { return new Log ( acum [0], acum [1] ); }
+  else if ( head == "Round" || head == "round") { return new Round ( acum [0], acum [1] ); }
+  else if ( head == "&" || head == "And" || head == "and") { return new And ( acum [0], acum [1] ); }
+  else if ( head == "|" || head == "Or" || head == "or") { return new Or ( acum [0], acum [1] ); }
+  else if ( head == "^" || head == "Xor" || head == "xor") { return new Xor ( acum [0], acum [1] ); }
+  else if ( head == "Sin" || head == "sin") { return new Sin ( acum [0]);}
+  else if ( head == "Cos" || head == "cos") { return new Cos ( acum [0]);}
+  else if ( head == "Atan" || head == "atan") { return new Atan ( acum [0], acum [1] ); }
+  else if ( head == "X" || head == "x") { return new X ( ); }
+  else if ( head == "Y" || head == "y") { return new Y ( ); }
+  else if ( head == "gradDir" ) { return new gradDir ( acum [0]);}
+  else if ( head == "gaussBlur" ) { return new gaussBlur ( acum [0]);}
+  else if ( head == "emboss" || head == "Emboss") { return new emboss ( acum [0]);}
+  else if ( head == "sharpen" || head == "Sharpen") { return new sharpen ( acum [0]);}
+  else if ( head == "warp" ) { return new Warp(acum [0], acum[1], acum[2]);}
+  else if ( head == "blur" ) { return new blur ( acum [0]);}
+  else if ( head == "bwNoise" ) { return new bwNoise ( ); }
+  else if ( head == "colorNoise" ) { return new colorNoise ( ); }
+  else if ( head == "Abs" || head == "abs") { return new Abs ( acum [0]);}
+  else if ( head == "Expt" || head == "expt") { return new Expt ( acum [0], acum [1] ); }
+  else if ( head == "Max" || head == "max") { return new Max(acum [0], acum [1]); }
+  else if ( head == "Min" || head == "min") { return new Min(acum [0], acum [1]); }
+  else { 
+    assert(false); 
+  }
+}
 
 Node* read (std::istream& i){
 	std::string acum="";
