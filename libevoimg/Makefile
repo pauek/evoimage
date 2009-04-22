@@ -9,6 +9,8 @@ libevoimg.a: $(OBJECTS)
 
 .cpp.o:
 	g++ $(CXXFLAGS) -c -o $@ $<
+	
+$(OBJECTS): Node.h
 
 clean:
 	rm -f $(OBJECTS) libevoimg.a

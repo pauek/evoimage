@@ -96,6 +96,16 @@ void Image::save_pnm(string name) const {
   }
 }
 
+void Image::copyPixels(const Image& I) {
+  const int _x = (x > I.x ? I.x : x);
+  const int _y = (y > I.y ? I.y : y);
+  for (int i = 0; i < _x; i++) {
+  	for (int j = 0; j < _y; j++) {
+  	  putPixel(i, j, I.getPixel(i, j));
+    }
+  }
+}
+
 void Image::filtraImatge (const float kernel[3][3]) {
   int i, j, m, n, mm, nn;
   int kCenterX, kCenterY;
@@ -158,18 +168,28 @@ void Image::warpGeneric () {
 
 // Leaf Operations ///////////////////////////////////////////////////
 
-void X::eval(Image& e) { 
+void Node::destroy(){
+  delete this;	
+}
+
+void X::eval(Image& e) {
+  float xtl, ytl, xbr, ybr;
+  e.get_tl(xtl, ytl);
+  e.get_br(xbr, ybr);
   const int x = e.getX(), y = e.getY();
   for (int i = 0 ; i < x ; i++)
     for (int j = 0 ; j < y ; j++)
-      e.putPixel(i, j, RGB(2.*float(i - x/2)/float(x)));
+      e.putPixel(i, j, RGB( (xbr - xtl)*float(i)/float(x-1) + xtl ));
 }
 
 void Y::eval(Image& e) { 
+  float xtl, ytl, xbr, ybr;
+  e.get_tl(xtl, ytl);
+  e.get_br(xbr, ybr);
   const int x = e.getX(), y = e.getY();
   for (int i = 0 ; i < x ; i++)
     for (int j = 0 ; j < y ; j++)
-      e.putPixel(i, j, RGB(2.*float(j - y/2)/float(y)));
+      e.putPixel(i, j, RGB( (ybr - ytl)*float(j)/float(y-1) + ytl ));
 }
 
 void v_fix::eval(Image& e) {
@@ -179,7 +199,7 @@ void v_fix::eval(Image& e) {
       e.putPixel(i, j, RGB( p1 , p2 , p3 ));
 }
 
-inline float frand() { 
+inline float frand() {
   return float(rand()) / float(RAND_MAX); 
 }
 
@@ -190,7 +210,7 @@ void bwNoise::eval(Image& e) {
   }
   for (int i = 0 ; i < x ; i++)
     for (int j = 0 ; j < y ; j++)
-      e.putPixel(i, j, RGB(frand()));
+      e.putPixel(i, j, RGB(frand() < .5 ? 1.0 : 0.0));
 }
 
 void colorNoise::eval(Image& e) {
@@ -203,7 +223,44 @@ void colorNoise::eval(Image& e) {
       e.putPixel(i, j, RGB(frand(), frand(), frand()));
 }
 
+void Warp::eval(Image& I) {
+  // (warp <expr> <scale x> <scale y>)
+  Image scalex(1, 1);
+  p2->eval(scalex);
+  float scx = scalex.getPixel(0, 0).getr();
+
+  Image scaley(1, 1);
+  p3->eval(scaley);
+  float scy = scaley.getPixel(0, 0).getr();
+  
+  float xtl, ytl, xbr, ybr;
+  I.get_tl(xtl, ytl);
+  I.get_br(xbr, ybr);
+  float xcen = (xtl + xbr) / 2.0;
+  float ycen = (ytl + ybr) / 2.0;
+  float xv = xtl - xcen, yv = ytl - ycen;
+  xv *= scx, yv *= scy;
+  
+  Image result(I.getX(), I.getY(),
+  	           xcen + xv, ycen + yv,
+  	           xcen - xv, ycen - yv);
+  p1->eval(result);
+  I.copyPixels(result);
+}
+
+void Warp::destroy() {
+  p1->destroy();
+  p2->destroy();
+  p3->destroy();
+  delete this;
+}
+
 // Unary Operations //////////////////////////////////////////////////
+
+void UnaryOp::destroy(){
+op1()->destroy();
+delete this;	
+}
 
 void Abs::eval(Image& I) {
   op1()->eval(I);
@@ -285,6 +342,12 @@ void blur::eval (Image& I){
 }
 
 // BinaryOperations //////////////////////////////////////////////////
+
+void BinOp::destroy(){
+  op1()->destroy();
+  op2()->destroy();
+  delete this;
+}
 
 void BinOp::eval(Image& I) {
   const int x = I.getX(), y = I.getY();
@@ -425,3 +488,13 @@ void Y::print(ostream& o) const { o << "y"; }
 void X::print(ostream& o) const { o << "x"; }
 void bwNoise::print(ostream& o) const { o << "bwNoise"; }
 void colorNoise::print(ostream& o) const { o << "colorNoise"; }
+
+void Warp::print(ostream& o) const {
+  o << "(warp ";  
+  p1->print(o);
+  o << " ";
+  p2->print(o);
+  o << " ";
+  p3->print(o);
+  o << ")";
+}

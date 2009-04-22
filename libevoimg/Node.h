@@ -78,12 +78,18 @@ public:
 };
 
 class Image {
-  int x,y;
+  int x, y;
+  float xtl, ytl; // top left map coordinates
+  float xbr, ybr; // bottom right map coordinates
   RGB *p;
 public:
-  Image (int _x , int _y) {
+  Image (int _x , int _y, 
+         float _xtl = -1.0, float _ytl =  1.0,
+         float _xbr =  1.0, float _ybr = -1.0) {
       x = _x;
       y = _y;
+      xtl = _xtl, ytl = _ytl;
+      xbr = _xbr, ybr = _ybr;
       p = new RGB[x * y];
   }
   ~Image() { delete[] p; }
@@ -93,6 +99,12 @@ public:
   RGB  getPixel (int i, int j) const  { return p[j*x+i]; }
   void putPixel (int i, int j, RGB v) { p[j*x+i] = v; }
 
+  void get_tl(float& x, float& y) const { x = xtl, y = ytl; }
+  void get_br(float& x, float& y) const { x = xbr, y = ybr; }
+  void set_tl(float x, float y) { xtl = x, ytl = y; }
+  void set_br(float x, float y) { xbr = x, ybr = y; }
+
+  void copyPixels(const Image& I);
   void filtraImatge(const float kernel[3][3]);
   void warpGeneric();
   void save_pnm(std::string filename) const;
@@ -100,6 +112,7 @@ public:
 
 class Node {
 public:
+  virtual void destroy();
   virtual void eval(Image& e) = 0;
   virtual void print(std::ostream& o) const { o << "?"; }
   static Node* randomNode(int lcount);
@@ -153,6 +166,17 @@ public:
   void print(std::ostream& o) const;
 };
 
+class Warp : public Node {
+  Node *p1, *p2, *p3;
+public:
+  Warp(Node *_p1, Node *_p2, Node *_p3) {
+    p1 = _p1, p2 = _p2, p3 = _p3;
+  }
+
+  void eval(Image& I);
+  void destroy();
+  void print(std::ostream& o) const;
+};
 
 // Operacions Unàries ////////////////////////////////////////////////
 
@@ -165,7 +189,7 @@ protected:
 
 public:
   UnaryOp(Node* _p1) { p1 = _p1; }
-
+  void destroy();
   void print(std::ostream& o) const;
 };
 
@@ -198,6 +222,7 @@ protected:
   virtual std::string head() const { return "?"; }
   
 public:
+  void destroy();
   BinOp(Node* _p1, Node* _p2) {
     p1 = _p1;
     p2 = _p2;
