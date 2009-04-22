@@ -357,91 +357,32 @@ void BinOp::eval(Image& I) {
   do_op(I, i1, i2);
 }
 
-void Sum::do_op(Image& res, Image& op1, Image& op2) {
-  const int x = res.getX(), y = res.getY();
-  for (int i = 0; i < x; i++)
-    for (int j = 0; j < y; j++)
-      res.putPixel(i, j, (op1.getPixel(i,j) + op2.getPixel(i,j)));
+#define DO_OP(Class, expr)					     \
+  void Class::do_op(Image& res, Image& op1, Image& op2) {	     \
+    const int x = res.getX(), y = res.getY();			     \
+    for (int i = 0; i < x; i++)					     \
+      for (int j = 0; j < y; j++)				     \
+	res.putPixel(i, j, (expr));				     \
+  }
+
+float _fmod(float x, float y) {
+  return (x > 0.0 ? fmod(x, y) : y - fmod(-x, y));
 }
 
-void Rest::do_op(Image& res, Image& op1, Image& op2) {
-  const int x = res.getX(), y = res.getY();
-  for (int i = 0; i < x; i++)
-    for (int j = 0; j < y; j++)
-      res.putPixel(i, j, (op1.getPixel(i,j) - op2.getPixel(i,j)));
-}
+const RGB offs(0.5, 0.5, 0.5);
 
-void Mult::do_op(Image& res, Image& op1, Image& op2) {
-  const int x = res.getX(), y = res.getY();
-  for (int i = 0; i < x; i++)
-    for (int j = 0; j < y; j++)
-      res.putPixel(i, j, (op1.getPixel(i,j) * op2.getPixel(i,j)));
-}
-
-void Div::do_op(Image& res, Image& op1, Image& op2) {
-  const int x = res.getX(), y = res.getY();
-  for (int i = 0; i < x; i++)
-    for (int j = 0; j < y; j++)
-      res.putPixel(i, j, (op1.getPixel(i,j) / op2.getPixel(i,j)));
-}
-
-void Mod::do_op(Image& res, Image& op1, Image& op2) {
-  const int x = res.getX(), y = res.getY();
-  for (int i = 0; i < x; i++)
-    for (int j = 0; j < y; j++)
-      res.putPixel(i, j, (op1.getPixel(i,j).map2(fmod, op2.getPixel(i,j))));
-}
-
-void Log::do_op(Image& res, Image& op1, Image& op2) {
-  const int x = res.getX(), y = res.getY();
-  for (int i = 0; i < x; i++)
-    for (int j = 0; j < y; j++)
-      res.putPixel(i, j, (op1.getPixel(i,j).map( log10 ) / op2.getPixel(i,j).map( log10 )));
-}
-
-void Round::do_op(Image& res, Image& op1, Image& op2) {
-  RGB offs = RGB(0.5, 0.5, 0.5);
-  const int x = res.getX(), y = res.getY();
-  for (int i = 0; i < x; i++)
-    for (int j = 0; j < y; j++)
-      res.putPixel(i, j, ((op1.getPixel(i,j) / op1.getPixel(i,j) + offs).map( floor )));
-}
-
-void And::do_op(Image& res, Image& op1, Image& op2) {
-  const int x = res.getX(), y = res.getY();
-  for (int i = 0; i < x; i++)
-    for (int j = 0; j < y; j++)
-      res.putPixel(i, j, (op1.getPixel(i,j) & op2.getPixel(i,j)));
-}
-
-void Or::do_op(Image& res, Image& op1, Image& op2) {
-  const int x = res.getX(), y = res.getY();
-  for (int i = 0; i < x; i++)
-    for (int j = 0; j < y; j++)
-      res.putPixel(i, j, (op1.getPixel(i,j) | op2.getPixel(i,j)));
-}
-
-void Xor::do_op(Image& res, Image& op1, Image& op2) {
-  const int x = res.getX(), y = res.getY();
-  for (int i = 0; i < x; i++)
-    for (int j = 0; j < y; j++)
-      res.putPixel(i, j, (op1.getPixel(i,j) ^ op2.getPixel(i,j)));
-}
-
-void Atan::do_op(Image& res, Image& op1, Image& op2) {
-  const int x = res.getX(), y = res.getY();
-  for (int i = 0; i < x; i++)
-    for (int j = 0; j < y; j++)
-      res.putPixel(i, j, (op1.getPixel(i,j).map2( atan2, op2.getPixel(i,j) )));
-}
-
-void Expt::do_op(Image& res, Image& op1, Image& op2) {
-  const int x = res.getX(), y = res.getY();
-  for (int i = 0; i < x; i++)
-    for (int j = 0; j < y; j++)
-      res.putPixel(i, j, op1.getPixel(i,j).map2(pow, op2.getPixel(i,j)));
-}
-
+DO_OP(Sum,   op1.getPixel(i,j) + op2.getPixel(i,j))
+DO_OP(Rest,  op1.getPixel(i,j) - op2.getPixel(i,j))
+DO_OP(Mult,  op1.getPixel(i,j) * op2.getPixel(i,j))
+DO_OP(Div,   op1.getPixel(i,j) / op2.getPixel(i,j))
+DO_OP(Mod,   op1.getPixel(i,j).map2(_fmod, op2.getPixel(i,j)))
+DO_OP(Log,   op1.getPixel(i,j).map( log10 ) / op2.getPixel(i,j).map( log10 ))
+DO_OP(And,   op1.getPixel(i,j) & op2.getPixel(i,j))
+DO_OP(Or,    op1.getPixel(i,j) | op2.getPixel(i,j))
+DO_OP(Xor,   op1.getPixel(i,j) ^ op2.getPixel(i,j))
+DO_OP(Atan,  op1.getPixel(i,j).map2( atan2, op2.getPixel(i,j) ))
+DO_OP(Expt,  op1.getPixel(i,j).map2(pow, op2.getPixel(i,j)))
+DO_OP(Round, (op1.getPixel(i,j) / op1.getPixel(i,j) + offs).map( floor ))
 
 void BinOp::print(ostream& o) const {
   o << "(" << head() << " ";
