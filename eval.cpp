@@ -50,7 +50,7 @@ int main(int argc, char *argv[]) {
   
   stringstream sin(args[0]); 
   Node* root = read(sin);
-  Image I(width, height);
+  Image I(width, height, -1.0, 1.0, 1.0, -1.0);
   root->eval(I);  
   I.save_pnm(outfile);
 }
