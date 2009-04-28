@@ -36,23 +36,27 @@ public:
     return RGB( f(_r, o.getr()), f(_g, o.getg()), f(_b, o.getb()) );
   }
 
-  RGB operator+(const RGB& o) {
+  RGB operator+(const RGB& o) const {
     return RGB(_r + o._r, _g + o._g, _b + o._b);
   }
   
-  RGB operator-(const RGB& o) {
+  RGB operator-(const RGB& o) const {
     return RGB(_r - o._r, _g - o._g, _b - o._b);
   }
   
-  RGB operator*(const RGB& o) {
+  RGB operator*(const RGB& o) const {
     return RGB(_r * o._r, _g * o._g, _b * o._b);
   }
+
+  RGB operator*(double x) const {
+    return RGB(_r * x, _g * x, _b * x);
+  }
   
-  RGB operator/(const RGB& o) {
+  RGB operator/(const RGB& o) const {
     return RGB(_r / o._r, _g / o._g, _b / o._b);
   }
   
-  RGB operator&(const RGB& o) {
+  RGB operator&(const RGB& o) const {
     long_float r1, r2, g1, g2, b1, b2;
     r1.f = _r; r2.f = o._r; r1.l &= r2.l;
     g1.f = _g; g2.f = o._g; g1.l &= g2.l;
@@ -60,7 +64,7 @@ public:
     return RGB(r1.f, g1.f, b1.f);
   }
   
-  RGB operator|(const RGB& o) {
+  RGB operator|(const RGB& o) const {
     long_float r1, r2, g1, g2, b1, b2;
     r1.f = _r; r2.f = o._r; r1.l |= r2.l;
     g1.f = _g; g2.f = o._g; g1.l |= g2.l;
@@ -68,7 +72,7 @@ public:
     return RGB(r1.f, g1.f, b1.f);
   }
   
-  RGB operator^(const RGB& o) {
+  RGB operator^(const RGB& o) const {
     long_float r1, r2, g1, g2, b1, b2;
     r1.f = _r; r2.f = o._r; r1.l ^= r2.l;
     g1.f = _g; g2.f = o._g; g1.l ^= g2.l;
@@ -142,27 +146,31 @@ public:
   void print(std::ostream& o) const;
 };
 
-class bwNoise : public Node {
+class Noise : public Node {
   int seed;
   
 public:
-  bwNoise() { seed=-1;}
-  bwNoise(int s) { seed=s; }
+  Noise() { seed=-1;}
+  Noise(int s) { seed=s; }
   
   int getSeed(){ return seed; }
   void eval(Image& e);
+  virtual RGB gen_noise() const = 0;
+};
+
+class bwNoise : public Noise {
+public:
+  bwNoise() : Noise() {}
+  bwNoise(int s) : Noise(s) {}
+  RGB gen_noise() const;
   void print(std::ostream& o) const;
 };
 
-class colorNoise : public Node {
-  int seed;
-  
+class colorNoise : public Noise {
 public:
-  colorNoise(int s){	seed=s;	}
-  colorNoise() { seed=-1;}
-  int getSeed(){ return seed; }
-
-  void eval(Image& e);
+  colorNoise() : Noise() {}
+  colorNoise(int s) : Noise(s) {}
+  RGB gen_noise() const;
   void print(std::ostream& o) const;
 };
 

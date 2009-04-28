@@ -203,24 +203,62 @@ inline float frand() {
   return float(rand()) / float(RAND_MAX); 
 }
 
-void bwNoise::eval(Image& e) {
+const double noise_size = 0.05;
+
+inline RGB linear(const RGB& a, const RGB& b, double t) {
+  return a * (1 - t) + b * t;
+}
+
+inline RGB bilinear(const RGB& aa, const RGB& ab,
+		    const RGB& ba, const RGB& bb,
+		    double u, double v) {
+  return linear( linear(aa, ab, u),
+		 linear(ba, bb, u), v );
+}
+
+void Noise::eval(Image& e) {
   const int x = e.getX(), y = e.getY();
   if (seed != -1) {
     srand(seed);
   }
-  for (int i = 0 ; i < x ; i++)
-    for (int j = 0 ; j < y ; j++)
-      e.putPixel(i, j, RGB(frand() < .5 ? 1.0 : 0.0));
+  
+  float xtl, ytl, xbr, ybr;
+  e.get_tl(xtl, ytl);
+  e.get_br(xbr, ybr);
+  const double width = xbr - xtl, height = ytl - ybr;
+  int xsz = int(floor(width  / noise_size)) + 1;
+  int ysz = int(floor(height / noise_size)) + 1;
+  if (xsz > x) xsz = x;
+  if (ysz > y) ysz = y;
+  
+  Image I(xsz, ysz);
+  for (int i = 0 ; i < xsz ; i++)
+    for (int j = 0 ; j < ysz ; j++)
+      I.putPixel(i, j, gen_noise()); // alternativa: (frand() < .5 ? 0.0 : 1.0)
+
+  // Bilinear interpolation
+  for (int i = 0 ; i < x ; i++) {
+    for (int j = 0 ; j < y ; j++) {
+      double u = width  * float(i) / float(x-1);
+      double v = height * float(j) / float(y-1);
+      u /= noise_size;
+      v /= noise_size;
+      int _x = floor(u), _y = floor(v);
+      double u_r = u - _x, v_r = v - _y;
+      e.putPixel(i, j, 
+		 bilinear( I.getPixel(_x, _y),   I.getPixel(_x+1, _y),
+			   I.getPixel(_x, _y+1), I.getPixel(_x+1, _y+1),
+			   u_r, v_r ));
+    }
+  }
 }
 
-void colorNoise::eval(Image& e) {
-  const int x = e.getX(), y = e.getY();
-  if (seed != -1) { 
-    srand(seed);  
-  }
-  for (int i = 0 ; i < x ; i++)
-    for (int j = 0 ; j < y ; j++)
-      e.putPixel(i, j, RGB(frand(), frand(), frand()));
+RGB bwNoise::gen_noise() const {
+  return RGB(frand());
+}
+
+RGB colorNoise::gen_noise() const {
+  return RGB(frand(), frand(), frand());
 }
 
 void Warp::eval(Image& I) {
