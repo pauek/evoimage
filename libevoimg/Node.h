@@ -79,6 +79,8 @@ public:
     b1.f = _b; b2.f = o._b; b1.l ^= b2.l;
     return RGB(r1.f, g1.f, b1.f);
   }
+
+  RGB hsv_to_rgb() const;
 };
 
 class Image {
@@ -193,6 +195,18 @@ public:
   void print(std::ostream& o) const;
 };
 
+class Dissolve : public Node {
+  Node *p1, *p2, *p3;
+public:
+  Dissolve(Node *_p1, Node *_p2, Node *_p3) {
+    p1 = _p1, p2 = _p2, p3 = _p3;
+  }
+
+  void eval(Image& I);
+  void destroy();
+  void print(std::ostream& o) const;
+};
+
 // Operacions Unàries ////////////////////////////////////////////////
 
 class UnaryOp : public Node {
@@ -225,6 +239,7 @@ DEF_UNARY_OP(emboss);
 DEF_UNARY_OP(sharpen);
 DEF_UNARY_OP(blur);
 DEF_UNARY_OP(warp);
+DEF_UNARY_OP(hsv_to_rgb);
 
 // Operacions Binàries ///////////////////////////////////////////////
 

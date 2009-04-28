@@ -5,6 +5,26 @@
 #include "Node.h"
 using namespace std;
 
+RGB RGB::hsv_to_rgb() const {
+  double xh = fmod( _r*360., 360 ) / 60.0;
+  double i = floor(xh);
+  double f = xh - i;
+  double p1 = _b * (1 - _g);
+  double p2 = _b * (1 - (_g * f));
+  double p3 = _b * (1 - (_g * (1 - f)));
+
+  double r = 0.0, g = 0.0, b = 0.0;
+  switch ( (int)i ) {
+  case 0: r = _b; g = p3; b = p1; break;
+  case 1: r = p2; g = _b; b = p1; break;
+  case 2: r = p1; g = _b; b = p3; break;
+  case 3: r = p1; g = p2; b = _b; break;
+  case 4: r = p3; g = p1; b = _b; break;
+  case 5: r = _b; g = p1; b = p2; break;
+  }
+  return RGB(r, g, b);
+}
+
 Node* Node::randomNode(int level) {
   Node *_op1, *_op2;
   int selector = rand() % 21;
@@ -416,6 +436,30 @@ void Warp::destroy() {
   delete this;
 }
 
+void Dissolve::eval(Image& I) {
+  const int x = I.getX(), y = I.getY();
+  Image _alpha(1, 1);
+  p3->eval(_alpha);
+  double alpha = _alpha.getPixel(0, 0).getr();
+  
+  Image I1(x, y); p1->eval(I1);
+  Image I2(x, y); p2->eval(I2);
+
+  for (int i = 0 ; i < x; i++)
+    for (int j = 0 ; j < y; j++)
+      I.putPixel(i, j, 
+		 linear(I1.getPixel(i, j), 
+			I2.getPixel(i, j), 
+			alpha));
+}
+
+void Dissolve::destroy() {
+  p1->destroy();
+  p2->destroy();
+  p3->destroy();
+  delete this;
+}
+
 // Unary Operations //////////////////////////////////////////////////
 
 void UnaryOp::destroy(){
@@ -500,6 +544,14 @@ void blur::eval (Image& I){
   };
   op1()->eval(I); 
   I.filtraImatge(kernel);
+}
+
+void hsv_to_rgb::eval(Image& I) {
+  op1()->eval(I);
+  const int x = I.getX(), y = I.getY();
+  for (int i = 0; i < x; i++)
+    for (int j = 0; j < y; j++)
+      I.putPixel(i, j, I.getPixel(i,j).hsv_to_rgb());
 }
 
 // BinaryOperations //////////////////////////////////////////////////
@@ -593,6 +645,7 @@ string emboss::head()  const { return "emboss"; }
 string sharpen::head()  const { return "sharpen"; }
 string warp::head() const { return "warp";}
 string blur::head() const { return "blur";}
+string hsv_to_rgb::head() const { return "hsv_to_rgb"; }
 string Abs::head()  const { return "Abs"; }
 string Expt::head()  const { return "Expt"; }
 string Max::head()  const { return "Max"; }
@@ -605,6 +658,16 @@ void colorNoise::print(ostream& o) const { o << "colorNoise"; }
 
 void Warp::print(ostream& o) const {
   o << "(warp ";  
+  p1->print(o);
+  o << " ";
+  p2->print(o);
+  o << " ";
+  p3->print(o);
+  o << ")";
+}
+
+void Dissolve::print(ostream& o) const {
+  o << "(dissolve "; 
   p1->print(o);
   o << " ";
   p2->print(o);
