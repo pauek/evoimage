@@ -1,5 +1,6 @@
 
 #include <cstdlib>
+#include <cassert>
 #include <string>
 #include <fstream>
 #include "Node.h"
@@ -26,11 +27,33 @@ RGB RGB::hsv_to_rgb() const {
 }
 
 Node* Node::randomNode(int level) {
-  Node *_op1, *_op2;
-  int selector = rand() % 21;
+  Node *_op1, *_op2, *_op3;
+  int selector = rand() % 26;
   cout << selector;
   
-  if (selector < 12) { 
+  if (selector < 10) {
+    // Operacions unàries
+    if (level > 2)
+      _op1 = randomNode (level - 1);
+    else
+      _op1 = randomLeave ();
+
+    switch (selector) {
+    case 0: return new Sin(_op1);
+    case 1: return new Cos(_op1);
+    case 2: return new gradDir(_op1);
+    case 3: return new gaussBlur(_op1);
+    case 4: return new emboss(_op1);
+    case 5: return new sharpen(_op1);
+    case 6: return new warp(_op1);
+    case 7: return new blur(_op1);
+    case 8: return new hsv_to_rgb(_op1);
+    case 9: 
+    default:
+      return new Abs(_op1);
+    }
+  }
+  else if (selector < 24) { 
     // Operacions binàries
     if (level > 2) {
       _op1 = randomNode(level - 1);
@@ -41,43 +64,43 @@ Node* Node::randomNode(int level) {
       _op2 = randomLeave();
     }
     switch (selector) {
-    case 0: return new Sum(_op1, _op2);
-    case 1: return new Rest(_op1, _op2);
-    case 2: return new Mult(_op1, _op2);
-    case 3: return new Div(_op1, _op2);
-    case 4: return new Mod(_op1, _op2);
-    case 5: return new Log(_op1, _op2);
-    case 6: return new Round(_op1, _op2);
-    case 7: return new And(_op1, _op2);
-    case 8: return new Or(_op1, _op2);
-    case 9: return new Xor(_op1, _op2);
-    case 10: return new Atan(_op1, _op2);
-    case 11: 
+    case 10: return new Sum(_op1, _op2);
+    case 11: return new Rest(_op1, _op2);
+    case 12: return new Mult(_op1, _op2);
+    case 13: return new Div(_op1, _op2);
+    case 14: return new Mod(_op1, _op2);
+    case 15: return new Log(_op1, _op2);
+    case 16: return new Round(_op1, _op2);
+    case 17: return new And(_op1, _op2);
+    case 18: return new Or(_op1, _op2);
+    case 19: return new Xor(_op1, _op2);
+    case 20: return new Atan(_op1, _op2);
+    case 21: return new Min(_op1, _op2);
+    case 22: return new Max(_op1, _op2);
+    case 23: 
     default:
       return new Expt(_op1, _op2);
     }
   }
-  else {   
-    // Operacions unàries
-    if (level > 2)
-      _op1 = randomNode (level - 1);
-    else
-      _op1 = randomLeave ();
-
-    switch (selector) {
-    case 12: return new Sin(_op1);
-    case 13: return new Cos(_op1);
-    case 14: return new gradDir(_op1);
-    case 15: return new gaussBlur(_op1);
-    case 16: return new emboss(_op1);
-    case 17: return new sharpen(_op1);
-    case 18: return new warp(_op1);
-    case 19: return new blur(_op1);
-    case 20: 
-    default:
-      return new Abs(_op1);
+  else if (selector == 24 || selector == 25) {
+    // Warp
+    if (level > 2) {
+      _op1 = randomNode(level - 1);
+      _op2 = randomNode(level - 1);
+      _op3 = randomNode(level - 1);
     }
+    else {
+      _op1 = randomLeave();
+      _op2 = randomLeave();
+      _op3 = randomLeave();
+    }
+    if (selector == 24)
+      return new Warp(_op1, _op2, _op3);
+    else
+      return new Dissolve(_op1, _op2, _op3);
   }
+  assert(false);
+  return NULL;
 }
 
 Node* Node::randomLeave() {
@@ -438,19 +461,19 @@ void Warp::destroy() {
 
 void Dissolve::eval(Image& I) {
   const int x = I.getX(), y = I.getY();
-  Image _alpha(1, 1);
-  p3->eval(_alpha);
-  double alpha = _alpha.getPixel(0, 0).getr();
+  Image _mask(x, y);
+  p3->eval(_mask);
   
   Image I1(x, y); p1->eval(I1);
   Image I2(x, y); p2->eval(I2);
 
   for (int i = 0 ; i < x; i++)
-    for (int j = 0 ; j < y; j++)
+    for (int j = 0 ; j < y; j++) {
+      RGB t = _mask.getPixel(i, j).clamp();
       I.putPixel(i, j, 
-		 linear(I1.getPixel(i, j), 
-			I2.getPixel(i, j), 
-			alpha));
+		 I1.getPixel(i, j) * t + 
+		 I2.getPixel(i, j) * t.invert());
+    }
 }
 
 void Dissolve::destroy() {
@@ -653,8 +676,8 @@ string Min::head()  const { return "Min"; }
 
 void Y::print(ostream& o) const { o << "y"; }
 void X::print(ostream& o) const { o << "x"; }
-void bwNoise::print(ostream& o) const { o << "bwNoise"; }
-void colorNoise::print(ostream& o) const { o << "colorNoise"; }
+void bwNoise::print(ostream& o) const { o << "(bwNoise)"; }
+void colorNoise::print(ostream& o) const { o << "(colorNoise)"; }
 
 void Warp::print(ostream& o) const {
   o << "(warp ";  

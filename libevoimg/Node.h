@@ -15,6 +15,12 @@ union long_float {
   float f;
 };
 
+inline float _clamp(float x) {
+  if (x > 1.0) x = 1.0;
+  if (x < 0.0) x = 0.0;
+  return x;
+}
+
 class RGB {
   float _r, _g, _b;
 
@@ -54,6 +60,14 @@ public:
   
   RGB operator/(const RGB& o) const {
     return RGB(_r / o._r, _g / o._g, _b / o._b);
+  }
+
+  RGB clamp() const {
+    return RGB(_clamp(_r), _clamp(_g), _clamp(_b));
+  }
+
+  RGB invert() const {
+    return RGB(1.0 - _r, 1.0 - _g, 1.0 - _b);
   }
   
   RGB operator&(const RGB& o) const {
