@@ -96,6 +96,13 @@ public:
       xbr = _xbr, ybr = _ybr;
       p = new RGB[x * y];
   }
+
+  Image(const Image& I) {
+    x = I.x, y = I.y;
+    xtl = I.xtl, ytl = I.ytl, xbr = I.xbr, ybr = I.ybr;
+    p = new RGB[x * y];
+    copyPixels(I);
+  }
   ~Image() { delete[] p; }
 
   int  getX () const { return x; }
@@ -109,7 +116,7 @@ public:
   void set_br(float x, float y) { xbr = x, ybr = y; }
 
   void copyPixels(const Image& I);
-  void filtraImatge(const float kernel[3][3]);
+  void filtraImatge(const RGB kernel[3][3]);
   void warpGeneric();
   void save_pnm(std::string filename) const;
 };

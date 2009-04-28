@@ -100,48 +100,171 @@ void Image::copyPixels(const Image& I) {
   const int _x = (x > I.x ? I.x : x);
   const int _y = (y > I.y ? I.y : y);
   for (int i = 0; i < _x; i++) {
-  	for (int j = 0; j < _y; j++) {
-  	  putPixel(i, j, I.getPixel(i, j));
+    for (int j = 0; j < _y; j++) {
+      putPixel(i, j, I.getPixel(i, j));
     }
   }
 }
 
-void Image::filtraImatge (const float kernel[3][3]) {
-  int i, j, m, n, mm, nn;
-  int kCenterX, kCenterY;
-  int kernelSizeX = 3;
-  int kernelSizeY = 3;                         
-  RGB sum;                                      
-  int rowIndex, colIndex;
-  int dataSizeX = x; 
-  int dataSizeY = y;
-    
-  kCenterX = kernelSizeX / 2;
-  kCenterY = kernelSizeY / 2;
+void Image::filtraImatge (const RGB kernel[3][3]) {
+  RGB res;
+  // Core
+  Image Tmp(*this);
+  for (int i = 1; i < x - 1; i++) {
+    for (int j = 1; j < y - 1; j++) {
+      res = 
+	kernel[2][2] * RGB(Tmp.getPixel(i-1, j-1)) + 
+	kernel[1][2] * RGB(Tmp.getPixel(i  , j-1)) + 
+	kernel[0][2] * RGB(Tmp.getPixel(i+1, j-1)) + 
 
-  for(i=0; i < dataSizeY; ++i) {
-    for(j=0; j < dataSizeX; ++j) {
-      sum = 0.0;                            
-      for(m=0; m < kernelSizeY; ++m) {
-	mm = kernelSizeY - 1 - m;       // index fila del kernel girat
+	kernel[2][1] * RGB(Tmp.getPixel(i-1, j  )) + 
+	kernel[1][1] * RGB(Tmp.getPixel(i  , j  )) + 
+	kernel[0][1] * RGB(Tmp.getPixel(i+1, j  )) + 
+
+	kernel[2][0] * RGB(Tmp.getPixel(i-1, j+1)) + 
+	kernel[1][0] * RGB(Tmp.getPixel(i  , j+1)) + 
+	kernel[0][0] * RGB(Tmp.getPixel(i+1, j+1));
 	
-	for(n=0; n < kernelSizeX; ++n) {
-	  nn = kernelSizeX - 1 - n;   // index columna del kernel girat
-	  
-	  // index de  l'input per mirar dspres si estem treballant amb valors de fora d la img
-	  rowIndex = i + m - kCenterY;
-	  colIndex = j + n - kCenterX;
-	  
-	  // ignorar els pixels que estan fora de la img. (hi ha altres mètodes tb)
-	  if(rowIndex >= 0 && rowIndex < dataSizeY && colIndex >= 0 && colIndex < dataSizeX)
-	    
-	    sum = sum + ( getPixel (rowIndex , colIndex ) * RGB(kernel[mm][nn]));
-	}
-      }
-      putPixel(i, j, sum); 
-      // Perquè això?: (sum.map( fabs ) + 0.5f));
+      putPixel(i, j, res);
     }
-  }	
+  }
+
+  // Top
+  for (int i = 1; i < x - 1; i++) {
+    res = 
+      kernel[2][2] * RGB(Tmp.getPixel(i-1, 0)) + 
+      kernel[1][2] * RGB(Tmp.getPixel(i  , 0)) + 
+      kernel[0][2] * RGB(Tmp.getPixel(i+1, 0)) + 
+      
+      kernel[2][1] * RGB(Tmp.getPixel(i-1, 0)) + 
+      kernel[1][1] * RGB(Tmp.getPixel(i  , 0)) + 
+      kernel[0][1] * RGB(Tmp.getPixel(i+1, 0)) + 
+      
+      kernel[2][0] * RGB(Tmp.getPixel(i-1, 1)) + 
+      kernel[1][0] * RGB(Tmp.getPixel(i  , 1)) + 
+      kernel[0][0] * RGB(Tmp.getPixel(i+1, 1));
+	
+    putPixel(i, 0, res);
+  }
+
+  // Bottom
+  for (int i = 1; i < x - 1; i++) {
+    res = 
+      kernel[2][2] * RGB(Tmp.getPixel(i-1, y-2)) + 
+      kernel[1][2] * RGB(Tmp.getPixel(i  , y-2)) + 
+      kernel[0][2] * RGB(Tmp.getPixel(i+1, y-2)) + 
+      
+      kernel[2][1] * RGB(Tmp.getPixel(i-1, y-1)) + 
+      kernel[1][1] * RGB(Tmp.getPixel(i  , y-1)) + 
+      kernel[0][1] * RGB(Tmp.getPixel(i+1, y-1)) + 
+      
+      kernel[2][0] * RGB(Tmp.getPixel(i-1, y-1)) + 
+      kernel[1][0] * RGB(Tmp.getPixel(i  , y-1)) + 
+      kernel[0][0] * RGB(Tmp.getPixel(i+1, y-1));
+	
+    putPixel(i, y-1, res);
+  }
+
+  // Left
+  for (int j = 1; j < y - 1; j++) {
+    res = 
+      kernel[2][2] * RGB(Tmp.getPixel(0, j-1)) + 
+      kernel[1][2] * RGB(Tmp.getPixel(0, j-1)) + 
+      kernel[0][2] * RGB(Tmp.getPixel(1, j-1)) + 
+      
+      kernel[2][1] * RGB(Tmp.getPixel(0, j  )) + 
+      kernel[1][1] * RGB(Tmp.getPixel(0, j  )) + 
+      kernel[0][1] * RGB(Tmp.getPixel(1, j  )) + 
+      
+      kernel[2][0] * RGB(Tmp.getPixel(0, j+1)) + 
+      kernel[1][0] * RGB(Tmp.getPixel(0, j+1)) + 
+      kernel[0][0] * RGB(Tmp.getPixel(1, j+1));
+    
+    putPixel(0, j, res);
+  }
+  
+  // Right
+  for (int j = 1; j < y - 1; j++) {
+    res = 
+      kernel[2][2] * RGB(Tmp.getPixel(x-2, j-1)) + 
+      kernel[1][2] * RGB(Tmp.getPixel(x-1, j-1)) + 
+      kernel[0][2] * RGB(Tmp.getPixel(x-1, j-1)) + 
+      
+      kernel[2][1] * RGB(Tmp.getPixel(x-2, j  )) + 
+      kernel[1][1] * RGB(Tmp.getPixel(x-1, j  )) + 
+      kernel[0][1] * RGB(Tmp.getPixel(x-1, j  )) + 
+      
+      kernel[2][0] * RGB(Tmp.getPixel(x-2, j+1)) + 
+      kernel[1][0] * RGB(Tmp.getPixel(x-1, j+1)) + 
+      kernel[0][0] * RGB(Tmp.getPixel(x-1, j+1));
+    
+    putPixel(x-1, j, res);
+  }
+
+  // TopLeft
+  res = 
+    kernel[2][2] * RGB(Tmp.getPixel(0, 0)) + 
+    kernel[1][2] * RGB(Tmp.getPixel(0, 0)) + 
+    kernel[0][2] * RGB(Tmp.getPixel(1, 0)) + 
+    
+    kernel[2][1] * RGB(Tmp.getPixel(0, 0)) + 
+    kernel[1][1] * RGB(Tmp.getPixel(0, 0)) + 
+    kernel[0][1] * RGB(Tmp.getPixel(1, 0)) + 
+    
+    kernel[2][0] * RGB(Tmp.getPixel(0, 1)) + 
+    kernel[1][0] * RGB(Tmp.getPixel(0, 1)) + 
+    kernel[0][0] * RGB(Tmp.getPixel(1, 1));
+
+  putPixel(0, 0, res);
+  
+  // BottomLeft
+  res = 
+    kernel[2][2] * RGB(Tmp.getPixel(0, y-2)) + 
+    kernel[1][2] * RGB(Tmp.getPixel(0, y-2)) + 
+    kernel[0][2] * RGB(Tmp.getPixel(1, y-2)) + 
+    
+    kernel[2][1] * RGB(Tmp.getPixel(0, y-1)) + 
+    kernel[1][1] * RGB(Tmp.getPixel(0, y-1)) + 
+    kernel[0][1] * RGB(Tmp.getPixel(1, y-1)) + 
+    
+    kernel[2][0] * RGB(Tmp.getPixel(0, y-1)) + 
+    kernel[1][0] * RGB(Tmp.getPixel(0, y-1)) + 
+    kernel[0][0] * RGB(Tmp.getPixel(1, y-1));
+  
+  putPixel(0, y-1, res);
+
+
+  // TopRight
+  res = 
+    kernel[2][2] * RGB(Tmp.getPixel(x-2, 0)) + 
+    kernel[1][2] * RGB(Tmp.getPixel(x-1, 0)) + 
+    kernel[0][2] * RGB(Tmp.getPixel(x-1, 0)) + 
+    
+    kernel[2][1] * RGB(Tmp.getPixel(x-2, 0)) + 
+    kernel[1][1] * RGB(Tmp.getPixel(x-1, 0)) + 
+    kernel[0][1] * RGB(Tmp.getPixel(x-1, 0)) + 
+    
+    kernel[2][0] * RGB(Tmp.getPixel(x-2, 1)) + 
+    kernel[1][0] * RGB(Tmp.getPixel(x-1, 1)) + 
+    kernel[0][0] * RGB(Tmp.getPixel(x-1, 1));
+  
+  putPixel(x-1, 0, res);
+
+  // TopRight
+  res = 
+    kernel[2][2] * RGB(Tmp.getPixel(x-2, y-2)) + 
+    kernel[1][2] * RGB(Tmp.getPixel(x-1, y-2)) + 
+    kernel[0][2] * RGB(Tmp.getPixel(x-1, y-2)) + 
+    
+    kernel[2][1] * RGB(Tmp.getPixel(x-2, y-1)) + 
+    kernel[1][1] * RGB(Tmp.getPixel(x-1, y-1)) + 
+    kernel[0][1] * RGB(Tmp.getPixel(x-1, y-1)) + 
+    					    
+    kernel[2][0] * RGB(Tmp.getPixel(x-2, y-1)) + 
+    kernel[1][0] * RGB(Tmp.getPixel(x-1, y-1)) + 
+    kernel[0][0] * RGB(Tmp.getPixel(x-1, y-1));
+  
+  putPixel(x-1, y-1, res);
 }
 
 void Image::warpGeneric () {
@@ -325,7 +448,7 @@ void Cos::eval(Image& I) {
 }
 
 void gaussBlur::eval(Image& I) {
-  static const float kernel[3][3] = {
+  static const RGB kernel[3][3] = {
     {  1.,  2.,  1. },
     {  2.,  4.,  2. },
     {  1.,  2.,  1. }
@@ -335,7 +458,7 @@ void gaussBlur::eval(Image& I) {
 }
 
 void gradDir::eval(Image& I){
-  static const float kernel[3][3] = {
+  static const RGB kernel[3][3] = {
     {  1., -2.,  1. },
     { -2.,  5., -2. },
     {  1., -2.,  1. }
@@ -345,7 +468,7 @@ void gradDir::eval(Image& I){
 }
 
 void sharpen::eval(Image& I){
-  static const float kernel[3][3] = {
+  static const RGB kernel[3][3] = {
     { -1., -1., -1. },
     { -1.,  9., -1. },
     { -1., -1., -1. }
@@ -355,7 +478,7 @@ void sharpen::eval(Image& I){
 }
 
 void emboss::eval(Image& I){
-  static const float kernel[3][3] = {
+  static const RGB kernel[3][3] = {
     {  2.,  0.,  0. },
     {  0., -1.,  0. },
     {  0.,  0., -1. }
@@ -370,7 +493,7 @@ void warp::eval(Image& I) {
 }
 
 void blur::eval (Image& I){
-  static const float kernel[3][3] = {
+  static const RGB kernel[3][3] = {
     { 1./9., 1./9., 1./9. },
     { 1./9., 1./9., 1./9. },
     { 1./9., 1./9., 1./9. }
