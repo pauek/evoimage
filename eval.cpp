@@ -53,4 +53,5 @@ int main(int argc, char *argv[]) {
   Image I(width, height, -1.0, 1.0, 1.0, -1.0);
   root->eval(I);  
   I.save_pnm(outfile);
+  root->destroy();
 }

@@ -66,4 +66,5 @@ int main(int argc, char *argv[]) {
   
   root->print(cout);
   cout << endl;
+  root->destroy();
 }
