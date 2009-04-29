@@ -698,3 +698,15 @@ void Dissolve::print(ostream& o) const {
   p3->print(o);
   o << ")";
 }
+
+Node* Node::mutaNode(){
+paramNum checkParam = n->pNum();
+if (checkParam == NONE) { /* muta fulla especific??? */ } 
+else if (checkParam == ONE) { n->op1()->mutaNode;  }
+else if (checkParam == TWO) { n->op1()->mutaNode; op2()->mutaNode; }
+else if (checkParam == THREE) { n->op1()->mutaNode; n->op2()->mutaNode; n->op3()->mutaNode; }
+else { assert(false); }
+
+
+
+}

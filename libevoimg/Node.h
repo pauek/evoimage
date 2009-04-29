@@ -9,6 +9,7 @@
 
 typedef float (*PFunction)(float);
 typedef float (*PFunction2)(float,float);
+enum paramNum { NONE, ONE, TWO, THREE };
 
 union long_float {
   long l;
@@ -141,21 +142,25 @@ class Node {
 public:
   virtual void destroy();
   virtual void eval(Image& e) = 0;
+  virtual paramNum pNum() = 0;
   virtual void print(std::ostream& o) const { o << "?"; }
   static Node* randomNode(int lcount);
   static Node* randomLeave();
+  virtual Node* mutaNode();
 };
 
 
 class X : public Node {
 public:
   void eval(Image& e);
+  paramNum pNum() { return NONE; }
   void print(std::ostream& o) const;
 };
 
 class Y : public Node {
 public:
   void eval(Image& e);
+  paramNum pNum() { return NONE; }
   void print(std::ostream& o) const;
 };
 
@@ -166,6 +171,7 @@ public:
   v_fix(float _p1, float _p2, float _p3) { p1=_p1; p2=_p2; p3=_p3; }
   
   void eval(Image& e);
+  paramNum pNum() { return NONE; }
   void print(std::ostream& o) const;
 };
 
@@ -186,6 +192,7 @@ public:
   bwNoise() : Noise() {}
   bwNoise(int s) : Noise(s) {}
   RGB gen_noise() const;
+  paramNum pNum() { return NONE; }
   void print(std::ostream& o) const;
 };
 
@@ -194,6 +201,7 @@ public:
   colorNoise() : Noise() {}
   colorNoise(int s) : Noise(s) {}
   RGB gen_noise() const;
+  paramNum pNum() { return NONE; }
   void print(std::ostream& o) const;
 };
 
@@ -203,9 +211,10 @@ public:
   Warp(Node *_p1, Node *_p2, Node *_p3) {
     p1 = _p1, p2 = _p2, p3 = _p3;
   }
-
+  
   void eval(Image& I);
   void destroy();
+  paramNum pNum() { return THREE; }
   void print(std::ostream& o) const;
 };
 
@@ -218,6 +227,7 @@ public:
 
   void eval(Image& I);
   void destroy();
+  paramNum pNum() { return THREE; }
   void print(std::ostream& o) const;
 };
 
@@ -233,6 +243,7 @@ protected:
 public:
   UnaryOp(Node* _p1) { p1 = _p1; }
   void destroy();
+  paramNum pNum() { return ONE; }
   void print(std::ostream& o) const;
 };
 
@@ -274,6 +285,7 @@ public:
 
   void eval(Image& I);
   virtual void do_op(Image& res, Image& op1, Image& op2) = 0;
+  paramNum pNum() { return TWO; }
   void print(std::ostream& o) const;
 };
 

@@ -74,6 +74,7 @@ int main(int argc, char **argv) {
   cout << "Print " << arg2 << ": ";
   root->print(cout); 
   cout << endl;
+  root->destroy();
   
 }
 // Local variables:
