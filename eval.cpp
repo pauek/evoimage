@@ -1,6 +1,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <cstdio>
 #include <vector>
 #include <Node.h>
 
@@ -9,7 +10,7 @@ using namespace std;
 // Paràmetres
 int    width = 400;        // Amplada de la imatge
 int    height = 400;       // Alçada de la imatge
-string outfile = "img.pnm"; // Nom de fitxer de sortida
+string outfile = "<none>"; // Nom de fitxer de sortida
 
 int str2int(string s) {
   double d;
@@ -52,5 +53,26 @@ int main(int argc, char *argv[]) {
   Node* root = read(sin);
   Image I(width, height, -1.0, 1.0, 1.0, -1.0);
   root->eval(I);  
-  I.save_pnm(outfile);
+  if (outfile == "<none>") {
+    char _templ[] = "evalXXXXXX";
+    char *tmpfile = _templ;
+    tmpfile = tmpnam(tmpfile);
+    outfile = string(tmpfile) + ".pnm";
+    I.save_pnm(outfile);
+    int ret;
+    {
+      stringstream sout;
+      sout << "display " << outfile;
+      ret = system(sout.str().c_str());
+    }
+    {
+      stringstream sout;
+      sout << "rm " << outfile;
+      system(sout.str().c_str());
+    }
+    return ret;
+  }
+  else {
+    I.save_pnm(outfile);
+  }
 }
