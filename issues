@@ -12,10 +12,7 @@ COSES A IMPLEMENTAR EN EL CORE
 sino que crec que ho ha de gestionar el propi evolucionador. Es 
 correcte? uhmm
 
--els deletes i mecanismes contra errors en el reader (asserts?)
-
--Alguna funció que no sé com és i millorar warp,bwnoise i colornoise 
-per exemple. 
+-mecanismes contra errors en el reader (asserts?)
 
 -Problemes de RANG. Moltes coses donen negres
 
