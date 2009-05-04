@@ -735,7 +735,7 @@ string gradDir::head()  const { return "gradDir"; }
 string emboss::head()  const { return "emboss"; }
 string sharpen::head()  const { return "sharpen"; }
 string blur::head() const { return "blur";}
-string hsv_to_rgb::head() const { return "hsv_to_rgb"; }
+string hsv_to_rgb::head() const { return "hsv-to-rgb"; }
 string Abs::head()  const { return "Abs"; }
 string Expt::head()  const { return "Expt"; }
 string Max::head()  const { return "Max"; }

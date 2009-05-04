@@ -88,7 +88,7 @@ Node* read_list(std::istream& i ) {
   else if ( head == "warp" ) { return new Warp(acum [0], acum[1], acum[2]); }
   else if ( head == "dissolve" ) { return new Dissolve(acum [0], acum[1], acum[2]); }
   else if ( head == "blur" ) { return new blur ( acum [0]);}
-  else if ( head == "hsv_to_rgb" ) { return new hsv_to_rgb(acum[0]); }
+  else if ( head == "hsv-to-rgb" ) { return new hsv_to_rgb(acum[0]); }
   else if ( head == "bwNoise" ) { return new bwNoise ( ); }
   else if ( head == "colorNoise" ) { return new colorNoise ( ); }
   else if ( head == "Abs" || head == "abs") { return new Abs ( acum [0]);}
