@@ -4,7 +4,7 @@ LDFLAGS = -levoimg -lstdc++ -lm -Llibevoimg
 all: evoimg eval random
 
 evoimg: libevoimg main.o
-	g++ $(CXXFLAGS) -o evoimg main.o $(LDFLAGS) -lreadline
+	g++ $(CXXFLAGS) -o evoimg main.o $(LDFLAGS) -lreadline -lhistory
 
 eval: libevoimg eval.o
 	g++ $(CXXFLAGS) -o eval eval.o $(LDFLAGS)

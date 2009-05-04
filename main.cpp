@@ -3,6 +3,7 @@
 #include <sstream>
 #include <vector>
 #include <readline/readline.h>
+#include <readline/history.h>
 #include <Node.h>
 
 using namespace std;
