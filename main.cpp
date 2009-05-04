@@ -90,22 +90,38 @@ int main(int argc, char *argv[]) {
   }
 
   srand(seed != -1 ? seed : unsigned(time(0)));
-  
+
+  vector<Node *> history;
   Node* root = new X();
+  history.push_back(root->clone());
   Image I(width, height);
 
   cout << "EvoImage v0.1 (c) 2009, Enric Martí & Pau Fernández" << endl;
-  string cmd = _readline();
-  while (cmd != "quit" && cmd != "q") {
+  string line = _readline();
+  while (true) {
+    istringstream csin(line);
+    string cmd;
+    csin >> cmd;
     if (cmd == "?" || cmd == "help") {
-      cout << "help | ? -- show this message" << endl
+      cout << "[h]elp|? -- show this message" << endl
 	   << "[s]how   -- show image" << endl
 	   << "[p]rint  -- print expression" << endl
 	   << "[m]utate -- mutate expression" << endl
 	   << "[r]andom -- new random expression" << endl;
     }
     if (cmd == "s" || cmd == "show") {
-      root->eval(I);
+      uint num;
+      Node *img = root;
+      csin >> num;
+      if (csin) {
+	if (num >= 0 && num < history.size()) {
+	  img = history[num];
+	}
+	else if (num < 0 || num > history.size()) {
+	  cerr << "show: index out of range" << endl;
+	}
+      }
+      img->eval(I);
       char _templ[] = "evalXXXXXX";
       char *tmpfile = _templ;
       tmpfile = tmpnam(tmpfile);
@@ -118,18 +134,34 @@ int main(int argc, char *argv[]) {
       cout << endl;
     }
     else if (cmd == "r" || cmd == "random") {
+      history.push_back(root->clone());
       root->destroy();
       root = Node::randomNode(level);
       root->print(cout);
       cout << endl;
     }
     else if (cmd == "m" || cmd == "mutate") {
+      history.push_back(root->clone());
       root = root->mutate();
       root->print(cout);
       cout << endl;
     }
-
-    cmd = _readline();
+    else if (cmd == "h" || cmd == "history") {
+      uint i;
+      for (i = 0 ; i < history.size(); i++) {
+	cout << i << " = ";
+	history[i]->print(cout);
+	cout << endl;
+      }
+      cout << i << " = ";
+      root->print(cout);
+      cout << endl;
+    }
+    else if (cmd == "set") {
+      root = read(csin);
+    }
+    
+    line = _readline();
   }
 
   I.save_pnm(outfile);

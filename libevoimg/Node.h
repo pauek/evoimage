@@ -133,7 +133,6 @@ public:
 
   void copyPixels(const Image& I);
   void filtraImatge(const RGB kernel[3][3]);
-  void warpGeneric();
   void save_pnm(std::string filename) const;
 };
 
@@ -146,6 +145,7 @@ public:
   virtual void  eval(Image& e) = 0;
   virtual void  print(std::ostream& o) const { o << "?"; }
   virtual int   depth() const = 0;
+  virtual Node *clone() const = 0;
   virtual Node *_mutate() { 
     // Default: no mutation
     return this; 
@@ -155,6 +155,8 @@ public:
   Node*  mutate();
 
   static Node* randomNode(int lcount);
+  static Node* randomUnaryOp(int lcount);
+  static Node* randomBinaryOp(int lcount);
   static Node* randomLeave();
 };
 
@@ -168,6 +170,7 @@ public:
   void  eval(Image& e);
   void  print(std::ostream& o) const;
   Node* _mutate();
+  Node *clone() const { return new X(); }
 };
 
 class Y : public Leaf {
@@ -175,6 +178,7 @@ public:
   void  eval(Image& e);
   void  print(std::ostream& o) const;
   Node* _mutate();
+  Node *clone() const { return new Y(); }
 };
 
 class v_fix : public Leaf {
@@ -185,7 +189,8 @@ public:
   
   void  eval(Image& e);
   void  print(std::ostream& o) const;
-  Node* _mutate();
+  Node *_mutate();
+  Node *clone() const { return new v_fix(p1, p2, p3); }
 };
 
 class Noise : public Leaf {
@@ -207,6 +212,7 @@ public:
   RGB gen_noise() const;
   Node *_mutate();
   void print(std::ostream& o) const;
+  Node *clone() const { return new bwNoise(); }
 };
 
 class colorNoise : public Noise {
@@ -216,6 +222,7 @@ public:
   RGB gen_noise() const;
   Node *_mutate();
   void print(std::ostream& o) const;
+  Node *clone() const { return new colorNoise(); }
 };
 
 class Warp : public Node {
@@ -233,6 +240,9 @@ public:
 				 p3->depth())); 
   }
   void print(std::ostream& o) const;
+  Node *clone() const { 
+    return new Warp(p1->clone(), p2->clone(), p3->clone());
+  }
 };
 
 class Dissolve : public Node {
@@ -250,6 +260,10 @@ public:
 				 p3->depth())); 
   }
   void print(std::ostream& o) const;
+
+  Node *clone() const { 
+    return new Dissolve(p1->clone(), p2->clone(), p3->clone());
+  }
 };
 
 // Operacions Unàries ////////////////////////////////////////////////
@@ -275,6 +289,9 @@ public:
     Name (Node* p1) : UnaryOp(p1) {}		\
     void eval(Image& I);			\
     std::string head() const;			\
+    Node *clone() const {			\
+      return new Name(op1()->clone());		\
+    }						\
   }
 
 DEF_UNARY_OP(Abs);
@@ -285,7 +302,6 @@ DEF_UNARY_OP(gradDir);
 DEF_UNARY_OP(emboss);
 DEF_UNARY_OP(sharpen);
 DEF_UNARY_OP(blur);
-DEF_UNARY_OP(warp);
 DEF_UNARY_OP(hsv_to_rgb);
 
 // Operacions Binàries ///////////////////////////////////////////////
@@ -322,6 +338,9 @@ public:
     Name (Node* p1, Node* p2): BinOp(p1, p2) {}		\
     void do_op(Image& res, Image& op1, Image& op2);	\
     std::string head() const;				\
+    Node *clone () const {				\
+      return new Name(op1()->clone(), op2()->clone());	\
+    }							\
   }
 
 DEF_BINARY_OP(Sum);

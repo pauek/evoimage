@@ -31,63 +31,72 @@ RGB RGB::hsv_to_rgb() const {
   return RGB(r, g, b);
 }
 
+Node *Node::randomUnaryOp(int level) {
+  int selector = rand() % 9;
+  // Operacions unàries
+  Node *_op1;
+  if (level > 2)
+    _op1 = randomNode (level - 1);
+  else
+    _op1 = randomLeave ();
+  
+  switch (selector) {
+  case 0: return new Sin(_op1);
+  case 1: return new Cos(_op1);
+  case 2: return new gradDir(_op1);
+  case 3: return new gaussBlur(_op1);
+  case 4: return new emboss(_op1);
+  case 5: return new sharpen(_op1);
+  case 6: return new blur(_op1);
+  case 7: return new hsv_to_rgb(_op1);
+  case 8: 
+  default:
+    return new Abs(_op1);
+  }
+}
+
+Node *Node::randomBinaryOp(int level) {
+  int selector = rand() % 14;
+  // Operacions binàries
+  Node *_op1, *_op2;
+  if (level > 2) {
+    _op1 = randomNode(level - 1);
+    _op2 = randomNode(level - 1);
+  }
+  else {
+    _op1 = randomLeave();
+    _op2 = randomLeave();
+  }
+  switch (selector) {
+  case 0: return new Sum(_op1, _op2);
+  case 1: return new Rest(_op1, _op2);
+  case 2: return new Mult(_op1, _op2);
+  case 3: return new Div(_op1, _op2);
+  case 4: return new Mod(_op1, _op2);
+  case 5: return new Log(_op1, _op2);
+  case 6: return new Round(_op1, _op2);
+  case 7: return new And(_op1, _op2);
+  case 8: return new Or(_op1, _op2);
+  case 9: return new Xor(_op1, _op2);
+  case 10: return new Atan(_op1, _op2);
+  case 11: return new Min(_op1, _op2);
+  case 12: return new Max(_op1, _op2);
+  case 13: 
+  default:
+    return new Expt(_op1, _op2);
+  }
+}
+
 Node* Node::randomNode(int level) {
   Node *_op1, *_op2, *_op3;
-  int selector = rand() % 26;
-  // cout << selector;
-  
-  if (selector < 10) {
-    // Operacions unàries
-    if (level > 2)
-      _op1 = randomNode (level - 1);
-    else
-      _op1 = randomLeave ();
-
-    switch (selector) {
-    case 0: return new Sin(_op1);
-    case 1: return new Cos(_op1);
-    case 2: return new gradDir(_op1);
-    case 3: return new gaussBlur(_op1);
-    case 4: return new emboss(_op1);
-    case 5: return new sharpen(_op1);
-    case 6: return new warp(_op1);
-    case 7: return new blur(_op1);
-    case 8: return new hsv_to_rgb(_op1);
-    case 9: 
-    default:
-      return new Abs(_op1);
-    }
+  int selector = rand() % 25;
+  if (selector < 9) {
+    return randomUnaryOp(level);
   }
-  else if (selector < 24) { 
-    // Operacions binàries
-    if (level > 2) {
-      _op1 = randomNode(level - 1);
-      _op2 = randomNode(level - 1);
-    }
-    else {
-      _op1 = randomLeave();
-      _op2 = randomLeave();
-    }
-    switch (selector) {
-    case 10: return new Sum(_op1, _op2);
-    case 11: return new Rest(_op1, _op2);
-    case 12: return new Mult(_op1, _op2);
-    case 13: return new Div(_op1, _op2);
-    case 14: return new Mod(_op1, _op2);
-    case 15: return new Log(_op1, _op2);
-    case 16: return new Round(_op1, _op2);
-    case 17: return new And(_op1, _op2);
-    case 18: return new Or(_op1, _op2);
-    case 19: return new Xor(_op1, _op2);
-    case 20: return new Atan(_op1, _op2);
-    case 21: return new Min(_op1, _op2);
-    case 22: return new Max(_op1, _op2);
-    case 23: 
-    default:
-      return new Expt(_op1, _op2);
-    }
+  else if (selector < 23) { 
+    return randomBinaryOp(level);
   }
-  else if (selector == 24 || selector == 25) {
+  else if (selector == 23 || selector == 24) {
     // Warp
     if (level > 2) {
       _op1 = randomNode(level - 1);
@@ -99,7 +108,7 @@ Node* Node::randomNode(int level) {
       _op2 = randomLeave();
       _op3 = randomLeave();
     }
-    if (selector == 24)
+    if (selector == 23)
       return new Warp(_op1, _op2, _op3);
     else
       return new Dissolve(_op1, _op2, _op3);
@@ -315,28 +324,6 @@ void Image::filtraImatge (const RGB kernel[3][3]) {
   putPixel(x-1, y-1, res);
 }
 
-void Image::warpGeneric () {
-  //De moment faré el warp amb aliasing i sense massa miraments, i només per l'eix x (que em sembla q de fet és l'y)
-	
-  int i,j;
-  int A = x/4;
-  int B = 3*x/4;
-  RGB *p2;
-  p2 = new RGB[x * y];
-	
-  for ( i = 0; i < x; i++){
-    for ( j = 0; j < y; j++){
-      p2[j*x+i] = getPixel( i , j );
-    }
-  }
-	
-  for ( i = 0; i < x; i++){
-    for ( j = 0; j < y; j++){
-      putPixel( i , j , p2[j*(A + (i/(B - A)))+i]);
-    }
-  }
-}
-
 // Leaf Operations ///////////////////////////////////////////////////
 
 void Node::destroy(){
@@ -360,9 +347,14 @@ void X::eval(Image& e) {
   e.get_tl(xtl, ytl);
   e.get_br(xbr, ybr);
   const int x = e.getX(), y = e.getY();
-  for (int i = 0 ; i < x ; i++)
-    for (int j = 0 ; j < y ; j++)
-      e.putPixel(i, j, RGB( (xbr - xtl)*float(i)/float(x-1) + xtl ));
+  if (x == 1 && y == 1) {
+    e.putPixel(0, 0, RGB( (xbr - xtl)/2.0 ));
+  }
+  else {
+    for (int i = 0 ; i < x ; i++)
+      for (int j = 0 ; j < y ; j++)
+	e.putPixel(i, j, RGB( (xbr - xtl)*float(i)/float(x-1) + xtl ));
+  }
 }
 
 Node *X::_mutate() {
@@ -380,9 +372,14 @@ void Y::eval(Image& e) {
   e.get_tl(xtl, ytl);
   e.get_br(xbr, ybr);
   const int x = e.getX(), y = e.getY();
-  for (int i = 0 ; i < x ; i++)
-    for (int j = 0 ; j < y ; j++)
-      e.putPixel(i, j, RGB( (ybr - ytl)*float(j)/float(y-1) + ytl ));
+  if (x == 1 && y == 1) {
+    e.putPixel(0, 0, RGB( (ybr - ytl)/2.0 ));
+  }
+  else {
+    for (int i = 0 ; i < x ; i++)
+      for (int j = 0 ; j < y ; j++)
+	e.putPixel(i, j, RGB( (ybr - ytl)*float(j)/float(y-1) + ytl ));
+  }
 }
 
 Node *Y::_mutate() {
@@ -426,6 +423,11 @@ void Noise::eval(Image& e) {
   const int x = e.getX(), y = e.getY();
   if (seed != -1) {
     srand(seed);
+  }
+
+  if (x == 1 && y == 1) {
+    e.putPixel(0, 0, gen_noise());
+    return;
   }
   
   float xtl, ytl, xbr, ybr;
@@ -488,10 +490,14 @@ void Warp::eval(Image& I) {
   Image scalex(1, 1);
   p2->eval(scalex);
   float scx = scalex.getPixel(0, 0).getr();
+  if (scx > 10.0) scx = 10.0;
+  if (scx < 0.1) scx = 0.1;
 
   Image scaley(1, 1);
   p3->eval(scaley);
   float scy = scaley.getPixel(0, 0).getr();
+  if (scy > 10.0) scy = 10.0;
+  if (scy < 0.1) scy = 0.1;
   
   float xtl, ytl, xbr, ybr;
   I.get_tl(xtl, ytl);
@@ -615,11 +621,6 @@ void emboss::eval(Image& I){
   I.filtraImatge(kernel);
 }
 
-void warp::eval(Image& I) {
-  op1()->eval(I); 
-  I.warpGeneric();
-}
-
 void blur::eval (Image& I){
   static const RGB kernel[3][3] = {
     { 1./9., 1./9., 1./9. },
@@ -733,7 +734,6 @@ string gaussBlur::head()  const { return "gaussBlur"; }
 string gradDir::head()  const { return "gradDir"; }
 string emboss::head()  const { return "emboss"; }
 string sharpen::head()  const { return "sharpen"; }
-string warp::head() const { return "warp";}
 string blur::head() const { return "blur";}
 string hsv_to_rgb::head() const { return "hsv_to_rgb"; }
 string Abs::head()  const { return "Abs"; }

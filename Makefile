@@ -1,4 +1,4 @@
-CXXFLAGS = -g3 -Wall -O2 -Ilibevoimg
+CXXFLAGS = -g3 -Wall -Ilibevoimg
 LDFLAGS = -levoimg -lstdc++ -lm -Llibevoimg
 
 all: evoimg eval random
