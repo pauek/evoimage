@@ -1,0 +1,5 @@
+#!/bin/bash
+num=$1
+../../eval -w 2000 -h 2000 -o img.pnm "$(cat ${num}.lisp)" && \
+  convert -scale 50% img.pnm ${num}.png && \
+  rm img.pnm
