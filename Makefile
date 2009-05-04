@@ -1,15 +1,16 @@
 CXXFLAGS = -g3 -Wall -O2 -Ilibevoimg
+LDFLAGS = -levoimg -lstdc++ -lm -Llibevoimg
 
 all: evoimg eval random
 
 evoimg: libevoimg main.o
-	g++ $(CXXFLAGS) -o evoimg main.o -Llibevoimg -levoimg -lstdc++ -lm
+	g++ $(CXXFLAGS) -o evoimg main.o $(LDFLAGS) -lreadline
 
 eval: libevoimg eval.o
-	g++ $(CXXFLAGS) -o eval eval.o -Llibevoimg -levoimg -lstdc++ -lm
+	g++ $(CXXFLAGS) -o eval eval.o $(LDFLAGS)
 
 random: libevoimg random.o
-	g++ $(CXXFLAGS) -o random random.o -Llibevoimg -levoimg -lstdc++ -lm
+	g++ $(CXXFLAGS) -o random random.o $(LDFLAGS)
 
 libevoimg: 
 	make -C libevoimg
