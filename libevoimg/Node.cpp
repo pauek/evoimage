@@ -6,6 +6,11 @@
 #include "Node.h"
 using namespace std;
 
+// Retorna un número entre 0.0 i 1.0
+inline float frand() {
+  return float(rand()) / float(RAND_MAX); 
+}
+
 RGB RGB::hsv_to_rgb() const {
   double xh = fmod( _r*360., 360 ) / 60.0;
   double i = floor(xh);
@@ -29,7 +34,7 @@ RGB RGB::hsv_to_rgb() const {
 Node* Node::randomNode(int level) {
   Node *_op1, *_op2, *_op3;
   int selector = rand() % 26;
-  cout << selector;
+  // cout << selector;
   
   if (selector < 10) {
     // Operacions unàries
@@ -338,6 +343,18 @@ void Node::destroy(){
   delete this;	
 }
 
+Node* Node::mutate() {
+  if (frand() < mutation_prob) {
+    // Cas 1
+    Node* p = randomNode(depth());
+    destroy();
+    return p;
+  }
+  else {
+    return _mutate();
+  }
+}
+
 void X::eval(Image& e) {
   float xtl, ytl, xbr, ybr;
   e.get_tl(xtl, ytl);
@@ -346,6 +363,16 @@ void X::eval(Image& e) {
   for (int i = 0 ; i < x ; i++)
     for (int j = 0 ; j < y ; j++)
       e.putPixel(i, j, RGB( (xbr - xtl)*float(i)/float(x-1) + xtl ));
+}
+
+Node *X::_mutate() {
+  if (frand() < mutation_prob) {
+    destroy();
+    return new Y();
+  }
+  else {
+    return this;
+  }
 }
 
 void Y::eval(Image& e) { 
@@ -358,6 +385,16 @@ void Y::eval(Image& e) {
       e.putPixel(i, j, RGB( (ybr - ytl)*float(j)/float(y-1) + ytl ));
 }
 
+Node *Y::_mutate() {
+  if (frand() < mutation_prob) {
+    destroy();
+    return new X();
+  }
+  else {
+    return this;
+  }
+}
+
 void v_fix::eval(Image& e) {
   const int x = e.getX(), y = e.getY();
   for (int i = 0 ; i < x ; i++)
@@ -365,8 +402,11 @@ void v_fix::eval(Image& e) {
       e.putPixel(i, j, RGB( p1 , p2 , p3 ));
 }
 
-inline float frand() {
-  return float(rand()) / float(RAND_MAX); 
+Node *v_fix::_mutate() {
+  p1 *= 0.8 + 0.4*frand();
+  p2 *= 0.8 + 0.4*frand();
+  p3 *= 0.8 + 0.4*frand();
+  return this;
 }
 
 const double noise_size = 0.05;
@@ -423,8 +463,24 @@ RGB bwNoise::gen_noise() const {
   return RGB(frand());
 }
 
+Node* bwNoise::_mutate() {
+  if (frand() < mutation_prob) {
+    destroy();
+    return new colorNoise();
+  }
+  else return this;
+}
+
 RGB colorNoise::gen_noise() const {
   return RGB(frand(), frand(), frand());
+}
+
+Node* colorNoise::_mutate() {
+  if (frand() < mutation_prob) {
+    destroy();
+    return new bwNoise();
+  }
+  else return this;
 }
 
 void Warp::eval(Image& I) {
@@ -446,8 +502,8 @@ void Warp::eval(Image& I) {
   xv *= scx, yv *= scy;
   
   Image result(I.getX(), I.getY(),
-  	           xcen + xv, ycen + yv,
-  	           xcen - xv, ycen - yv);
+	       xcen + xv, ycen + yv,
+	       xcen - xv, ycen - yv);
   p1->eval(result);
   I.copyPixels(result);
 }
@@ -485,9 +541,14 @@ void Dissolve::destroy() {
 
 // Unary Operations //////////////////////////////////////////////////
 
-void UnaryOp::destroy(){
-op1()->destroy();
-delete this;	
+void UnaryOp::destroy() {
+  op1()->destroy();
+  delete this;	
+}
+
+Node *UnaryOp::_mutate() {
+  p1 = p1->_mutate();
+  return this;
 }
 
 void Abs::eval(Image& I) {
@@ -583,6 +644,12 @@ void BinOp::destroy(){
   op1()->destroy();
   op2()->destroy();
   delete this;
+}
+
+Node *BinOp::_mutate() {
+  p1 = p1->_mutate();
+  p2 = p2->_mutate();
+  return this;
 }
 
 void BinOp::eval(Image& I) {
@@ -697,16 +764,4 @@ void Dissolve::print(ostream& o) const {
   o << " ";
   p3->print(o);
   o << ")";
-}
-
-Node* Node::mutaNode(){
-paramNum checkParam = n->pNum();
-if (checkParam == NONE) { /* muta fulla especific??? */ } 
-else if (checkParam == ONE) { n->op1()->mutaNode;  }
-else if (checkParam == TWO) { n->op1()->mutaNode; op2()->mutaNode; }
-else if (checkParam == THREE) { n->op1()->mutaNode; n->op2()->mutaNode; n->op3()->mutaNode; }
-else { assert(false); }
-
-
-
 }
