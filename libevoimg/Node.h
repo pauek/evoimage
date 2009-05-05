@@ -243,6 +243,7 @@ public:
   Node *clone() const { 
     return new Warp(p1->clone(), p2->clone(), p3->clone());
   }
+  //Node *_mutate();
 };
 
 class Dissolve : public Node {

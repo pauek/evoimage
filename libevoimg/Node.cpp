@@ -514,12 +514,25 @@ void Warp::eval(Image& I) {
   I.copyPixels(result);
 }
 
+
 void Warp::destroy() {
   p1->destroy();
   p2->destroy();
   p3->destroy();
   delete this;
 }
+
+/*Node* Node::_mutate() {
+  p1 = p1->_mutate();
+  p2 = p2->_mutate();
+  p3 = p3->_mutate();
+  
+  if (frand() <  mutation_prob) {
+  	return new dissolve(p1, p2, p3);  	
+  	}	
+  else { return this; }	
+	
+}*/
 
 void Dissolve::eval(Image& I) {
   const int x = I.getX(), y = I.getY();
@@ -554,7 +567,24 @@ void UnaryOp::destroy() {
 
 Node *UnaryOp::_mutate() {
   p1 = p1->_mutate();
-  return this;
+  
+  
+  if (frand() < mutation_prob) {
+  	int selector = rand() % 9;
+  	switch (selector) {
+  	case 0: return new Sin(p1);
+  	case 1: return new Cos(p1);
+  	case 2: return new gradDir(p1);
+  	case 3: return new gaussBlur(p1);
+  	case 4: return new emboss(p1);
+  	case 5: return new sharpen(p1);
+  	case 6: return new blur(p1);
+  	case 7: return new hsv_to_rgb(p1);
+  	case 8: 
+  	default:
+  	return new Abs(p1);
+	}}
+	else { return this; }
 }
 
 void Abs::eval(Image& I) {
@@ -650,6 +680,31 @@ void BinOp::destroy(){
 Node *BinOp::_mutate() {
   p1 = p1->_mutate();
   p2 = p2->_mutate();
+  
+  if (frand() < mutation_prob) {
+  
+  	int selector = rand() % 14;
+  	switch (selector) {
+  	case 0: return new Sum(p1, p2);
+  	case 1: return new Rest(p1, p2);
+  	case 2: return new Mult(p1, p2);
+  	case 3: return new Div(p1, p2);
+  	case 4: return new Mod(p1, p2);
+  	case 5: return new Log(p1, p2);
+  	case 6: return new Round(p1, p2);
+  	case 7: return new And(p1, p2);
+  	case 8: return new Or(p1, p2);
+  	case 9: return new Xor(p1, p2);
+  	case 10: return new Atan(p1, p2);
+  	case 11: return new Min(p1, p2);
+  	case 12: return new Max(p1, p2);
+  	case 13: 
+  	default:
+    	return new Expt(p1, p2);
+    }}
+  else { return this; }
+  
+  
   return this;
 }
 
