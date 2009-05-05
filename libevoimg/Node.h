@@ -94,6 +94,25 @@ public:
     return RGB(r1.f, g1.f, b1.f);
   }
 
+  bool operator==(const RGB& o) const{
+  if (fabs(_r - o._r) < 1e-3 && 
+      fabs(_g - o._g) < 1e-3 && 
+      fabs(_b - o._b) < 1e-3) { 
+    return true; 
+  }
+  else { return false; }
+  }
+  
+  bool operator>(const RGB& o) const{
+  if (_r > o._r && _g > o._g && _b > o._b) { return true; }
+  else { return false; }
+  }
+  
+  bool operator<(const RGB& o) const{
+  if (_r < o._r && _g < o._g && _b < o._b) { return true; }
+  else { return false; }
+  }
+  
   RGB hsv_to_rgb() const;
 };
 
@@ -130,10 +149,11 @@ public:
   void get_br(float& x, float& y) const { x = xbr, y = ybr; }
   void set_tl(float x, float y) { xtl = x, ytl = y; }
   void set_br(float x, float y) { xbr = x, ybr = y; }
-
+  
   void copyPixels(const Image& I);
   void filtraImatge(const RGB kernel[3][3]);
   void save_pnm(std::string filename) const;
+  bool allBallW();
 };
 
 class Node {

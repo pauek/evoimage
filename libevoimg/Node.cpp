@@ -338,6 +338,21 @@ void Image::filtraImatge (const RGB kernel[3][3]) {
   putPixel(x-1, y-1, res);
 }
 
+bool Image::allBallW(){
+  int countB = 0;
+  int countW = 0;
+  RGB B(0.001, 0.001, 0.001);
+  RGB W(0.999, 0.999, 0.999);	
+  for (int i = 0; i < x; i++) {
+    for (int j = 0; j < y; j++) {
+      if (getPixel(i, j) < B) { countB++; }
+      if (getPixel(i, j) > W) { countW++; }
+    }
+  }
+  if (countB >= int(x*y*0.95) || countW >= int(x*y*0.95)) { return true; }
+  else { return false; }
+}
+
 // Leaf Operations ///////////////////////////////////////////////////
 
 void Node::destroy(){

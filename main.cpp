@@ -22,6 +22,14 @@ int str2int(string s) {
   return d;
 }
 
+bool BadImg (Node* n){
+	Image I(20, 20);
+	Image I2(33, 33);
+	n->eval(I);
+	n->eval(I2);
+	return (I.allBallW() && I2.allBallW());	
+}
+
 bool parseArgs(int argc, char *argv[], vector<string>& args) {
   int k = 1;
   while (k < argc) {
@@ -138,8 +146,10 @@ int main(int argc, char *argv[]) {
       history.push_back(root->clone());
       root->destroy();
       root = Node::randomNode(level);
-      // Aqui hi ha d'anar un while-if o for amb checkImg(root); perque 
-      //vagi fent fins que no surti imatge guapa
+      while (BadImg(root)){
+      	root->destroy();
+        root = Node::randomNode(level);
+      }
       root->print(cout);
       cout << endl;
     }
