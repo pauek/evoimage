@@ -156,7 +156,9 @@ public:
 
   static Node* randomNode(int lcount);
   static Node* randomUnaryOp(int lcount);
+  static Node* randomUnaryHead(Node* p1);
   static Node* randomBinaryOp(int lcount);
+  static Node* randomBinaryHead(Node* p1, Node* p2);
   static Node* randomLeave();
 };
 

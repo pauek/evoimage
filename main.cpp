@@ -138,6 +138,8 @@ int main(int argc, char *argv[]) {
       history.push_back(root->clone());
       root->destroy();
       root = Node::randomNode(level);
+      // Aqui hi ha d'anar un while-if o for amb checkImg(root); perque 
+      //vagi fent fins que no surti imatge guapa
       root->print(cout);
       cout << endl;
     }

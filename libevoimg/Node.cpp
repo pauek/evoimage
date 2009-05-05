@@ -32,7 +32,7 @@ RGB RGB::hsv_to_rgb() const {
 }
 
 Node *Node::randomUnaryOp(int level) {
-  int selector = rand() % 9;
+  
   // Operacions unàries
   Node *_op1;
   if (level > 2)
@@ -40,23 +40,30 @@ Node *Node::randomUnaryOp(int level) {
   else
     _op1 = randomLeave ();
   
+  return randomUnaryHead(_op1);
+  
+}
+
+Node* Node::randomUnaryHead(Node* p1){
+	
+  int selector = rand() % 9;
   switch (selector) {
-  case 0: return new Sin(_op1);
-  case 1: return new Cos(_op1);
-  case 2: return new gradDir(_op1);
-  case 3: return new gaussBlur(_op1);
-  case 4: return new emboss(_op1);
-  case 5: return new sharpen(_op1);
-  case 6: return new blur(_op1);
-  case 7: return new hsv_to_rgb(_op1);
+  case 0: return new Sin(p1);
+  case 1: return new Cos(p1);
+  case 2: return new gradDir(p1);
+  case 3: return new gaussBlur(p1);
+  case 4: return new emboss(p1);
+  case 5: return new sharpen(p1);
+  case 6: return new blur(p1);
+  case 7: return new hsv_to_rgb(p1);
   case 8: 
   default:
-    return new Abs(_op1);
-  }
+    return new Abs(p1);
+	}
 }
 
 Node *Node::randomBinaryOp(int level) {
-  int selector = rand() % 14;
+  
   // Operacions binàries
   Node *_op1, *_op2;
   if (level > 2) {
@@ -67,24 +74,31 @@ Node *Node::randomBinaryOp(int level) {
     _op1 = randomLeave();
     _op2 = randomLeave();
   }
+  return randomBinaryHead(_op1, _op2);
+}
+
+Node* Node::randomBinaryHead(Node* p1, Node* p2){
+  int selector = rand() % 14;	
   switch (selector) {
-  case 0: return new Sum(_op1, _op2);
-  case 1: return new Rest(_op1, _op2);
-  case 2: return new Mult(_op1, _op2);
-  case 3: return new Div(_op1, _op2);
-  case 4: return new Mod(_op1, _op2);
-  case 5: return new Log(_op1, _op2);
-  case 6: return new Round(_op1, _op2);
-  case 7: return new And(_op1, _op2);
-  case 8: return new Or(_op1, _op2);
-  case 9: return new Xor(_op1, _op2);
-  case 10: return new Atan(_op1, _op2);
-  case 11: return new Min(_op1, _op2);
-  case 12: return new Max(_op1, _op2);
+  case 0: return new Sum(p1, p2);
+  case 1: return new Rest(p1, p2);
+  case 2: return new Mult(p1, p2);
+  case 3: return new Div(p1, p2);
+  case 4: return new Mod(p1, p2);
+  case 5: return new Log(p1, p2);
+  case 6: return new Round(p1, p2);
+  case 7: return new And(p1, p2);
+  case 8: return new Or(p1, p2);
+  case 9: return new Xor(p1, p2);
+  case 10: return new Atan(p1, p2);
+  case 11: return new Min(p1, p2);
+  case 12: return new Max(p1, p2);
   case 13: 
   default:
-    return new Expt(_op1, _op2);
-  }
+    return new Expt(p1, p2);
+  }	
+	
+	
 }
 
 Node* Node::randomNode(int level) {
@@ -566,24 +580,12 @@ void UnaryOp::destroy() {
 }
 
 Node *UnaryOp::_mutate() {
-  p1 = p1->_mutate();
+  p1 = p1->mutate();
   
   
   if (frand() < mutation_prob) {
-  	int selector = rand() % 9;
-  	switch (selector) {
-  	case 0: return new Sin(p1);
-  	case 1: return new Cos(p1);
-  	case 2: return new gradDir(p1);
-  	case 3: return new gaussBlur(p1);
-  	case 4: return new emboss(p1);
-  	case 5: return new sharpen(p1);
-  	case 6: return new blur(p1);
-  	case 7: return new hsv_to_rgb(p1);
-  	case 8: 
-  	default:
-  	return new Abs(p1);
-	}}
+  	return randomUnaryHead(p1);
+  }
 	else { return this; }
 }
 
@@ -678,30 +680,12 @@ void BinOp::destroy(){
 }
 
 Node *BinOp::_mutate() {
-  p1 = p1->_mutate();
-  p2 = p2->_mutate();
+  p1 = p1->mutate();
+  p2 = p2->mutate();
   
   if (frand() < mutation_prob) {
-  
-  	int selector = rand() % 14;
-  	switch (selector) {
-  	case 0: return new Sum(p1, p2);
-  	case 1: return new Rest(p1, p2);
-  	case 2: return new Mult(p1, p2);
-  	case 3: return new Div(p1, p2);
-  	case 4: return new Mod(p1, p2);
-  	case 5: return new Log(p1, p2);
-  	case 6: return new Round(p1, p2);
-  	case 7: return new And(p1, p2);
-  	case 8: return new Or(p1, p2);
-  	case 9: return new Xor(p1, p2);
-  	case 10: return new Atan(p1, p2);
-  	case 11: return new Min(p1, p2);
-  	case 12: return new Max(p1, p2);
-  	case 13: 
-  	default:
-    	return new Expt(p1, p2);
-    }}
+  	return randomBinaryHead(p1, p2);
+  	}
   else { return this; }
   
   
