@@ -33,21 +33,27 @@ bool BadImg (Node* n){
 
 
 
-char[24][24] pgm2digit(int digit){
+char  pgm2digit(int digit){
 	
+char _digit[24][24];
 ifstream fin("digit1.pgm");
 string aux;
 fin >> aux;
 fin >> aux;
-fin >> aux;	
-	
+fin >> aux;
+for (int i = 0; i < 24; i++){
+	for(int j = 0; j < 24; j++){
+		fin >> _digit[i][j];
+		}
+	}
+return _digit;
 }
 
 Image getNumTemp(int i, int j){
 	Image numTemp(24,24);
 	RGB Black(0.0, 0.0, 0.0);
 	RGB White(1.0, 1.0, 1.0);
-	char _digit[24][24] = pgm2digit(1);
+	char *_digit[24][24] = pgm2digit(1);
 	for (int i = 0; i < 24; i++) {
 		for (int j = 0; j < 24; j++) {
 			numTemp.putPixel(i, j, (_digit[i][j] == 'x' ? Black : White));
