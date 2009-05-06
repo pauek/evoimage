@@ -30,6 +30,30 @@ bool BadImg (Node* n){
 	return (I.allBallW() && I2.allBallW());	
 }
 
+void compose16(Image& mosaic, Node* root, vector<Node *>& history){
+  for (int c = 0; c < 4; c++){
+	for (int c2 = 0; c2 < 4; c2++){
+      history.push_back(root->clone());
+      root->destroy();
+      root = Node::randomNode(level);
+	  while (BadImg(root)){
+        root->destroy();
+        root = Node::randomNode(level);
+        }
+      root->print(cout);
+      cout << endl;	
+      Image thumb(192, 192);
+      root->eval(thumb);
+      for (int i=0; i < thumb.getX(); i++){
+    	  for (int j=0; j < thumb.getY(); j++){
+    		  mosaic.putPixel((c2*191)+i, (c*191)+j, thumb.getPixel(i, j));
+    		  }
+    	
+    	  }
+      }
+   }
+}
+
 bool parseArgs(int argc, char *argv[], vector<string>& args) {
   int k = 1;
   while (k < argc) {
@@ -114,6 +138,7 @@ int main(int argc, char *argv[]) {
     if (cmd == "?" || cmd == "help") {
       cout << "[h]elp|? -- show this message" << endl
 	   << "[s]how   -- show image" << endl
+	   << "[g]roup  -- show a group of 16 random expressions" << endl
 	   << "[p]rint  -- print expression" << endl
 	   << "[m]utate -- mutate expression" << endl
 	   << "[r]andom -- new random expression" << endl;
@@ -138,6 +163,21 @@ int main(int argc, char *argv[]) {
       I.save_pnm(outfile);
       display(outfile);
     }
+    
+    else if (cmd == "g" || cmd == "group") {
+      
+      Image mosaic(768, 768);
+      
+      compose16(mosaic, root, history);
+      
+      char _templ[] = "evalXXXXXX";
+      char *tmpfile = _templ;
+      tmpfile = tmpnam(tmpfile);
+      outfile = string(tmpfile) + ".pnm";
+      mosaic.save_pnm(outfile);
+      display(outfile);
+    }
+    
     else if (cmd == "p" || cmd == "print") {
       root->print(cout);
       cout << endl;
