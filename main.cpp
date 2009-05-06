@@ -30,6 +30,33 @@ bool BadImg (Node* n){
 	return (I.allBallW() && I2.allBallW());	
 }
 
+
+
+
+char[24][24] pgm2digit(int digit){
+	
+ifstream fin("digit1.pgm");
+string aux;
+fin >> aux;
+fin >> aux;
+fin >> aux;	
+	
+}
+
+Image getNumTemp(int i, int j){
+	Image numTemp(24,24);
+	RGB Black(0.0, 0.0, 0.0);
+	RGB White(1.0, 1.0, 1.0);
+	char _digit[24][24] = pgm2digit(1);
+	for (int i = 0; i < 24; i++) {
+		for (int j = 0; j < 24; j++) {
+			numTemp.putPixel(i, j, (_digit[i][j] == 'x' ? Black : White));
+		}
+	}
+
+	return numTemp;
+}
+
 void compose16(Image& mosaic, Node* root, vector<Node *>& history){
   for (int c = 0; c < 4; c++){
 	for (int c2 = 0; c2 < 4; c2++){
@@ -47,12 +74,22 @@ void compose16(Image& mosaic, Node* root, vector<Node *>& history){
       for (int i=0; i < thumb.getX(); i++){
     	  for (int j=0; j < thumb.getY(); j++){
     		  mosaic.putPixel((c2*191)+i, (c*191)+j, thumb.getPixel(i, j));
+    		  
     		  }
     	
     	  }
+    	  Image numTemp = getNumTemp(c, c2);
+    	  for (int i = 0; i < 24; i++){
+    	  	for (int j = 0; j < 24; j++){
+    	  		
+    	  		mosaic.putPixel((c2*191)+i, (c*191)+j, numTemp.getPixel(i,j));
+    	  		}
+    	  	}
       }
    }
 }
+
+
 
 bool parseArgs(int argc, char *argv[], vector<string>& args) {
   int k = 1;

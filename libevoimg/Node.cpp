@@ -341,7 +341,7 @@ void Image::filtraImatge (const RGB kernel[3][3]) {
 bool Image::allBallW(){
   int countB = 0;
   int countW = 0;
-  RGB B(0.001, 0.001, 0.001);
+  RGB B(1, 1, 1);
   RGB W(0.999, 0.999, 0.999);	
   for (int i = 0; i < x; i++) {
     for (int j = 0; j < y; j++) {
@@ -349,7 +349,8 @@ bool Image::allBallW(){
       if (getPixel(i, j) > W) { countW++; }
     }
   }
-  if (countB >= int(x*y*0.95) || countW >= int(x*y*0.95)) { return true; }
+  cout << countB << " " << countW << endl;
+  if (countB >= int(x*y*0.9) || countW >= int(x*y*0.75)) { return true; }
   else { return false; }
 }
 
