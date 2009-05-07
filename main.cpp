@@ -1,5 +1,6 @@
 
 #include <iostream>
+#include <fstream>
 #include <sstream>
 #include <vector>
 #include <readline/readline.h>
@@ -12,7 +13,7 @@ using namespace std;
 string outfile = "img.pnm"; // Nom imatge de sortida
 int    width = 400;         // Amplada de la imatge
 int    height = 400;        // Alçada de la imatge
-int    level = 3;           // Profunditat de l'arbre generat
+int    level = 4;           // Profunditat de l'arbre generat
 int    seed = -1;           // Llavor per als nombres aleatoris
 
 int str2int(string s) {
@@ -33,30 +34,31 @@ bool BadImg (Node* n){
 
 
 
-char  pgm2digit(int digit){
+void  pgm2digit(char digMat[24][24], int digit){
 	
-char _digit[24][24];
-ifstream fin("digit1.pgm");
+
+ifstream fin("digit1.pgm", ifstream::in);
 string aux;
 fin >> aux;
 fin >> aux;
 fin >> aux;
 for (int i = 0; i < 24; i++){
 	for(int j = 0; j < 24; j++){
-		fin >> _digit[i][j];
+		fin >> digMat[i][j];
 		}
 	}
-return _digit;
+
 }
 
 Image getNumTemp(int i, int j){
 	Image numTemp(24,24);
 	RGB Black(0.0, 0.0, 0.0);
 	RGB White(1.0, 1.0, 1.0);
-	char *_digit[24][24] = pgm2digit(1);
+	char _digit[24][24];
+	pgm2digit(_digit, 1);
 	for (int i = 0; i < 24; i++) {
 		for (int j = 0; j < 24; j++) {
-			numTemp.putPixel(i, j, (_digit[i][j] == 'x' ? Black : White));
+			numTemp.putPixel(i, j, _digit[i][j] );
 		}
 	}
 
@@ -184,7 +186,8 @@ int main(int argc, char *argv[]) {
 	   << "[g]roup  -- show a group of 16 random expressions" << endl
 	   << "[p]rint  -- print expression" << endl
 	   << "[m]utate -- mutate expression" << endl
-	   << "[r]andom -- new random expression" << endl;
+	   << "[r]andom -- new random expression" << endl
+	   << "[q]uit -- quits the program" << endl;
     }
     if (cmd == "s" || cmd == "show") {
       uint num;
@@ -255,6 +258,10 @@ int main(int argc, char *argv[]) {
     }
     else if (cmd == "set") {
       root = read(csin);
+    }
+    else if (cmd == "q" || cmd == "quit") {
+ 	root->destroy();
+ 	return 1;
     }
     
     line = _readline();

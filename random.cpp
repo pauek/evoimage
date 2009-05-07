@@ -10,7 +10,7 @@ using namespace std;
 string outfile = "img.pnm"; // Nom imatge de sortida
 int    width = 400;         // Amplada de la imatge
 int    height = 400;        // Alçada de la imatge
-int    level = 3;           // Profunditat de l'arbre generat
+int    level = 4;           // Profunditat de l'arbre generat
 int    seed = -1;           // Llavor per als nombres aleatoris
 
 int str2int(string s) {
