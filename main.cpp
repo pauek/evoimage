@@ -38,12 +38,18 @@ void  pgm2digit(char digMat[24][24], int digit){
 	
 
 ifstream fin("digit1.pgm", ifstream::in);
-string aux;
+string aux, x, y;
 fin >> aux;
-fin >> aux;
+fin >> x;
+fin >> y;
 fin >> aux;
 for (int i = 0; i < 24; i++){
 	for(int j = 0; j < 24; j++){
+		digMat[i][j] = 1;
+		}
+	}
+for (int i = 0; i < atoi(x.c_str()); i++){
+	for(int j = 0; j < atoi(y.c_str()); j++){
 		fin >> digMat[i][j];
 		}
 	}
