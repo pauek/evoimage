@@ -187,7 +187,7 @@ int main(int argc, char *argv[]) {
 	   << "[p]rint  -- print expression" << endl
 	   << "[m]utate -- mutate expression" << endl
 	   << "[r]andom -- new random expression" << endl
-	   << "[q]uit -- quits the program" << endl;
+	   << "[q]uit   -- quits the program" << endl;
     }
     if (cmd == "s" || cmd == "show") {
       uint num;
@@ -260,8 +260,7 @@ int main(int argc, char *argv[]) {
       root = read(csin);
     }
     else if (cmd == "q" || cmd == "quit") {
- 	root->destroy();
- 	return 1;
+      return 1;
     }
     
     line = _readline();
