@@ -361,18 +361,10 @@ void Node::destroy(){
 }
 
 Node* Node::mutate() {
-   /*if (frand() < mutation_prob) {
-     // Cas 1
-     Node* p = randomNode(depth());
-     destroy();
-     return p;
-   }*/
-   //else {
-   	 int tam = size();
-   	 int idx = (rand() % tam);
-   	 cout << tam << " " << idx << endl;
-     return _mutate(idx);
-  // }
+  int tam = size();
+  int idx = (rand() % tam);
+  cout << tam << " " << idx << endl;
+  return _mutate(idx);
 }
 
 void X::eval(Image& e) {
@@ -391,13 +383,16 @@ void X::eval(Image& e) {
 }
 
 Node *X::_mutate(int& idx) {
-  if (--idx != 0) {return this;}
-  else{  
-  	
-    	destroy();
-	    return new Y();
-  	}
-  
+  if (--idx != 0) { return this; }
+  else {  
+    if (frand() < replace_prob) {
+      return randomNode(2);
+    }
+    else {
+      destroy();
+      return new Y();
+    }
+  }
 }
 
 void Y::eval(Image& e) { 
@@ -416,10 +411,15 @@ void Y::eval(Image& e) {
 }
 
 Node *Y::_mutate(int& idx) {
-  if (--idx != 0){return this;}
-  else{
-    destroy();
-    return new X();
+  if (--idx != 0) { return this; }
+  else {
+    if (frand() < replace_prob) {
+      return randomNode(2);
+    }
+    else {
+      destroy();
+      return new X();
+    }
   }
 }
 
@@ -432,10 +432,15 @@ void v_fix::eval(Image& e) {
 }
 
 Node *v_fix::_mutate(int& idx) {
-  p1 *= 0.8 + 0.4*frand();
-  p2 *= 0.8 + 0.4*frand();
-  p3 *= 0.8 + 0.4*frand();
-  return this;
+  if (frand() < replace_prob) {
+    return randomNode(2);
+  }
+  else {
+    p1 *= 0.8 + 0.4*frand();
+    p2 *= 0.8 + 0.4*frand();
+    p3 *= 0.8 + 0.4*frand();
+    return this;
+  }
 }
 
 const double noise_size = 0.05;
@@ -498,11 +503,16 @@ RGB bwNoise::gen_noise() const {
 }
 
 Node* bwNoise::_mutate(int& idx) {
-  if (--idx != 0){return this;}
-  else{
-    destroy();
-    return new colorNoise();
-}
+  if (--idx != 0) { return this; }
+  else {
+    if (frand() < replace_prob) {
+      return randomNode(2);
+    }
+    else {
+      destroy();
+      return new colorNoise();
+    }
+  }
 }
 
 RGB colorNoise::gen_noise() const {
@@ -510,10 +520,15 @@ RGB colorNoise::gen_noise() const {
 }
 
 Node* colorNoise::_mutate(int& idx) {
-  if (--idx != 0){return this;}
+  if (--idx != 0) { return this; }
   else{
-    destroy();
-    return new bwNoise();
+    if (frand() < replace_prob) {
+      return randomNode(2);
+    }
+    else {
+      destroy();
+      return new bwNoise();
+    }
   }
 }
 
@@ -554,17 +569,18 @@ void Warp::destroy() {
   delete this;
 }
 
-/*Node* Node::_mutate(bool& mutated) {
-  p1 = p1->_mutate(bool& mutated);
-  p2 = p2->_mutate(bool& mutated);
-  p3 = p3->_mutate(bool& mutated);
-  
-  if (frand() <  mutation_prob) {
-  	return new dissolve(p1, p2, p3);  	
-  	}	
-  else { return this; }	
-	
-}*/
+Node* Warp::_mutate(int& idx) {
+  p1 = p1->_mutate(idx);
+  p2 = p2->_mutate(idx);
+  p3 = p3->_mutate(idx);
+  if (--idx != 0) { return this; }
+  else {
+    if (frand() < replace_prob) {
+      return randomNode(depth() + 1);  	
+    }	
+    else { return this; }
+  }
+}
 
 void Dissolve::eval(Image& I) {
   const int x = I.getX(), y = I.getY();
@@ -590,6 +606,20 @@ void Dissolve::destroy() {
   delete this;
 }
 
+Node* Dissolve::_mutate(int& idx) {
+  p1 = p1->_mutate(idx);
+  p2 = p2->_mutate(idx);
+  p3 = p3->_mutate(idx);
+  if (--idx != 0) { return this; }
+  else {
+    if (frand() < replace_prob) {
+      return randomNode(depth() + 1);  	
+    }	
+    else { return this; }
+  }
+}
+
+
 // Unary Operations //////////////////////////////////////////////////
 
 void UnaryOp::destroy() {
@@ -599,9 +629,14 @@ void UnaryOp::destroy() {
 
 Node *UnaryOp::_mutate(int& idx) {
   p1 = p1->_mutate(idx);  
-  if (--idx != 0){return this;}
+  if (--idx != 0) { return this; }
   else{ 
-    return randomUnaryHead(p1);
+    if (frand() < replace_prob) {
+      return randomNode(depth() + 1);
+    }
+    else {
+      return randomUnaryHead(p1);
+    }
   }
 }
 
@@ -696,12 +731,16 @@ void BinOp::destroy(){
 }
 
 Node *BinOp::_mutate(int& idx) {
-	
   p1 = p1->_mutate(idx);
   p2 = p2->_mutate(idx);
-  if (--idx != 0){return this;}
-  else{
-  return randomBinaryHead(p1, p2);
+  if (--idx != 0) { return this; }
+  else {
+    if (frand() < replace_prob) {
+      return randomNode(depth() + 1);
+    }
+    else {
+      return randomBinaryHead(p1, p2);
+    }
   }
 }
 

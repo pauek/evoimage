@@ -158,7 +158,7 @@ public:
 
 class Node {
 protected:
-  static const float mutation_prob = 0.1;
+  static const float replace_prob = 0.5;
 
 public:
   virtual void  destroy();
@@ -270,7 +270,8 @@ public:
   Node *clone() const { 
     return new Warp(p1->clone(), p2->clone(), p3->clone());
   }
-  //Node *_mutate(bool& mutated);
+
+  Node *_mutate(int& idx);
 };
 
 class Dissolve : public Node {
@@ -295,6 +296,8 @@ public:
   Node *clone() const { 
     return new Dissolve(p1->clone(), p2->clone(), p3->clone());
   }
+
+  Node *_mutate(int& idx);
 };
 
 // Operacions Unàries ////////////////////////////////////////////////
