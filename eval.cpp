@@ -44,6 +44,26 @@ void usage() {
   exit(0);
 }
 
+int display_image(const Image& I) {
+  char _templ[] = "evalXXXXXX";
+  char *tmpfile = _templ;
+  tmpfile = tmpnam(tmpfile);
+  outfile = string(tmpfile) + ".pnm";
+  I.save_pnm(outfile);
+  int ret;
+  {
+    stringstream sout;
+    sout << "display " << outfile;
+    ret = system(sout.str().c_str());
+  }
+  {
+    stringstream sout;
+    sout << "rm " << outfile;
+    system(sout.str().c_str());
+  }
+  return ret;
+}
+
 int main(int argc, char *argv[]) {
   vector<string> args;
   parseArgs(argc, argv, args);
@@ -54,23 +74,7 @@ int main(int argc, char *argv[]) {
   Image I(width, height, -1.0, 1.0, 1.0, -1.0);
   root->eval(I);  
   if (outfile == "<none>") {
-    char _templ[] = "evalXXXXXX";
-    char *tmpfile = _templ;
-    tmpfile = tmpnam(tmpfile);
-    outfile = string(tmpfile) + ".pnm";
-    I.save_pnm(outfile);
-    int ret;
-    {
-      stringstream sout;
-      sout << "display " << outfile;
-      ret = system(sout.str().c_str());
-    }
-    {
-      stringstream sout;
-      sout << "rm " << outfile;
-      system(sout.str().c_str());
-    }
-    return ret;
+    return display_image(I);
   }
   else {
     I.save_pnm(outfile);
