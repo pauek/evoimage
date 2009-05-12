@@ -140,7 +140,13 @@ void usage() {
   exit(0);
 }
 
-void display(string outfile) {
+void display(const Image& I) {
+  char _templ[] = "evoimgXXXXXX";
+  char *tmpfile = _templ;
+  tmpfile = tmpnam(tmpfile);
+  outfile = string(tmpfile) + ".pnm";
+  I.save_pnm(outfile);
+
   // Launch a new process
   if (fork() == 0) {
     int ret;
@@ -212,28 +218,13 @@ int main(int argc, char *argv[]) {
 	}
       }
       img->eval(I);
-      char _templ[] = "evalXXXXXX";
-      char *tmpfile = _templ;
-      tmpfile = tmpnam(tmpfile);
-      outfile = string(tmpfile) + ".pnm";
-      I.save_pnm(outfile);
-      display(outfile);
+      display(I);
     }
-    
     else if (cmd == "g" || cmd == "group") {
-      
       Image mosaic(768, 768);
-      
       compose16(mosaic, root, history);
-      
-      char _templ[] = "evalXXXXXX";
-      char *tmpfile = _templ;
-      tmpfile = tmpnam(tmpfile);
-      outfile = string(tmpfile) + ".pnm";
-      mosaic.save_pnm(outfile);
-      display(outfile);
+      display(mosaic);
     }
-    
     else if (cmd == "p" || cmd == "print") {
       root->print(cout);
       cout << endl;
