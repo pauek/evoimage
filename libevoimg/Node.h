@@ -165,8 +165,9 @@ public:
   virtual void  eval(Image& e) = 0;
   virtual void  print(std::ostream& o) const { o << "?"; }
   virtual int   depth() const = 0;
+  virtual int   size() const = 0;
   virtual Node *clone() const = 0;
-  virtual Node *_mutate() { 
+  virtual Node *_mutate(int& idx) { 
     // Default: no mutation
     return this; 
   }
@@ -185,13 +186,14 @@ public:
 class Leaf : public Node {
 public:
   int depth() const { return 1; }
+  int size() const { return 1; }
 };
 
 class X : public Leaf {
 public:
   void  eval(Image& e);
   void  print(std::ostream& o) const;
-  Node* _mutate();
+  Node* _mutate(int& idx);
   Node *clone() const { return new X(); }
 };
 
@@ -199,7 +201,7 @@ class Y : public Leaf {
 public:
   void  eval(Image& e);
   void  print(std::ostream& o) const;
-  Node* _mutate();
+  Node* _mutate(int& idx);
   Node *clone() const { return new Y(); }
 };
 
@@ -211,7 +213,7 @@ public:
   
   void  eval(Image& e);
   void  print(std::ostream& o) const;
-  Node *_mutate();
+  Node *_mutate(int& idx);
   Node *clone() const { return new v_fix(p1, p2, p3); }
 };
 
@@ -232,7 +234,7 @@ public:
   bwNoise() : Noise() {}
   bwNoise(int s) : Noise(s) {}
   RGB gen_noise() const;
-  Node *_mutate();
+  Node *_mutate(int& idx);
   void print(std::ostream& o) const;
   Node *clone() const { return new bwNoise(); }
 };
@@ -242,7 +244,7 @@ public:
   colorNoise() : Noise() {}
   colorNoise(int s) : Noise(s) {}
   RGB gen_noise() const;
-  Node *_mutate();
+  Node *_mutate(int& idx);
   void print(std::ostream& o) const;
   Node *clone() const { return new colorNoise(); }
 };
@@ -257,15 +259,18 @@ public:
   void eval(Image& I);
   void destroy();
   int  depth() const { 
-    return 1 + std::max(p1->depth(), 
+    return (1 + std::max(p1->depth(), 
 			std::max(p2->depth(), 
-				 p3->depth())); 
+				 p3->depth()))); 
+  }
+  int  size() const { 
+    return (1 + p1->size() + p2->size() + p3->size()); 
   }
   void print(std::ostream& o) const;
   Node *clone() const { 
     return new Warp(p1->clone(), p2->clone(), p3->clone());
   }
-  //Node *_mutate();
+  //Node *_mutate(bool& mutated);
 };
 
 class Dissolve : public Node {
@@ -277,10 +282,13 @@ public:
 
   void eval(Image& I);
   void destroy();
-  int  depth() const {
-    return 1 + std::max(p1->depth(), 
+  int  depth() const { 
+    return (1 + std::max(p1->depth(), 
 			std::max(p2->depth(), 
-				 p3->depth())); 
+				 p3->depth()))); 
+  }
+  int  size() const {
+    return (1 + p1->size() + p2->size() + p3->size()); 
   }
   void print(std::ostream& o) const;
 
@@ -297,12 +305,13 @@ class UnaryOp : public Node {
 protected:
   Node* op1() const { return p1; }
   virtual std::string head() const { return "?"; }  
-  Node *_mutate();
+  Node *_mutate(int& idx);
 
 public:
   UnaryOp(Node* _p1) { p1 = _p1; }
   void destroy();
   int  depth() const { return 1 + p1->depth(); }
+  int  size() const { return 1 + p1->size(); }
   void print(std::ostream& o) const;
 };
 
@@ -336,7 +345,7 @@ protected:
   Node* op1() const { return p1; }
   Node* op2() const { return p2; }
   virtual std::string head() const { return "?"; }
-  Node *_mutate();
+  Node *_mutate(int& idx);
   
 public:
   void destroy();
@@ -349,6 +358,10 @@ public:
 
   int depth() const {
     return 1 + std::max(p1->depth(), p2->depth());
+  }
+  
+  int size() const {
+    return 1 + (p1->size() + p2->size());
   }
 
   virtual void do_op(Image& res, Image& op1, Image& op2) = 0;

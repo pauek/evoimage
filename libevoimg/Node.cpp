@@ -349,7 +349,7 @@ bool Image::allBallW(){
       if (getPixel(i, j) > W) { countW++; }
     }
   }
-  cout << countB << " " << countW << endl;
+  //cout << countB << " " << countW << endl;
   if (countB >= int(x*y*0.9) || countW >= int(x*y*0.75)) { return true; }
   else { return false; }
 }
@@ -361,15 +361,18 @@ void Node::destroy(){
 }
 
 Node* Node::mutate() {
-  if (frand() < mutation_prob) {
-    // Cas 1
-    Node* p = randomNode(depth());
-    destroy();
-    return p;
-  }
-  else {
-    return _mutate();
-  }
+   /*if (frand() < mutation_prob) {
+     // Cas 1
+     Node* p = randomNode(depth());
+     destroy();
+     return p;
+   }*/
+   //else {
+   	 int tam = size();
+   	 int idx = (rand() % tam);
+   	 cout << tam << " " << idx << endl;
+     return _mutate(idx);
+  // }
 }
 
 void X::eval(Image& e) {
@@ -387,14 +390,14 @@ void X::eval(Image& e) {
   }
 }
 
-Node *X::_mutate() {
-  if (frand() < mutation_prob) {
-    destroy();
-    return new Y();
-  }
-  else {
-    return this;
-  }
+Node *X::_mutate(int& idx) {
+  if (--idx != 0) {return this;}
+  else{  
+  	
+    	destroy();
+	    return new Y();
+  	}
+  
 }
 
 void Y::eval(Image& e) { 
@@ -412,15 +415,14 @@ void Y::eval(Image& e) {
   }
 }
 
-Node *Y::_mutate() {
-  if (frand() < mutation_prob) {
+Node *Y::_mutate(int& idx) {
+  if (--idx != 0){return this;}
+  else{
     destroy();
     return new X();
   }
-  else {
-    return this;
-  }
 }
+
 
 void v_fix::eval(Image& e) {
   const int x = e.getX(), y = e.getY();
@@ -429,7 +431,7 @@ void v_fix::eval(Image& e) {
       e.putPixel(i, j, RGB( p1 , p2 , p3 ));
 }
 
-Node *v_fix::_mutate() {
+Node *v_fix::_mutate(int& idx) {
   p1 *= 0.8 + 0.4*frand();
   p2 *= 0.8 + 0.4*frand();
   p3 *= 0.8 + 0.4*frand();
@@ -495,24 +497,24 @@ RGB bwNoise::gen_noise() const {
   return RGB(frand());
 }
 
-Node* bwNoise::_mutate() {
-  if (frand() < mutation_prob) {
+Node* bwNoise::_mutate(int& idx) {
+  if (--idx != 0){return this;}
+  else{
     destroy();
     return new colorNoise();
-  }
-  else return this;
+}
 }
 
 RGB colorNoise::gen_noise() const {
   return RGB(frand(), frand(), frand());
 }
 
-Node* colorNoise::_mutate() {
-  if (frand() < mutation_prob) {
+Node* colorNoise::_mutate(int& idx) {
+  if (--idx != 0){return this;}
+  else{
     destroy();
     return new bwNoise();
   }
-  else return this;
 }
 
 void Warp::eval(Image& I) {
@@ -552,10 +554,10 @@ void Warp::destroy() {
   delete this;
 }
 
-/*Node* Node::_mutate() {
-  p1 = p1->_mutate();
-  p2 = p2->_mutate();
-  p3 = p3->_mutate();
+/*Node* Node::_mutate(bool& mutated) {
+  p1 = p1->_mutate(bool& mutated);
+  p2 = p2->_mutate(bool& mutated);
+  p3 = p3->_mutate(bool& mutated);
   
   if (frand() <  mutation_prob) {
   	return new dissolve(p1, p2, p3);  	
@@ -595,14 +597,12 @@ void UnaryOp::destroy() {
   delete this;	
 }
 
-Node *UnaryOp::_mutate() {
-  p1 = p1->mutate();
-  
-  
-  if (frand() < mutation_prob) {
-  	return randomUnaryHead(p1);
+Node *UnaryOp::_mutate(int& idx) {
+  p1 = p1->_mutate(idx);  
+  if (--idx != 0){return this;}
+  else{ 
+    return randomUnaryHead(p1);
   }
-	else { return this; }
 }
 
 void Abs::eval(Image& I) {
@@ -695,17 +695,14 @@ void BinOp::destroy(){
   delete this;
 }
 
-Node *BinOp::_mutate() {
-  p1 = p1->mutate();
-  p2 = p2->mutate();
-  
-  if (frand() < mutation_prob) {
-  	return randomBinaryHead(p1, p2);
-  	}
-  else { return this; }
-  
-  
-  return this;
+Node *BinOp::_mutate(int& idx) {
+	
+  p1 = p1->_mutate(idx);
+  p2 = p2->_mutate(idx);
+  if (--idx != 0){return this;}
+  else{
+  return randomBinaryHead(p1, p2);
+  }
 }
 
 void BinOp::eval(Image& I) {
