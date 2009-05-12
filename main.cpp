@@ -31,40 +31,56 @@ bool BadImg (Node* n){
 	return (I.allBallW() && I2.allBallW());	
 }
 
+#include "digits.cpp"
 
-
-
-void  pgm2digit(char digMat[24][24], int digit){
-	
-
-ifstream fin("digit1.pgm", ifstream::in);
-string aux, x, y;
-fin >> aux;
-fin >> x;
-fin >> y;
-fin >> aux;
-for (int i = 0; i < 24; i++){
-	for(int j = 0; j < 24; j++){
-		digMat[i][j] = 1;
-		}
+void read_digit(float digMat[11][22], int digit) {
+ stringstream fin(_digit[digit]);
+ string aux; 
+ int x, y;
+ float pixVal;
+ fin >> aux;
+ fin >> x;
+ fin >> y;
+ fin >> aux;
+ for (int j = 0; j < y; j++){
+	for(int i = 0; i < x; i++){
+		digMat[i][j] = 0.0;
+		fin >> pixVal;
+  	    digMat[i][j] = pixVal/255;
 	}
-for (int i = 0; i < atoi(x.c_str()); i++){
-	for(int j = 0; j < atoi(y.c_str()); j++){
-		fin >> digMat[i][j];
-		}
-	}
+ }
+}
 
+void  pgm2digit(float idxMat[24][24], int idx) {
+   for (int i = 0; i < 24; i++) {
+	 for(int j = 0; j < 24; j++) {
+		idxMat[i][j] = 1.0;
+	 }
+   }
+
+   float digMat[11][22];
+   // Desenes
+   if (idx / 10 > 0) {
+     read_digit(digMat, idx / 10);
+     for (int j = 0; j < 22; j++)
+     	for (int i = 0; i < 11; i++)
+	        idxMat[i+1][j+1] = digMat[i][j];
+   }
+   read_digit(digMat, idx % 10);
+   for (int j = 0; j < 22; j++)
+     for (int i = 0; i < 11; i++)
+	    idxMat[i+12][j+1] = digMat[i][j];
 }
 
 Image getNumTemp(int i, int j){
 	Image numTemp(24,24);
 	RGB Black(0.0, 0.0, 0.0);
 	RGB White(1.0, 1.0, 1.0);
-	char _digit[24][24];
-	pgm2digit(_digit, 1);
-	for (int i = 0; i < 24; i++) {
-		for (int j = 0; j < 24; j++) {
-			numTemp.putPixel(i, j, _digit[i][j] );
+	float _digit[24][24];
+	pgm2digit(_digit, i*4 + j);
+	for (int k = 0; k < 24; k++) {
+		for (int l = 0; l < 24; l++) {
+			numTemp.putPixel(k, l, _digit[k][l] );
 		}
 	}
 
@@ -276,5 +292,5 @@ int main(int argc, char *argv[]) {
   
   root->print(cout);
   cout << endl;
-  root->destroy();
+  
 }
