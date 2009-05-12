@@ -1,6 +1,6 @@
-CXXFLAGS = -Wall -g3 -O2 -fPIC
-OBJECTS = Node.o Reader.o
 
+CXXFLAGS = -Wall -O3
+OBJECTS = Node.o Reader.o
 
 all: libevoimg.a
 
@@ -9,7 +9,7 @@ libevoimg.a: $(OBJECTS)
 
 .cpp.o:
 	g++ $(CXXFLAGS) -c -o $@ $<
-	
+
 $(OBJECTS): Node.h
 
 clean:
