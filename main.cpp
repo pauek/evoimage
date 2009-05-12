@@ -1,4 +1,5 @@
 
+#include <cassert>
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -42,11 +43,12 @@ void read_digit(float digMat[11][22], int digit) {
   fin >> x;
   fin >> y;
   fin >> aux;
-  for (int j = 0; j < y; j++) {
-    for(int i = 0; i < x; i++) {
+  for (int j = 0; j < 22; j++) {
+    for(int i = 0; i < 11; i++) {
       digMat[i][j] = 0.0;
-      fin >> pixVal;
-      digMat[i][j] = pixVal/255;
+      if (fin >> pixVal) {
+	digMat[i][j] = pixVal/255;
+      }
     }
   }
 }
@@ -75,7 +77,7 @@ Image getNumTemp(int i, int j){
   RGB Black(0.0, 0.0, 0.0);
   RGB White(1.0, 1.0, 1.0);
   float _digit[24][24];
-  pgm2digit(_digit, i*4 + j);
+  pgm2digit(_digit, i*4 + j + 1);
   for (int k = 0; k < 24; k++) 
     for (int l = 0; l < 24; l++) 
       numTemp.putPixel(k, l, _digit[k][l] );
@@ -83,29 +85,21 @@ Image getNumTemp(int i, int j){
   return numTemp;
 }
 
-void compose16(Image& mosaic, Node* root, vector<Node *>& history){
-  for (int c = 0; c < 4; c++){
-    for (int c2 = 0; c2 < 4; c2++){
-      history.push_back(root->clone());
-      root->destroy();
-      root = Node::randomNode(level);
-      while (BadImg(root)){
-        root->destroy();
-        root = Node::randomNode(level);
-      }
-      root->print(cout);
-      cout << endl;	
-      Image thumb(192, 192);
-      root->eval(thumb);
-      for (int i=0; i < thumb.getX(); i++)
-	for (int j=0; j < thumb.getY(); j++)
-	  mosaic.putPixel((c2*191)+i, (c*191)+j, thumb.getPixel(i, j));
+void compose16(Image& mosaic, const vector<Node *>& pop) {
+  assert(pop.size() <= 16);
+  for (uint i = 0; i < pop.size(); i++) {
+    Image thumb(192, 192);
+    pop[i]->eval(thumb);
+    int c = i / 4, c2 = i % 4;
 
-      Image numTemp = getNumTemp(c, c2);
-      for (int i = 0; i < 24; i++)
-	for (int j = 0; j < 24; j++)
-	  mosaic.putPixel((c2*191)+i, (c*191)+j, numTemp.getPixel(i,j));
-    }
+    for (int i = 0; i < thumb.getX(); i++)
+      for (int j = 0; j < thumb.getY(); j++)
+	mosaic.putPixel((c2*192)+i, (c*192)+j, thumb.getPixel(i, j));
+    
+    Image numTemp = getNumTemp(c, c2);
+    for (int i = 0; i < 24; i++)
+      for (int j = 0; j < 24; j++)
+	mosaic.putPixel((c2*192)+i, (c*192)+j, numTemp.getPixel(i,j));
   }
 }
 
@@ -177,6 +171,22 @@ string _readline() {
   return string(_line);
 }
 
+void init_population(vector<Node *>& pop) {
+  pop.resize(16);
+  for (int i = 0; i < 16; i++) 
+    pop[i] = Node::randomNode(level);
+}
+
+void next_generation(vector<Node *>& pop, int ifather) {
+  Node *father = pop[ifather];
+  vector<Node *> next;
+  next.push_back(father);
+  while (next.size() < pop.size()) {
+    next.push_back(father->clone()->mutate());
+  }
+  pop.swap(next);
+}
+
 int main(int argc, char *argv[]) {
   vector<string> _args;
   if (!parseArgs(argc, argv, _args)) {
@@ -186,9 +196,10 @@ int main(int argc, char *argv[]) {
   srand(seed != -1 ? seed : unsigned(time(0)));
 
   vector<Node *> history;
-  Node* root = new X();
-  history.push_back(root->clone());
-  Image I(width, height);
+  vector<Node *> pop; // Population of images
+  Image mosaic(768, 768), img(width, height);
+
+  init_population(pop);
 
   cout << "EvoImage v0.1 (c) 2009, Enric Martí & Pau Fernández" << endl;
   string line = _readline();
@@ -207,58 +218,79 @@ int main(int argc, char *argv[]) {
     }
     if (cmd == "s" || cmd == "show") {
       uint num;
-      Node *img = root;
       csin >> num;
       if (csin) {
-	if (num >= 0 && num < history.size()) {
-	  img = history[num];
+	if (num >= 0 && num < pop.size()) {
+	  Node *r = pop[num-1];
+	  r->eval(img);
+	  display(img);
 	}
-	else if (num < 0 || num > history.size()) {
+	else if (num < 0 || num > pop.size()) {
 	  cerr << "show: index out of range" << endl;
 	}
       }
-      img->eval(I);
-      display(I);
-    }
-    else if (cmd == "g" || cmd == "group") {
-      Image mosaic(768, 768);
-      compose16(mosaic, root, history);
-      display(mosaic);
+      else {
+	compose16(mosaic, pop);
+	display(mosaic);
+      }
     }
     else if (cmd == "p" || cmd == "print") {
-      root->print(cout);
-      cout << endl;
+      for (uint i = 0; i < pop.size(); i++) {
+	cout << i << " = ";
+	pop[i]->print(cout);
+	cout << endl;
+      }
+    }
+    else if (cmd == "save") {
+      int idx;
+      csin >> idx;
+      if (csin) {
+	history.push_back(pop[idx-1]);
+      }
+      else {
+	cout << "usage: save <idx>" << endl;
+      }
     }
     else if (cmd == "r" || cmd == "random") {
-      history.push_back(root->clone());
-      root->destroy();
-      root = Node::randomNode(level);
-      while (BadImg(root)){
-      	root->destroy();
-        root = Node::randomNode(level);
+      int i;
+      csin >> i;
+      if (csin) {
+	i--;
+	if (i >= 0 && i < pop.size()) {
+	  do {
+	    pop[i]->destroy();
+	    pop[i] = Node::randomNode(level);
+	  }
+	  while (BadImg(pop[i]));
+	  pop[i]->print(cout);
+	  cout << endl;
+	}
+	else {
+	  cout << "index out of range" << endl;
+	}
       }
-      root->print(cout);
-      cout << endl;
+      else {
+	cout << "usage: random <idx>" << endl;
+      }
     }
-    else if (cmd == "m" || cmd == "mutate") {
-      history.push_back(root->clone());
-      root = root->mutate();
-      root->print(cout);
-      cout << endl;
+    else if (cmd == "n" || cmd == "next") {
+      int idx = 0;
+      csin >> idx;
+      if (!csin) idx = 1;
+      next_generation(pop, idx-1);
+      compose16(mosaic, pop);
+      display(mosaic);
     }
     else if (cmd == "h" || cmd == "history") {
       uint i;
       for (i = 0 ; i < history.size(); i++) {
-	cout << i << " = ";
+	cout << i+1 << " = ";
 	history[i]->print(cout);
 	cout << endl;
       }
       cout << i << " = ";
-      root->print(cout);
+      history[i]->print(cout);
       cout << endl;
-    }
-    else if (cmd == "set") {
-      root = read(csin);
     }
     else if (cmd == "q" || cmd == "quit") {
       return 1;
@@ -267,8 +299,8 @@ int main(int argc, char *argv[]) {
     line = _readline();
   }
 
-  I.save_pnm(outfile);
-  
-  root->print(cout);
+  pop[0]->eval(img);
+  img.save_pnm(outfile);
+  pop[0]->print(cout);
   cout << endl;
 }
