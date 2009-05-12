@@ -25,7 +25,7 @@ bool parseArgs(int argc, char *argv[], vector<string>& args) {
   int k = 1;
   while (k < argc) {
     string arg(argv[k]);
-    if (arg == "-h") return false;
+    if (arg == "--help") return false;
     else if (arg == "-o1") outfile1 = string(argv[++k]);
     else if (arg == "-o2") outfile2 = string(argv[++k]);
     else if (arg == "-w")  width  = str2int(argv[++k]);
@@ -34,14 +34,14 @@ bool parseArgs(int argc, char *argv[], vector<string>& args) {
     else if (arg == "-s")  seed   = str2int(argv[++k]);
     else {
       args.push_back(arg);
+      k++;
     }
-    k++;
   }
   return true;
 }
 
 void usage() {
-  cout << "usage: random [options] <expr>..." << endl;
+  cout << "usage: random [options]" << endl;
   cout << endl;
   cout << "options: " << endl;
   cout << " -w, image width [" << width << "]" << endl;
