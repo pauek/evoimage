@@ -181,8 +181,8 @@ public:
   static Node* randomBinaryOp(int lcount);
   static Node* randomBinaryHead(Node* p1, Node* p2);
   static Node* randomLeaf();
-  static Node* bypassUnary();
-  static Node* bypassBinary();
+ // virtual Node* bypassUnary();
+ // virtual Node* bypassBinary();
 };
 
 class Leaf : public Node {
@@ -314,6 +314,7 @@ protected:
   void setNULL() { p1 = NULL; }
   virtual std::string head() const { return "?"; }  
   Node *_mutate(int& idx);
+  Node* bypassUnary();
 
 public:
   UnaryOp(Node* _p1) { p1 = _p1; }
@@ -331,7 +332,7 @@ public:
     std::string head() const;			\
     Node *clone() const {			\
       return new Name(op1()->clone());		\
-    }						\
+    }										\
   }
 
 DEF_UNARY_OP(Abs);
@@ -354,7 +355,7 @@ protected:
   Node* op2() const { return p2; }
   virtual std::string head() const { return "?"; }
   Node *_mutate(int& idx);
-  
+  Node* bypassBinary();
 public:
   void destroy();
   BinOp(Node* _p1, Node* _p2) {
@@ -384,7 +385,7 @@ public:
     std::string head() const;				\
     Node *clone () const {				\
       return new Name(op1()->clone(), op2()->clone());	\
-    }							\
+    }											\
   }
 
 DEF_BINARY_OP(Sum);

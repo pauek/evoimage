@@ -144,15 +144,15 @@ Node* Node::randomLeaf() {
   }
 }
 
-Node* Node::bypassUnary() {
+Node* UnaryOp::bypassUnary() {
 	Node* son = op1()->clone();
-	destroy();
-	return son();
+	return son;
 }
 
-Node* Node::bypassBinary() {
+Node* BinOp::bypassBinary() {
 	
-	
+	Node* son = frand() < 0.5 ? op1()->clone() : op2()->clone();
+	return son;
 
 
 }
