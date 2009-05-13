@@ -192,6 +192,9 @@ void Image::copyPixels(const Image& I) {
 
 void Image::filtraImatge (const RGB kernel[3][3]) {
   RGB res;
+
+  if (getX() < 3 || getY() < 3) return;
+
   // Core
   Image Tmp(*this);
   for (int i = 1; i < x - 1; i++) {
@@ -609,14 +612,24 @@ void Warp::eval(Image& I) {
   Image scalex(1, 1);
   p2->eval(scalex);
   float scx = scalex.getPixel(0, 0).getr();
-  if (scx > 10.0) scx = 10.0;
-  if (scx < 0.1) scx = 0.1;
+  if (!isfinite(scx)) {
+    scx = 1;
+  }
+  else {
+    if (scx > 10.0) scx = 10.0;
+    if (scx < 0.1) scx = 0.1;
+  }
 
   Image scaley(1, 1);
   p3->eval(scaley);
   float scy = scaley.getPixel(0, 0).getr();
-  if (scy > 10.0) scy = 10.0;
-  if (scy < 0.1) scy = 0.1;
+  if (!isfinite(scy)) {
+    scy = 1;
+  }
+  else {
+    if (scy > 10.0) scy = 10.0;
+    if (scy < 0.1) scy = 0.1;
+  }
   
   float xtl, ytl, xbr, ybr;
   I.get_tl(xtl, ytl);
