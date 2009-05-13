@@ -38,7 +38,7 @@ Node *Node::randomUnaryOp(int level) {
   if (level > 2)
     _op1 = randomNode (level - 1);
   else
-    _op1 = randomLeave ();
+    _op1 = randomLeaf();
   
   return randomUnaryHead(_op1);
   
@@ -71,8 +71,8 @@ Node *Node::randomBinaryOp(int level) {
     _op2 = randomNode(level - 1);
   }
   else {
-    _op1 = randomLeave();
-    _op2 = randomLeave();
+    _op1 = randomLeaf();
+    _op2 = randomLeaf();
   }
   return randomBinaryHead(_op1, _op2);
 }
@@ -118,9 +118,9 @@ Node* Node::randomNode(int level) {
       _op3 = randomNode(level - 1);
     }
     else {
-      _op1 = randomLeave();
-      _op2 = randomLeave();
-      _op3 = randomLeave();
+      _op1 = randomLeaf();
+      _op2 = randomLeaf();
+      _op3 = randomLeaf();
     }
     if (selector == 23)
       return new Warp(_op1, _op2, _op3);
@@ -131,12 +131,12 @@ Node* Node::randomNode(int level) {
   return NULL;
 }
 
-Node* Node::randomLeave() {
+Node* Node::randomLeaf() {
   int selector = rand() % 5;
   switch (selector) {
   case 0: return new X();
   case 1: return new Y();
-  case 2: return new v_fix(rand() % 255, rand() % 255, rand() % 255);
+  case 2: return new v_fix(frand(), frand(), frand());
   case 3: return new bwNoise();
   case 4: 
   default:
@@ -359,73 +359,61 @@ bool Image::allBallW(){
 
 Node* Node::mutate() {
   int tam = size();
-  int idx = (rand() % tam);
+  int idx = (rand() % tam) + 1;
   cout << tam << " " << idx << endl;
   return _mutate(idx);
 }
 
-Node *X::_mutate(int& idx) {
+Node *Leaf::_mutate(int& idx) {
   if (--idx != 0) { return this; }
   else {  
     if (frand() < replace_prob) {
       return randomNode(2);
     }
     else {
-      destroy();
-      return new Y();
+      return _mutate_leaf();
     }
   }
 }
 
-Node *Y::_mutate(int& idx) {
-  if (--idx != 0) { return this; }
+Node *X::_mutate_leaf() {
+  if (frand() < .5) {
+    destroy();
+    return new Y();
+  } 
   else {
-    if (frand() < replace_prob) {
-      return randomNode(2);
-    }
-    else {
-      destroy();
-      return new X();
-    }
+    return randomLeaf();
   }
 }
 
-Node *v_fix::_mutate(int& idx) {
-  if (frand() < replace_prob) {
-    return randomNode(2);
+Node *Y::_mutate_leaf() {
+  if (frand() < .5) {
+    destroy();
+    return new X();
   }
   else {
+    return randomLeaf();
+  }
+}
+
+Node *v_fix::_mutate_leaf() {
+  if (frand() < .7) {
     p1 *= 0.8 + 0.4*frand();
     p2 *= 0.8 + 0.4*frand();
     p3 *= 0.8 + 0.4*frand();
     return this;
   }
-}
-
-Node* bwNoise::_mutate(int& idx) {
-  if (--idx != 0) { return this; }
   else {
-    if (frand() < replace_prob) {
-      return randomNode(2);
-    }
-    else {
-      destroy();
-      return new colorNoise();
-    }
+    return randomLeaf();
   }
 }
 
-Node* colorNoise::_mutate(int& idx) {
-  if (--idx != 0) { return this; }
-  else{
-    if (frand() < replace_prob) {
-      return randomNode(2);
-    }
-    else {
-      destroy();
-      return new bwNoise();
-    }
-  }
+Node* bwNoise::_mutate_leaf() {
+  return randomLeaf();
+}
+
+Node* colorNoise::_mutate_leaf() {
+  return randomLeaf();
 }
 
 Node* Warp::_mutate(int& idx) {
@@ -473,6 +461,7 @@ Node *BinOp::_mutate(int& idx) {
   if (--idx != 0) { return this; }
   else {
     if (frand() < replace_prob) {
+      // TODO: Cas 6
       return randomNode(depth() + 1);
     }
     else {

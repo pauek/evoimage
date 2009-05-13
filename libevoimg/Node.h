@@ -180,29 +180,31 @@ public:
   static Node* randomUnaryHead(Node* p1);
   static Node* randomBinaryOp(int lcount);
   static Node* randomBinaryHead(Node* p1, Node* p2);
-  static Node* randomLeave();
+  static Node* randomLeaf();
 };
 
 class Leaf : public Node {
 public:
   int depth() const { return 1; }
   int size() const { return 1; }
+  Node *_mutate(int& idx);
+  virtual Node *_mutate_leaf() = 0;
 };
 
 class X : public Leaf {
 public:
   void  eval(Image& e);
   void  print(std::ostream& o) const;
-  Node* _mutate(int& idx);
   Node *clone() const { return new X(); }
+  Node *_mutate_leaf();
 };
 
 class Y : public Leaf {
 public:
   void  eval(Image& e);
   void  print(std::ostream& o) const;
-  Node* _mutate(int& idx);
   Node *clone() const { return new Y(); }
+  Node *_mutate_leaf();
 };
 
 class v_fix : public Leaf {
@@ -213,8 +215,8 @@ public:
   
   void  eval(Image& e);
   void  print(std::ostream& o) const;
-  Node *_mutate(int& idx);
   Node *clone() const { return new v_fix(p1, p2, p3); }
+  Node *_mutate_leaf();
 };
 
 class Noise : public Leaf {
@@ -234,7 +236,7 @@ public:
   bwNoise() : Noise() {}
   bwNoise(int s) : Noise(s) {}
   RGB gen_noise() const;
-  Node *_mutate(int& idx);
+  Node *_mutate_leaf();
   void print(std::ostream& o) const;
   Node *clone() const { return new bwNoise(); }
 };
@@ -244,7 +246,7 @@ public:
   colorNoise() : Noise() {}
   colorNoise(int s) : Noise(s) {}
   RGB gen_noise() const;
-  Node *_mutate(int& idx);
+  Node *_mutate_leaf();
   void print(std::ostream& o) const;
   Node *clone() const { return new colorNoise(); }
 };

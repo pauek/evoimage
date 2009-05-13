@@ -1,5 +1,5 @@
 
-CXXFLAGS = -Wall -O3
+CXXFLAGS = -Wall -g3
 OBJECTS = Node.o Reader.o
 
 all: libevoimg.a

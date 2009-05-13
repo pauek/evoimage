@@ -236,7 +236,7 @@ int main(int argc, char *argv[]) {
     }
     else if (cmd == "p" || cmd == "print") {
       for (uint i = 0; i < pop.size(); i++) {
-	cout << i << " = ";
+	cout << i+1 << " = ";
 	pop[i]->print(cout);
 	cout << endl;
       }
