@@ -83,6 +83,10 @@ int main(int argc, char *argv[]) {
   stringstream sin(args[0]); 
   Node* root = read(sin);
   Image I(width, height);
+
+  root->print(cout);
+  cout << endl;
+
   root->eval(I);  
   if (outfile == "<none>") {
     display(I);
