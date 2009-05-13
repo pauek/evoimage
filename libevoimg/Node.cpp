@@ -354,17 +354,137 @@ bool Image::allBallW(){
   else { return false; }
 }
 
-// Leaf Operations ///////////////////////////////////////////////////
 
-void Node::destroy(){
-  delete this;	
-}
+// Mutate Operations /////////////////////////////////////////////////
 
 Node* Node::mutate() {
   int tam = size();
   int idx = (rand() % tam);
   cout << tam << " " << idx << endl;
   return _mutate(idx);
+}
+
+Node *X::_mutate(int& idx) {
+  if (--idx != 0) { return this; }
+  else {  
+    if (frand() < replace_prob) {
+      return randomNode(2);
+    }
+    else {
+      destroy();
+      return new Y();
+    }
+  }
+}
+
+Node *Y::_mutate(int& idx) {
+  if (--idx != 0) { return this; }
+  else {
+    if (frand() < replace_prob) {
+      return randomNode(2);
+    }
+    else {
+      destroy();
+      return new X();
+    }
+  }
+}
+
+Node *v_fix::_mutate(int& idx) {
+  if (frand() < replace_prob) {
+    return randomNode(2);
+  }
+  else {
+    p1 *= 0.8 + 0.4*frand();
+    p2 *= 0.8 + 0.4*frand();
+    p3 *= 0.8 + 0.4*frand();
+    return this;
+  }
+}
+
+Node* bwNoise::_mutate(int& idx) {
+  if (--idx != 0) { return this; }
+  else {
+    if (frand() < replace_prob) {
+      return randomNode(2);
+    }
+    else {
+      destroy();
+      return new colorNoise();
+    }
+  }
+}
+
+Node* colorNoise::_mutate(int& idx) {
+  if (--idx != 0) { return this; }
+  else{
+    if (frand() < replace_prob) {
+      return randomNode(2);
+    }
+    else {
+      destroy();
+      return new bwNoise();
+    }
+  }
+}
+
+Node* Warp::_mutate(int& idx) {
+  p1 = p1->_mutate(idx);
+  p2 = p2->_mutate(idx);
+  p3 = p3->_mutate(idx);
+  if (--idx != 0) { return this; }
+  else {
+    if (frand() < replace_prob) {
+      return randomNode(depth() + 1);  	
+    }	
+    else { return this; }
+  }
+}
+
+Node* Dissolve::_mutate(int& idx) {
+  p1 = p1->_mutate(idx);
+  p2 = p2->_mutate(idx);
+  p3 = p3->_mutate(idx);
+  if (--idx != 0) { return this; }
+  else {
+    if (frand() < replace_prob) {
+      return randomNode(depth() + 1);  	
+    }	
+    else { return this; }
+  }
+}
+
+Node *UnaryOp::_mutate(int& idx) {
+  p1 = p1->_mutate(idx);  
+  if (--idx != 0) { return this; }
+  else{ 
+    if (frand() < replace_prob) {
+      return randomNode(depth() + 1);
+    }
+    else {
+      return randomUnaryHead(p1);
+    }
+  }
+}
+
+Node *BinOp::_mutate(int& idx) {
+  p1 = p1->_mutate(idx);
+  p2 = p2->_mutate(idx);
+  if (--idx != 0) { return this; }
+  else {
+    if (frand() < replace_prob) {
+      return randomNode(depth() + 1);
+    }
+    else {
+      return randomBinaryHead(p1, p2);
+    }
+  }
+}
+
+// Leaf Operations ///////////////////////////////////////////////////
+
+void Node::destroy(){
+  delete this;	
 }
 
 void X::eval(Image& e) {
@@ -379,19 +499,6 @@ void X::eval(Image& e) {
     for (int i = 0 ; i < x ; i++)
       for (int j = 0 ; j < y ; j++)
 	e.putPixel(i, j, RGB( (xbr - xtl)*float(i)/float(x-1) + xtl ));
-  }
-}
-
-Node *X::_mutate(int& idx) {
-  if (--idx != 0) { return this; }
-  else {  
-    if (frand() < replace_prob) {
-      return randomNode(2);
-    }
-    else {
-      destroy();
-      return new Y();
-    }
   }
 }
 
@@ -410,18 +517,6 @@ void Y::eval(Image& e) {
   }
 }
 
-Node *Y::_mutate(int& idx) {
-  if (--idx != 0) { return this; }
-  else {
-    if (frand() < replace_prob) {
-      return randomNode(2);
-    }
-    else {
-      destroy();
-      return new X();
-    }
-  }
-}
 
 
 void v_fix::eval(Image& e) {
@@ -431,17 +526,6 @@ void v_fix::eval(Image& e) {
       e.putPixel(i, j, RGB( p1 , p2 , p3 ));
 }
 
-Node *v_fix::_mutate(int& idx) {
-  if (frand() < replace_prob) {
-    return randomNode(2);
-  }
-  else {
-    p1 *= 0.8 + 0.4*frand();
-    p2 *= 0.8 + 0.4*frand();
-    p3 *= 0.8 + 0.4*frand();
-    return this;
-  }
-}
 
 const double noise_size = 0.05;
 
@@ -502,35 +586,11 @@ RGB bwNoise::gen_noise() const {
   return RGB(frand());
 }
 
-Node* bwNoise::_mutate(int& idx) {
-  if (--idx != 0) { return this; }
-  else {
-    if (frand() < replace_prob) {
-      return randomNode(2);
-    }
-    else {
-      destroy();
-      return new colorNoise();
-    }
-  }
-}
 
 RGB colorNoise::gen_noise() const {
   return RGB(frand(), frand(), frand());
 }
 
-Node* colorNoise::_mutate(int& idx) {
-  if (--idx != 0) { return this; }
-  else{
-    if (frand() < replace_prob) {
-      return randomNode(2);
-    }
-    else {
-      destroy();
-      return new bwNoise();
-    }
-  }
-}
 
 void Warp::eval(Image& I) {
   // (warp <expr> <scale x> <scale y>)
@@ -569,19 +629,6 @@ void Warp::destroy() {
   delete this;
 }
 
-Node* Warp::_mutate(int& idx) {
-  p1 = p1->_mutate(idx);
-  p2 = p2->_mutate(idx);
-  p3 = p3->_mutate(idx);
-  if (--idx != 0) { return this; }
-  else {
-    if (frand() < replace_prob) {
-      return randomNode(depth() + 1);  	
-    }	
-    else { return this; }
-  }
-}
-
 void Dissolve::eval(Image& I) {
   const int x = I.getX(), y = I.getY();
   Image _mask(x, y);
@@ -606,38 +653,12 @@ void Dissolve::destroy() {
   delete this;
 }
 
-Node* Dissolve::_mutate(int& idx) {
-  p1 = p1->_mutate(idx);
-  p2 = p2->_mutate(idx);
-  p3 = p3->_mutate(idx);
-  if (--idx != 0) { return this; }
-  else {
-    if (frand() < replace_prob) {
-      return randomNode(depth() + 1);  	
-    }	
-    else { return this; }
-  }
-}
-
 
 // Unary Operations //////////////////////////////////////////////////
 
 void UnaryOp::destroy() {
   op1()->destroy();
   delete this;	
-}
-
-Node *UnaryOp::_mutate(int& idx) {
-  p1 = p1->_mutate(idx);  
-  if (--idx != 0) { return this; }
-  else{ 
-    if (frand() < replace_prob) {
-      return randomNode(depth() + 1);
-    }
-    else {
-      return randomUnaryHead(p1);
-    }
-  }
 }
 
 void Abs::eval(Image& I) {
@@ -728,20 +749,6 @@ void BinOp::destroy(){
   op1()->destroy();
   op2()->destroy();
   delete this;
-}
-
-Node *BinOp::_mutate(int& idx) {
-  p1 = p1->_mutate(idx);
-  p2 = p2->_mutate(idx);
-  if (--idx != 0) { return this; }
-  else {
-    if (frand() < replace_prob) {
-      return randomNode(depth() + 1);
-    }
-    else {
-      return randomBinaryHead(p1, p2);
-    }
-  }
 }
 
 void BinOp::eval(Image& I) {
