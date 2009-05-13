@@ -1,6 +1,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <fstream>
 #include <cstdio>
 #include <vector>
 #include <Node.h>
@@ -11,6 +12,7 @@ using namespace std;
 int    width = 400;        // Amplada de la imatge
 int    height = 400;       // Alçada de la imatge
 long   seed = -1;
+string expr = "";
 string outfile = "<none>"; // Nom de fitxer de sortida
 
 int str2int(string s) {
@@ -26,6 +28,7 @@ void parseArgs(int argc, char *argv[], vector<string>& args) {
     string arg(argv[k]);
     if (arg == "-o")      outfile = string(argv[++k]);
     else if (arg == "-s") seed   = str2int(argv[++k]);
+    else if (arg == "-e") expr   = string(argv[++k]);
     else if (arg == "-w") width  = str2int(argv[++k]);
     else if (arg == "-h") height = str2int(argv[++k]);
     else {
@@ -76,12 +79,20 @@ void display(const Image& I) {
 int main(int argc, char *argv[]) {
   vector<string> args;
   parseArgs(argc, argv, args);
-  if (args.size() != 1) usage();
-
   srand(seed != -1 ? seed : unsigned(time(0)));
   
-  stringstream sin(args[0]); 
-  Node* root = read(sin);
+  istream* i;
+  if (expr != "" && args.empty()) {
+    i = new stringstream(expr);
+  }
+  else if (expr == "" && !args.empty()) {
+    i = new ifstream(args[0].c_str()); 
+  }
+  else {
+    usage();
+  }
+
+  Node* root = read(*i);
   Image I(width, height);
 
   root->print(cout);
