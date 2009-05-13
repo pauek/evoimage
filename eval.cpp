@@ -45,9 +45,9 @@ void usage() {
 }
 
 void display(const Image& I) {
-  char _templ[] = "evalXXXXXX";
-  char *tmpfile = _templ;
-  tmpfile = tmpnam(tmpfile);
+  static int idx = 0;
+  char tmpfile[] = "/tmp/evoimgXXXXXX";
+  sprintf(tmpfile, "/tmp/evoimg%06d", idx++);
   outfile = string(tmpfile) + ".pnm";
   I.save_pnm(outfile);
 
