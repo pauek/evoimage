@@ -144,6 +144,19 @@ Node* Node::randomLeaf() {
   }
 }
 
+Node* Node::bypassUnary() {
+	Node* son = op1()->clone();
+	destroy();
+	return son();
+}
+
+Node* Node::bypassBinary() {
+	
+	
+
+
+}
+
 inline int clamp(float x) {
   int v = int(x*255);
   if (v > 255) v = 255;
@@ -450,7 +463,12 @@ Node *UnaryOp::_mutate(int& idx) {
       return randomNode(depth() + 1);
     }
     else {
-      return randomUnaryHead(p1);
+    	if(frand() < 0.6) { 
+    		return randomUnaryHead(p1); 
+    	}
+        else { 
+        	return bypassUnary(); 
+        }
     }
   }
 }
@@ -465,7 +483,12 @@ Node *BinOp::_mutate(int& idx) {
       return randomNode(depth() + 1);
     }
     else {
-      return randomBinaryHead(p1, p2);
+          	if(frand() < 0.6) { 
+    		return randomBinaryHead(p1, p2); 
+    	}
+        else { 
+        	return bypassBinary(); 
+        }
     }
   }
 }

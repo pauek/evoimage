@@ -12,8 +12,8 @@ using namespace std;
 
 // Paràmetres
 string outfile = "img.pnm"; // Nom imatge de sortida
-int    width = 400;         // Amplada de la imatge
-int    height = 400;        // Alçada de la imatge
+int    width = 600;         // Amplada de la imatge
+int    height = 600;        // Alçada de la imatge
 int    level = 4;           // Profunditat de l'arbre generat
 int    seed = -1;           // Llavor per als nombres aleatoris
 

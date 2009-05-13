@@ -181,6 +181,8 @@ public:
   static Node* randomBinaryOp(int lcount);
   static Node* randomBinaryHead(Node* p1, Node* p2);
   static Node* randomLeaf();
+  static Node* bypassUnary();
+  static Node* bypassBinary();
 };
 
 class Leaf : public Node {
@@ -309,6 +311,7 @@ class UnaryOp : public Node {
 
 protected:
   Node* op1() const { return p1; }
+  void setNULL() { p1 = NULL; }
   virtual std::string head() const { return "?"; }  
   Node *_mutate(int& idx);
 
