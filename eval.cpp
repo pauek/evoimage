@@ -10,6 +10,7 @@ using namespace std;
 // Paràmetres
 int    width = 400;        // Amplada de la imatge
 int    height = 400;       // Alçada de la imatge
+long   seed = -1;
 string outfile = "<none>"; // Nom de fitxer de sortida
 
 int str2int(string s) {
@@ -24,6 +25,7 @@ void parseArgs(int argc, char *argv[], vector<string>& args) {
   while (k < argc) {
     string arg(argv[k]);
     if (arg == "-o")      outfile = string(argv[++k]);
+    else if (arg == "-s") seed   = str2int(argv[++k]);
     else if (arg == "-w") width  = str2int(argv[++k]);
     else if (arg == "-h") height = str2int(argv[++k]);
     else {
@@ -39,15 +41,16 @@ void usage() {
   cout << "options: " << endl;
   cout << " -w, image width [" << width << "]" << endl;
   cout << " -h, image height [" << height << "]" << endl;
+  cout << " -s, seed [" << seed << "]" << endl;
   cout << " -o, output file [\"" << outfile << "\"]" << endl;
   cout << endl;
   exit(0);
 }
 
 void display(const Image& I) {
-  static int idx = 0;
-  char tmpfile[] = "/tmp/evoimgXXXXXX";
-  sprintf(tmpfile, "/tmp/evoimg%06d", idx++);
+  // display només es crida un cop
+  char tmpfile[100];
+  sprintf(tmpfile, "/tmp/evoimg.eval.%d", getpid());
   outfile = string(tmpfile) + ".pnm";
   I.save_pnm(outfile);
 
@@ -74,10 +77,12 @@ int main(int argc, char *argv[]) {
   vector<string> args;
   parseArgs(argc, argv, args);
   if (args.size() != 1) usage();
+
+  srand(seed != -1 ? seed : unsigned(time(0)));
   
   stringstream sin(args[0]); 
   Node* root = read(sin);
-  Image I(width, height, -1.0, 1.0, 1.0, -1.0);
+  Image I(width, height);
   root->eval(I);  
   if (outfile == "<none>") {
     display(I);

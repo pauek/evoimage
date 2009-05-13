@@ -56,8 +56,8 @@ void usage() {
 
 void display(const Image& I) {
   static int idx = 0;
-  char tmpfile[] = "/tmp/evoimgXXXXXX";
-  sprintf(tmpfile, "/tmp/evoimg%06d", idx++);
+  char tmpfile[100];
+  sprintf(tmpfile, "/tmp/evoimg.random.%d.%d", getpid(), idx++);
   string outfile = string(tmpfile) + ".pnm";
   I.save_pnm(outfile);
 
