@@ -12,10 +12,12 @@ using namespace std;
 
 // Paràmetres
 string outfile = "img.pnm"; // Nom imatge de sortida
-int    width = 600;         // Amplada de la imatge
-int    height = 600;        // Alçada de la imatge
+int    width = 120;         // Amplada de la imatge
+int    height = 120;        // Alçada de la imatge
 int    level = 4;           // Profunditat de l'arbre generat
 int    seed = -1;           // Llavor per als nombres aleatoris
+
+int bwidth = 500, bheight = 500; // "Big" width, height
 
 int str2int(string s) {
   double d;
@@ -88,18 +90,18 @@ Image getNumTemp(int i, int j){
 void compose16(Image& mosaic, const vector<Node *>& pop) {
   assert(pop.size() <= 16);
   for (uint i = 0; i < pop.size(); i++) {
-    Image thumb(192, 192);
+    Image thumb(width, height);
     pop[i]->eval(thumb);
     int c = i / 4, c2 = i % 4;
 
     for (int i = 0; i < thumb.getX(); i++)
       for (int j = 0; j < thumb.getY(); j++)
-	mosaic.putPixel((c2*192)+i, (c*192)+j, thumb.getPixel(i, j));
+	mosaic.putPixel((c2*width)+i, (c*height)+j, thumb.getPixel(i, j));
     
     Image numTemp = getNumTemp(c, c2);
     for (int i = 0; i < 24; i++)
       for (int j = 0; j < 24; j++)
-	mosaic.putPixel((c2*192)+i, (c*192)+j, numTemp.getPixel(i,j));
+	mosaic.putPixel((c2*width)+i, (c*height)+j, numTemp.getPixel(i,j));
   }
 }
 
@@ -109,8 +111,6 @@ bool parseArgs(int argc, char *argv[], vector<string>& args) {
     string arg(argv[k]);
     if (arg == "-h") return false;
     else if (arg == "-o") outfile = string(argv[++k]);
-    else if (arg == "-w") width  = str2int(argv[++k]);
-    else if (arg == "-h") height = str2int(argv[++k]);
     else if (arg == "-l") level  = str2int(argv[++k]);
     else if (arg == "-s") seed   = str2int(argv[++k]);
     else {
@@ -125,8 +125,6 @@ void usage() {
   cout << "usage: random [options] <expr>..." << endl;
   cout << endl;
   cout << "options: " << endl;
-  cout << " -w, image width [" << width << "]" << endl;
-  cout << " -h, image height [" << height << "]" << endl;
   cout << " -l, expr depth [" << level << "]" << endl;
   cout << " -s, seed [" << seed << "]" << endl;
   cout << " -o, output file [\"" << outfile << "\"]" << endl;
@@ -172,6 +170,9 @@ string _readline() {
 }
 
 void init_population(vector<Node *>& pop) {
+  for (uint i = 0; i < pop.size(); i++) {
+    pop[i]->destroy();
+  }
   pop.resize(16);
   for (int i = 0; i < 16; i++) 
     pop[i] = Node::randomNode(level);
@@ -197,7 +198,6 @@ int main(int argc, char *argv[]) {
 
   vector<Node *> history;
   vector<Node *> pop; // Population of images
-  Image mosaic(768, 768), img(width, height);
 
   init_population(pop);
 
@@ -222,6 +222,7 @@ int main(int argc, char *argv[]) {
       if (csin) {
 	if (num >= 0 && num < pop.size()) {
 	  Node *r = pop[num-1];
+	  Image img(bwidth, bheight);
 	  r->eval(img);
 	  display(img);
 	}
@@ -230,6 +231,7 @@ int main(int argc, char *argv[]) {
 	}
       }
       else {
+	Image mosaic(width * 4, height * 4);
 	compose16(mosaic, pop);
 	display(mosaic);
       }
@@ -251,8 +253,26 @@ int main(int argc, char *argv[]) {
 	cout << "usage: save <idx>" << endl;
       }
     }
+    else if (cmd == "conf" || cmd == "config") {
+      string subcmd;
+      csin >> subcmd;
+      if (csin) {
+	if (subcmd == "width") {
+	  csin >> width;
+	}
+	else if (subcmd == "height") {
+	  csin >> height;
+	}
+      }
+    }
+    else if (cmd == "new") {
+      init_population(pop);
+      Image mosaic(width * 4, height * 4);
+      compose16(mosaic, pop);
+      display(mosaic);
+    }
     else if (cmd == "r" || cmd == "random") {
-      int i;
+      uint i;
       csin >> i;
       if (csin) {
 	i--;
@@ -278,6 +298,7 @@ int main(int argc, char *argv[]) {
       csin >> idx;
       if (!csin) idx = 1;
       next_generation(pop, idx-1);
+      Image mosaic(width * 4, height * 4);
       compose16(mosaic, pop);
       display(mosaic);
     }
@@ -298,9 +319,4 @@ int main(int argc, char *argv[]) {
     
     line = _readline();
   }
-
-  pop[0]->eval(img);
-  img.save_pnm(outfile);
-  pop[0]->print(cout);
-  cout << endl;
 }
