@@ -132,29 +132,30 @@ Node* Node::randomNode(int level) {
 }
 
 Node* Node::randomLeaf() {
-  int selector = rand() % 5;
+  int selector = rand() % 8;
   switch (selector) {
-  case 0: return new X();
-  case 1: return new Y();
-  case 2: return new v_fix(frand(), frand(), frand());
-  case 3: return new bwNoise();
-  case 4: 
+  case 0: case 1: 
+    return new X();
+  case 2: case 3:
+    return new Y();
+  case 4: case 5:
+    return new v_fix(frand(), frand(), frand());
+  case 6: 
+    return new bwNoise();
+  case 7: 
   default:
     return new colorNoise();
   }
 }
 
 Node* UnaryOp::bypassUnary() {
-	Node* son = op1()->clone();
-	return son;
+  Node* son = op1()->clone();
+  return son;
 }
 
 Node* BinOp::bypassBinary() {
-	
-	Node* son = frand() < 0.5 ? op1()->clone() : op2()->clone();
-	return son;
-
-
+  Node* son = frand() < 0.5 ? op1()->clone() : op2()->clone();
+  return son;
 }
 
 inline int clamp(float x) {
@@ -466,12 +467,12 @@ Node *UnaryOp::_mutate(int& idx) {
       return randomNode(depth() + 1);
     }
     else {
-    	if(frand() < 0.6) { 
-    		return randomUnaryHead(p1); 
-    	}
-        else { 
-        	return bypassUnary(); 
-        }
+      if(frand() < 0.6) { 
+	return randomUnaryHead(p1); 
+      }
+      else { 
+	return bypassUnary(); 
+      }
     }
   }
 }
@@ -486,12 +487,12 @@ Node *BinOp::_mutate(int& idx) {
       return randomNode(depth() + 1);
     }
     else {
-          	if(frand() < 0.6) { 
-    		return randomBinaryHead(p1, p2); 
-    	}
-        else { 
-        	return bypassBinary(); 
-        }
+      if(frand() < 0.6) { 
+	return randomBinaryHead(p1, p2); 
+      }
+      else { 
+	return bypassBinary(); 
+      }
     }
   }
 }

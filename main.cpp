@@ -297,10 +297,21 @@ int main(int argc, char *argv[]) {
       int idx = 0;
       csin >> idx;
       if (!csin) idx = 1;
-      next_generation(pop, idx-1);
-      Image mosaic(width * 4, height * 4);
-      compose16(mosaic, pop);
-      display(mosaic);
+      if (idx >= 1 && idx <= int(pop.size())) {
+	next_generation(pop, idx-1);
+	Image mosaic(width * 4, height * 4);
+	compose16(mosaic, pop);
+	display(mosaic);
+      }
+    }
+    else if (cmd == "e" || cmd == "export") {
+      string filename;
+      int idx;
+      csin >> idx >> filename;
+      if (csin && idx >= 1 && idx <= pop.size()) {
+	ofstream fout(filename.c_str());
+	pop[idx-1]->print(fout);
+      }
     }
     else if (cmd == "h" || cmd == "history") {
       uint i;
