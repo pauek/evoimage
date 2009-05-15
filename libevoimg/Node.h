@@ -1,3 +1,4 @@
+// -*- mode: c++ -*-
 
 #include <iostream>
 #include <cmath>
@@ -156,6 +157,8 @@ public:
   bool allBallW();
 };
 
+class Visitor;
+
 class Node {
 protected:
   static const float replace_prob = 0.5;
@@ -171,6 +174,8 @@ public:
     // Default: no mutation
     return this; 
   }
+
+  virtual void  accept(Visitor& v) = 0;
 
   // Aquest mutate és "extern" i no virtual
   Node*  mutate();
@@ -191,6 +196,8 @@ public:
   int size() const { return 1; }
   Node *_mutate(int& idx);
   virtual Node *_mutate_leaf() = 0;
+  virtual std::string name() const = 0;
+  void accept(Visitor& v);
 };
 
 class X : public Leaf {
@@ -199,6 +206,7 @@ public:
   void  print(std::ostream& o) const;
   Node *clone() const { return new X(); }
   Node *_mutate_leaf();
+  std::string name() const { return "X"; }
 };
 
 class Y : public Leaf {
@@ -207,6 +215,7 @@ public:
   void  print(std::ostream& o) const;
   Node *clone() const { return new Y(); }
   Node *_mutate_leaf();
+  std::string name() const { return "Y"; }
 };
 
 class v_fix : public Leaf {
@@ -219,6 +228,7 @@ public:
   void  print(std::ostream& o) const;
   Node *clone() const { return new v_fix(p1, p2, p3); }
   Node *_mutate_leaf();
+  std::string name() const { return "v_fix"; }
 };
 
 class Noise : public Leaf {
@@ -241,6 +251,7 @@ public:
   Node *_mutate_leaf();
   void print(std::ostream& o) const;
   Node *clone() const { return new bwNoise(); }
+  std::string name() const { return "bwNoise"; }
 };
 
 class colorNoise : public Noise {
@@ -251,6 +262,7 @@ public:
   Node *_mutate_leaf();
   void print(std::ostream& o) const;
   Node *clone() const { return new colorNoise(); }
+  std::string name() const { return "colorNoise"; }
 };
 
 class Warp : public Node {
@@ -259,6 +271,10 @@ public:
   Warp(Node *_p1, Node *_p2, Node *_p3) {
     p1 = _p1, p2 = _p2, p3 = _p3;
   }
+
+  Node *op1() const { return p1; }
+  Node *op2() const { return p2; }
+  Node *op3() const { return p3; }
   
   void eval(Image& I);
   void destroy();
@@ -276,6 +292,8 @@ public:
   }
 
   Node *_mutate(int& idx);
+
+  void accept(Visitor& v);
 };
 
 class Dissolve : public Node {
@@ -284,6 +302,10 @@ public:
   Dissolve(Node *_p1, Node *_p2, Node *_p3) {
     p1 = _p1, p2 = _p2, p3 = _p3;
   }
+
+  Node *op1() const { return p1; }
+  Node *op2() const { return p2; }
+  Node *op3() const { return p3; }
 
   void eval(Image& I);
   void destroy();
@@ -302,6 +324,8 @@ public:
   }
 
   Node *_mutate(int& idx);
+
+  void accept(Visitor& v);
 };
 
 // Operacions Unàries ////////////////////////////////////////////////
@@ -310,18 +334,19 @@ class UnaryOp : public Node {
   Node *p1;
 
 protected:
-  Node* op1() const { return p1; }
   void setNULL() { p1 = NULL; }
-  virtual std::string head() const { return "?"; }  
   Node *_mutate(int& idx);
   Node* bypassUnary();
 
 public:
   UnaryOp(Node* _p1) { p1 = _p1; }
+  Node* op1() const { return p1; }
+  virtual std::string head() const { return "?"; }  
   void destroy();
   int  depth() const { return 1 + p1->depth(); }
   int  size() const { return 1 + p1->size(); }
   void print(std::ostream& o) const;
+  void accept(Visitor& v);
 };
 
 #define DEF_UNARY_OP(Name)			\
@@ -351,11 +376,9 @@ class BinOp : public Node {
   Node *p1, *p2;
 
 protected:
-  Node* op1() const { return p1; }
-  Node* op2() const { return p2; }
-  virtual std::string head() const { return "?"; }
   Node *_mutate(int& idx);
   Node* bypassBinary();
+
 public:
   void destroy();
   BinOp(Node* _p1, Node* _p2) {
@@ -364,6 +387,10 @@ public:
   }
 
   void eval(Image& I);
+
+  Node* op1() const { return p1; }
+  Node* op2() const { return p2; }
+  virtual std::string head() const { return "?"; }
 
   int depth() const {
     return 1 + std::max(p1->depth(), p2->depth());
@@ -375,6 +402,7 @@ public:
 
   virtual void do_op(Image& res, Image& op1, Image& op2) = 0;
   void print(std::ostream& o) const;
+  void accept(Visitor& v);
 };
 
 #define DEF_BINARY_OP(Name) \
@@ -385,7 +413,7 @@ public:
     std::string head() const;				\
     Node *clone () const {				\
       return new Name(op1()->clone(), op2()->clone());	\
-    }											\
+    }							\
   }
 
 DEF_BINARY_OP(Sum);
@@ -403,7 +431,47 @@ DEF_BINARY_OP(Expt);
 DEF_BINARY_OP(Min);
 DEF_BINARY_OP(Max);
 
+// Visitor ///////////////////////////////////////////////////////////
+
+class Visitor {
+public:
+  virtual void visitLeaf(Leaf *) = 0;
+  virtual void visitUnaryOp(UnaryOp *) = 0;
+  virtual void visitBinOp(BinOp *) = 0;
+  virtual void visitDissolve(Dissolve *) = 0;
+  virtual void visitWarp(Warp *) = 0;
+};
+
+inline void Leaf::accept(Visitor& v) { v.visitLeaf(this); }
+inline void UnaryOp::accept(Visitor& v) { v.visitUnaryOp(this); }
+inline void BinOp::accept(Visitor& v) { v.visitBinOp(this); }
+inline void Dissolve::accept(Visitor& v) { v.visitDissolve(this); }
+inline void Warp::accept(Visitor& v) { v.visitWarp(this); }
+
+class GraphvizVisitor : public Visitor {
+  std::ostream& _out;
+  int _idx;
+public:
+  GraphvizVisitor(std::ostream& out)
+    :_out(out), _idx(0) {
+    _out << "digraph G {" << std::endl;
+  }
+
+  ~GraphvizVisitor() {
+    _out << "}" << std::endl;
+  }
+
+  void visitLeaf(Leaf *);
+  void visitUnaryOp(UnaryOp *);
+  void visitBinOp(BinOp *);
+  void visitDissolve(Dissolve *);
+  void visitWarp(Warp *);
+};
+
+void show_graph(Node *);
+
 // Reader ////////////////////////////////////////////////////////////
+
 std::string read_token(std::istream& i);
 float read_number(std::istream& i);
 Node* read_vec(std::istream& i);

@@ -308,7 +308,7 @@ int main(int argc, char *argv[]) {
       string filename;
       int idx;
       csin >> idx >> filename;
-      if (csin && idx >= 1 && idx <= pop.size()) {
+      if (csin && idx >= 1 && idx <= (int)pop.size()) {
 	ofstream fout(filename.c_str());
 	pop[idx-1]->print(fout);
       }
@@ -323,6 +323,16 @@ int main(int argc, char *argv[]) {
       cout << i << " = ";
       history[i]->print(cout);
       cout << endl;
+    }
+    else if (cmd == "t" || cmd == "tree") {
+      int idx;
+      csin >> idx;
+      if (csin && idx >= 1 && idx <= (int)pop.size()) {
+	show_graph(pop[idx-1]);
+      }
+      else {
+	cout << "usage: tree <idx>" << endl;
+      }
     }
     else if (cmd == "q" || cmd == "quit") {
       return 1;
