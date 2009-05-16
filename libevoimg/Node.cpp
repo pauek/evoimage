@@ -695,12 +695,21 @@ void Abs::eval(Image& I) {
       I.putPixel(i, j, I.getPixel(i,j).map( fabs ));
 }
 
+// Forcem entre 0.0 i 1.0
+float mySin(float x) {
+  return (1.0 + sin(M_PI * x)) / 2.0;
+}
+
 void Sin::eval(Image& I) {
   op1()->eval(I);
   const int x = I.getX(), y = I.getY();
   for (int i = 0; i < x; i++)
     for (int j = 0; j < y; j++)
-      I.putPixel(i, j, I.getPixel(i,j).map( sin ));
+      I.putPixel(i, j, I.getPixel(i,j).map( mySin ));
+}
+
+float myCos(float x) {
+  return (1.0 + cos(M_PI * x)) / 2.0;
 }
 
 void Cos::eval(Image& I) {
@@ -708,7 +717,7 @@ void Cos::eval(Image& I) {
   const int x = I.getX(), y = I.getY();
   for (int i = 0; i < x; i++)
     for (int j = 0; j < y; j++)
-      I.putPixel(i, j, I.getPixel(i,j).map( cos ));
+      I.putPixel(i, j, I.getPixel(i,j).map( myCos ));
 }
 
 void gaussBlur::eval(Image& I) {
