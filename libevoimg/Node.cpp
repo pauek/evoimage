@@ -3,6 +3,8 @@
 #include <cassert>
 #include <string>
 #include <fstream>
+#include <iomanip>
+#include <sstream>
 #include "Node.h"
 using namespace std;
 
@@ -413,11 +415,23 @@ Node *Y::_mutate_leaf() {
   }
 }
 
+string v_fix::name() const { 
+  std::stringstream s;
+  s << std::setprecision(2) << p1 << ", " 
+    << std::setprecision(2) << p2 << ", " 
+    << std::setprecision(2) << p3;
+  return s.str(); 
+}
+
+Node *v_fix::_mutate(int& idx) {
+  p1 *= 0.8 + 0.4*frand();
+  p2 *= 0.8 + 0.4*frand();
+  p3 *= 0.8 + 0.4*frand();
+  return Leaf::_mutate(idx);
+}
+
 Node *v_fix::_mutate_leaf() {
   if (frand() < .7) {
-    p1 *= 0.8 + 0.4*frand();
-    p2 *= 0.8 + 0.4*frand();
-    p3 *= 0.8 + 0.4*frand();
     return this;
   }
   else {

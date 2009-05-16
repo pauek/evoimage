@@ -227,8 +227,9 @@ public:
   void  eval(Image& e);
   void  print(std::ostream& o) const;
   Node *clone() const { return new v_fix(p1, p2, p3); }
+  Node *_mutate(int& idx);
   Node *_mutate_leaf();
-  std::string name() const { return "v_fix"; }
+  std::string name() const;
 };
 
 class Noise : public Leaf {
