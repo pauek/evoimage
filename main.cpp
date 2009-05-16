@@ -5,7 +5,6 @@
 #include <sstream>
 #include <vector>
 #include <readline/readline.h>
-#include <readline/history.h>
 #include <Node.h>
 
 using namespace std;
@@ -196,7 +195,6 @@ int main(int argc, char *argv[]) {
 
   srand(seed != -1 ? seed : unsigned(time(0)));
 
-  vector<Node *> history;
   vector<Node *> pop; // Population of images
 
   init_population(pop);
@@ -210,9 +208,11 @@ int main(int argc, char *argv[]) {
     if (cmd == "?" || cmd == "help") {
       cout << "[h]elp|? -- show this message" << endl
 	   << "[s]how   -- show image" << endl
-	   << "[g]roup  -- show a group of 16 random expressions" << endl
 	   << "[p]rint  -- print expression" << endl
+	   << "config   -- config [width, height] <val>" << endl
+	   << "new      -- restart the population" << endl
 	   << "[m]utate -- mutate expression" << endl
+	   << "[e]xport -- export the image" << endl
 	   << "[r]andom -- new random expression" << endl
 	   << "[q]uit   -- quits the program" << endl;
     }
@@ -243,17 +243,7 @@ int main(int argc, char *argv[]) {
 	cout << endl;
       }
     }
-    else if (cmd == "save") {
-      int idx;
-      csin >> idx;
-      if (csin) {
-	history.push_back(pop[idx-1]);
-      }
-      else {
-	cout << "usage: save <idx>" << endl;
-      }
-    }
-    else if (cmd == "conf" || cmd == "config") {
+    else if (cmd == "config") {
       string subcmd;
       csin >> subcmd;
       if (csin) {
@@ -270,28 +260,6 @@ int main(int argc, char *argv[]) {
       Image mosaic(width * 4, height * 4);
       compose16(mosaic, pop);
       display(mosaic);
-    }
-    else if (cmd == "r" || cmd == "random") {
-      uint i;
-      csin >> i;
-      if (csin) {
-	i--;
-	if (i >= 0 && i < pop.size()) {
-	  do {
-	    pop[i]->destroy();
-	    pop[i] = Node::randomNode(level);
-	  }
-	  while (BadImg(pop[i]));
-	  pop[i]->print(cout);
-	  cout << endl;
-	}
-	else {
-	  cout << "index out of range" << endl;
-	}
-      }
-      else {
-	cout << "usage: random <idx>" << endl;
-      }
     }
     else if (cmd == "n" || cmd == "next") {
       int idx = 0;
@@ -312,17 +280,9 @@ int main(int argc, char *argv[]) {
 	ofstream fout(filename.c_str());
 	pop[idx-1]->print(fout);
       }
-    }
-    else if (cmd == "h" || cmd == "history") {
-      uint i;
-      for (i = 0 ; i < history.size(); i++) {
-	cout << i+1 << " = ";
-	history[i]->print(cout);
-	cout << endl;
+      else {
+	cout << "usage: export <idx> <filename>" << endl;
       }
-      cout << i << " = ";
-      history[i]->print(cout);
-      cout << endl;
     }
     else if (cmd == "t" || cmd == "tree") {
       int idx;
