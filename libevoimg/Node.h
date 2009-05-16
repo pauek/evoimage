@@ -232,39 +232,6 @@ public:
   std::string name() const;
 };
 
-class Noise : public Leaf {
-  int seed;
-  
-public:
-  Noise() { seed=-1;}
-  Noise(int s) { seed=s; }
-  
-  int getSeed(){ return seed; }
-  void eval(Image& e);
-  virtual RGB gen_noise() const = 0;
-};
-
-class bwNoise : public Noise {
-public:
-  bwNoise() : Noise() {}
-  bwNoise(int s) : Noise(s) {}
-  RGB gen_noise() const;
-  Node *_mutate_leaf();
-  void print(std::ostream& o) const;
-  Node *clone() const { return new bwNoise(); }
-  std::string name() const { return "bwNoise"; }
-};
-
-class colorNoise : public Noise {
-public:
-  colorNoise() : Noise() {}
-  colorNoise(int s) : Noise(s) {}
-  RGB gen_noise() const;
-  Node *_mutate_leaf();
-  void print(std::ostream& o) const;
-  Node *clone() const { return new colorNoise(); }
-  std::string name() const { return "colorNoise"; }
-};
 
 class Warp : public Node {
   Node *p1, *p2, *p3;
@@ -370,6 +337,39 @@ DEF_UNARY_OP(emboss);
 DEF_UNARY_OP(sharpen);
 DEF_UNARY_OP(blur);
 DEF_UNARY_OP(hsv_to_rgb);
+
+class Noise : public UnaryOp {
+  static drand48_data _data;
+
+protected:
+  float  random();
+  static void set_seed(int s);
+
+public:
+  Noise(Node *p) : UnaryOp(p) {}
+  void eval(Image& e);
+  virtual RGB gen_noise() = 0;
+};
+
+class bwNoise : public Noise {
+public:
+  bwNoise(Node *p) : Noise(p) {}
+  RGB gen_noise();
+  std::string head() const;
+  void print(std::ostream& o) const;
+  Node *clone() const { return new bwNoise(op1()->clone()); }
+  std::string name() const { return "bwNoise"; }
+};
+
+class colorNoise : public Noise {
+public:
+  colorNoise(Node *p) : Noise(p) {}
+  RGB gen_noise();
+  std::string head() const;
+  void print(std::ostream& o) const;
+  Node *clone() const { return new colorNoise(op1()->clone()); }
+  std::string name() const { return "colorNoise"; }
+};
 
 // Operacions Binàries ///////////////////////////////////////////////
 

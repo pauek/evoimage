@@ -34,7 +34,6 @@ RGB RGB::hsv_to_rgb() const {
 }
 
 Node *Node::randomUnaryOp(int level) {
-  
   // Operacions unàries
   Node *_op1;
   if (level > 2)
@@ -43,12 +42,10 @@ Node *Node::randomUnaryOp(int level) {
     _op1 = randomLeaf();
   
   return randomUnaryHead(_op1);
-  
 }
 
-Node* Node::randomUnaryHead(Node* p1){
-	
-  int selector = rand() % 9;
+Node* Node::randomUnaryHead(Node* p1) {
+  int selector = rand() % 11;
   switch (selector) {
   case 0: return new Sin(p1);
   case 1: return new Cos(p1);
@@ -58,10 +55,12 @@ Node* Node::randomUnaryHead(Node* p1){
   case 5: return new sharpen(p1);
   case 6: return new blur(p1);
   case 7: return new hsv_to_rgb(p1);
-  case 8: 
+  case 8: return new bwNoise(p1);
+  case 9: return new colorNoise(p1);
+  case 10: 
   default:
     return new Abs(p1);
-	}
+  }
 }
 
 Node *Node::randomBinaryOp(int level) {
@@ -134,19 +133,14 @@ Node* Node::randomNode(int level) {
 }
 
 Node* Node::randomLeaf() {
-  int selector = rand() % 8;
+  int selector = rand() % 3;
   switch (selector) {
-  case 0: case 1: 
+  case 0: 
     return new X();
-  case 2: case 3:
+  case 1:
     return new Y();
-  case 4: case 5:
+  case 2: default:
     return new v_fix(frand(), frand(), frand());
-  case 6: 
-    return new bwNoise();
-  case 7: 
-  default:
-    return new colorNoise();
   }
 }
 
@@ -439,14 +433,6 @@ Node *v_fix::_mutate_leaf() {
   }
 }
 
-Node* bwNoise::_mutate_leaf() {
-  return randomLeaf();
-}
-
-Node* colorNoise::_mutate_leaf() {
-  return randomLeaf();
-}
-
 Node* Warp::_mutate(int& idx) {
   p1 = p1->_mutate(idx);
   p2 = p2->_mutate(idx);
@@ -570,12 +556,26 @@ inline RGB bilinear(const RGB& aa, const RGB& ab,
 		 linear(ba, bb, u), v );
 }
 
-void Noise::eval(Image& e) {
-  const int x = e.getX(), y = e.getY();
-  if (seed != -1) {
-    srand(seed);
-  }
+drand48_data Noise::_data;
 
+float Noise::random() {
+  double x;
+  drand48_r(&_data, &x);
+  return x;
+}
+
+void Noise::set_seed(int s) {
+  srand48_r(s, &_data);
+}
+
+void Noise::eval(Image& e) {
+  Image seed(1, 1);
+  op1()->eval(seed);
+  float fseed = seed.getPixel(0, 0).getr();
+  int lseed = long(floor(fseed * 10000));
+  set_seed(lseed);
+
+  const int x = e.getX(), y = e.getY();
   if (x == 1 && y == 1) {
     e.putPixel(0, 0, gen_noise());
     return;
@@ -612,15 +612,13 @@ void Noise::eval(Image& e) {
   }
 }
 
-RGB bwNoise::gen_noise() const {
-  return RGB(frand());
+RGB bwNoise::gen_noise() {
+  return RGB(random());
 }
 
-
-RGB colorNoise::gen_noise() const {
-  return RGB(frand(), frand(), frand());
+RGB colorNoise::gen_noise() {
+  return RGB(random(), random(), random());
 }
-
 
 void Warp::eval(Image& I) {
   // (warp <expr> <scale x> <scale y>)
@@ -887,6 +885,8 @@ string Abs::head()  const { return "Abs"; }
 string Expt::head()  const { return "Expt"; }
 string Max::head()  const { return "Max"; }
 string Min::head()  const { return "Min"; }
+string bwNoise::head()  const { return "bwNoise"; }
+string colorNoise::head()  const { return "colorNoise"; }
 
 void Y::print(ostream& o) const { o << "y"; }
 void X::print(ostream& o) const { o << "x"; }
