@@ -206,14 +206,14 @@ int main(int argc, char *argv[]) {
     string cmd;
     csin >> cmd;
     if (cmd == "?" || cmd == "help") {
-      cout << "[h]elp|? -- show this message" << endl
-	   << "[s]how   -- show image" << endl
-	   << "[p]rint  -- print expression" << endl
-	   << "config   -- config [width, height] <val>" << endl
-	   << "new      -- restart the population" << endl
-	   << "[m]utate -- mutate expression" << endl
-	   << "[e]xport -- export the image" << endl
-	   << "[r]andom -- new random expression" << endl
+      cout << "[h]elp|? -- show this message" << endl << endl
+	   << "[s]how [image number]  -- by default shows the last 16 images generation. With a 1-16 number as a parameter shows that image" << endl << endl
+	   << "[p]rint [image number] -- by default prints the last 16 images generation. With a 1-16 number as a parameter shows that image" << endl << endl
+	   << "config   -- config [width, height] <val>" << endl << endl
+	   << "new      -- restart the population" << endl << endl
+	   << "[n]ext  [parent number] -- mutates expression, generating a new 16 images generation" << endl << endl
+	   << "[e]xport [parent number] -- export the image" << endl << endl
+	   << "[t]ree [image number] -- generates a graphic visualization of the image tree" << endl << endl
 	   << "[q]uit   -- quits the program" << endl;
     }
     if (cmd == "s" || cmd == "show") {
