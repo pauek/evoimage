@@ -220,7 +220,7 @@ int main(int argc, char *argv[]) {
       uint num;
       csin >> num;
       if (csin) {
-	if (num >= 0 && num < pop.size()) {
+	if (num >= 0 && num <= pop.size()) {
 	  Node *r = pop[num-1];
 	  Image img(bwidth, bheight);
 	  r->eval(img);
