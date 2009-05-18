@@ -186,8 +186,7 @@ public:
   static Node* randomBinaryOp(int lcount);
   static Node* randomBinaryHead(Node* p1, Node* p2);
   static Node* randomLeaf();
- // virtual Node* bypassUnary();
- // virtual Node* bypassBinary();
+ 
 };
 
 class Leaf : public Node {
@@ -305,6 +304,7 @@ protected:
   void setNULL() { p1 = NULL; }
   Node *_mutate(int& idx);
   Node* bypassUnary();
+  Node* nodeAsParam();
 
 public:
   UnaryOp(Node* _p1) { p1 = _p1; }
@@ -379,7 +379,7 @@ class BinOp : public Node {
 protected:
   Node *_mutate(int& idx);
   Node* bypassBinary();
-
+  Node* nodeAsParam();
 public:
   void destroy();
   BinOp(Node* _p1, Node* _p2) {

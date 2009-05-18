@@ -154,6 +154,36 @@ Node* BinOp::bypassBinary() {
   return son;
 }
 
+Node* UnaryOp::nodeAsParam(){
+	
+	Node* nodeP1 = this->clone();
+	
+	if (frand() < 0.5){
+		Node* newFather = randomBinaryHead(nodeP1, randomLeaf());
+		return newFather;
+	}
+	else{
+		Node* newFather = randomUnaryHead(nodeP1);
+		return newFather;
+		}
+
+	
+}
+
+Node* BinOp::nodeAsParam(){
+	Node* nodeP1 = this->clone();
+	
+	if (frand() < 0.5){
+		Node* newFather = randomBinaryHead(nodeP1, randomLeaf());
+		return newFather;
+	}
+	else{
+		Node* newFather = randomUnaryHead(nodeP1);
+		return newFather;
+		}
+	
+}
+
 inline int clamp(float x) {
   int v = int(x*255);
   if (v > 255) v = 255;
