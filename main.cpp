@@ -206,14 +206,15 @@ int main(int argc, char *argv[]) {
     string cmd;
     csin >> cmd;
     if (cmd == "?" || cmd == "help") {
-      cout << "[h]elp|?                                  show this message" << endl
+      cout << "[h]elp|?                                  shows this message" << endl
 	   << "[s]how [image id]                         by default shows the last 16 images generation. " << endl  
 	   << "[p]rint [image id]                        by default prints the last 16 images generation. " << endl 
 	   << "config [width, height] <val>              sets images width or height at given value" << endl
-	   << "new                                       restart the population" << endl 
-	   << "[n]ext  <image id>                        mutates given expression, creating a new 16 child generation"  << endl
-	   << "[e]xport <image id> <filename>            export the image expression to a file"  << endl
-	   << "[ei, export-image] <image id> <filename>  export the image to a pgm file"  << endl
+	   << "new                                       restarts the population" << endl 
+	   << "[n]ext  <image id>                        mutates given expression," << endl <<
+	      "                                          creating a new 16 child generation"  << endl
+	   << "[e]xport <image id> <filename>            exports the image expression to a file"  << endl
+	   << "[ei, export-image] <image id> <filename>  exports the image to a pgm file"  << endl
 	   << "[t]ree <image id>                         generates a graphic visualization of the image tree"  << endl
 	   << "[q]uit                                    quits the program" << endl;
     }
