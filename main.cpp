@@ -15,6 +15,7 @@ string outfile = "img.pnm"; // Nom imatge de sortida
 int    width = 120;         // Amplada de la imatge
 int    height = 120;        // Alçada de la imatge
 int    level = 4;           // Profunditat de l'arbre generat
+int    numimg = 16;         // Número de mutants a generar
 int    seed = -1;           // Llavor per als nombres aleatoris
 
 int bwidth = 500, bheight = 500; // "Big" width, height
@@ -74,12 +75,12 @@ void  pgm2digit(float idxMat[24][24], int idx) {
       idxMat[i+12][j+1] = digMat[i][j];
 }
 
-Image getNumTemp(int i, int j){
+Image getNumTemp(int i, int j, int side){
   Image numTemp(24,24);
   RGB Black(0.0, 0.0, 0.0);
   RGB White(1.0, 1.0, 1.0);
   float _digit[24][24];
-  pgm2digit(_digit, i*4 + j + 1);
+  pgm2digit(_digit, i*side + j + 1);
   for (int k = 0; k < 24; k++) 
     for (int l = 0; l < 24; l++) 
       numTemp.putPixel(k, l, _digit[k][l] );
@@ -98,10 +99,10 @@ void *eval_one(void *_args) {
   return NULL;
 }
 
-void compose16(Image& mosaic, const vector<Node *>& pop) {
-  assert(pop.size() <= 16);
+void compose(Image& mosaic, int side, const vector<Node *>& pop) {
+  assert(pop.size() <= 100);
   const int sz = pop.size();
-  Image *pimg[16];
+  Image *pimg[100];
 
   // Create the images
   for(int i = 0; i < sz; i++) {
@@ -109,8 +110,8 @@ void compose16(Image& mosaic, const vector<Node *>& pop) {
   }
 
   // Launch threads
-  pthread_t thr[16];
-  struct _eval e[16];
+  pthread_t thr[100];
+  struct _eval e[100];
   for (int i = 0; i < sz; i++) {
     e[i].pimg = pimg[i];
     e[i].expr = pop[i];
@@ -124,13 +125,13 @@ void compose16(Image& mosaic, const vector<Node *>& pop) {
   
   for (int i = 0; i < sz; i++) {
     Image& thumb = *pimg[i];
-    int c = i / 4, c2 = i % 4;
+    int c = i / side, c2 = i % side;
 
     for (int i = 0; i < thumb.getX(); i++)
       for (int j = 0; j < thumb.getY(); j++)
 	mosaic.putPixel((c2*width)+i, (c*height)+j, thumb.getPixel(i, j));
     
-    Image numTemp = getNumTemp(c, c2);
+    Image numTemp = getNumTemp(c, c2, side);
     for (int i = 0; i < 24; i++)
       for (int j = 0; j < 24; j++)
 	mosaic.putPixel((c2*width)+i, (c*height)+j, numTemp.getPixel(i,j));
@@ -205,16 +206,22 @@ void init_population(vector<Node *>& pop) {
   for (uint i = 0; i < pop.size(); i++) {
     pop[i]->destroy();
   }
-  pop.resize(16);
-  for (int i = 0; i < 16; i++) 
+  pop.resize(numimg);
+  for (int i = 0; i < numimg; i++) 
     pop[i] = Node::randomNode(level);
+}
+
+int calc_side() {
+  int side = 1;
+  while (side * side < numimg) side++;
+  return side;
 }
 
 void next_generation(vector<Node *>& pop, int ifather) {
   Node *father = pop[ifather];
   vector<Node *> next;
   next.push_back(father);
-  while (next.size() < pop.size()) {
+  while (next.size() < numimg) {
     next.push_back(father->clone()->mutate());
   }
   pop.swap(next);
@@ -240,12 +247,12 @@ int main(int argc, char *argv[]) {
     csin >> cmd;
     if (cmd == "?" || cmd == "help") {
       cout << "[h]elp|?                                  shows this message" << endl
-	   << "[s]how [image id]                         by default shows the last 16 images generation. " << endl  
-	   << "[p]rint [image id]                        by default prints the last 16 images generation. " << endl 
-	   << "config [width, height] <val>              sets images width or height at given value" << endl
+	   << "[s]how [image id]                         by default shows the last generation. " << endl  
+	   << "[p]rint [image id]                        by default prints the last generation. " << endl 
+	   << "config [width, height, numimg] <val>      configures parameters" << endl
 	   << "new                                       restarts the population" << endl 
 	   << "[n]ext  <image id>                        mutates given expression," << endl <<
-	      "                                          creating a new 16 child generation"  << endl
+	      "                                          creating a new generation"  << endl
 	   << "[e]xport <image id> <filename>            exports the image expression to a file"  << endl
 	   << "[ei, export-image] <image id> <filename>  exports the image to a pgm file"  << endl
 	   << "[t]ree <image id>                         generates a graphic visualization of the image tree"  << endl
@@ -266,8 +273,9 @@ int main(int argc, char *argv[]) {
 	}
       }
       else {
-	Image mosaic(width * 4, height * 4);
-	compose16(mosaic, pop);
+	int side = calc_side();
+	Image mosaic(width * side, height * side);
+	compose(mosaic, side, pop);
 	display(mosaic);
       }
     }
@@ -288,12 +296,16 @@ int main(int argc, char *argv[]) {
 	else if (subcmd == "height") {
 	  csin >> height;
 	}
+	else if (subcmd == "numimg") {
+	  csin >> numimg;
+	}
       }
     }
     else if (cmd == "new") {
       init_population(pop);
-      Image mosaic(width * 4, height * 4);
-      compose16(mosaic, pop);
+      int side = calc_side();
+      Image mosaic(width * side, height * side);
+      compose(mosaic, side, pop);
       display(mosaic);
     }
     else if (cmd == "n" || cmd == "next") {
@@ -302,8 +314,9 @@ int main(int argc, char *argv[]) {
       if (!csin) idx = 1;
       if (idx >= 1 && idx <= int(pop.size())) {
 	next_generation(pop, idx-1);
-	Image mosaic(width * 4, height * 4);
-	compose16(mosaic, pop);
+	int side = calc_side();
+	Image mosaic(width * side, height * side);
+	compose(mosaic, side, pop);
 	display(mosaic);
       }
     }
