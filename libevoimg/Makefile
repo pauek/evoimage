@@ -1,6 +1,12 @@
 
-CXXFLAGS = -Wall -O3
+CXXFLAGS = -Wall
 OBJECTS = Node.o Reader.o
+
+ifdef DEBUG
+  CXXFLAGS += -g3
+else
+  CXXFLAGS += -O3
+endif
 
 all: libevoimg.a
 

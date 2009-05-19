@@ -442,7 +442,6 @@ bool Image::allBallW(){
       if (getPixel(i, j) > W) { countW++; }
     }
   }
-  //cout << countB << " " << countW << endl;
   if (countB >= int(x*y*0.9) || countW >= int(x*y*0.75)) { return true; }
   else { return false; }
 }
@@ -453,7 +452,6 @@ bool Image::allBallW(){
 Node* Node::mutate() {
   int tam = size();
   int idx = (rand() % tam) + 1;
-  cout << tam << " " << idx << endl;
   return _mutate(idx);
 }
 
