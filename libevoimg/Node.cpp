@@ -4,9 +4,59 @@
 #include <string>
 #include <fstream>
 #include <iomanip>
+#include <vector>
 #include <sstream>
 #include "Node.h"
 using namespace std;
+
+// ThreadedEvaluator ///////////////////////////////////////
+
+class ThreadedEvaluator {
+  struct _Thread {
+    pthread_t thr;
+    Node *_node;
+    Image *_img;
+    _Thread(Node *n, Image *i)
+      :_node(n), _img(i) {}
+  };
+
+  vector<_Thread> _threads;
+
+  static void *eval_one(void *);
+
+public:
+  ~ThreadedEvaluator() {
+    for (uint i = 0; i < _threads.size(); i++)
+      delete _threads[i]._img;
+  }
+
+  void add_node(Node *n, int w, int h) { 
+    _threads.push_back(_Thread(n, new Image(w, h))); 
+  }
+
+  void run();
+
+  Image *img(int n) { return _threads.at(n)._img; }
+};
+
+void ThreadedEvaluator::run() {
+  // launch them
+  for (uint i = 0 ; i < _threads.size(); i++) {
+    pthread_create(&_threads[i].thr, NULL, eval_one, &_threads[i]);
+  }
+  // wait...
+  for (uint i = 0 ; i < _threads.size(); i++) {
+    pthread_join(_threads[i].thr, NULL);
+  }
+}
+
+void *ThreadedEvaluator::eval_one(void *x) {
+  _Thread *t = (_Thread*)x;
+  t->_node->eval(*t->_img);
+  return NULL;
+}
+
+////////////////////////////////////////////////////////////
 
 // Retorna un número entre 0.0 i 1.0
 inline float frand() {
@@ -705,16 +755,21 @@ void Dissolve::eval(Image& I) {
   const int x = I.getX(), y = I.getY();
   Image _mask(x, y);
   p3->eval(_mask);
-  
-  Image I1(x, y); p1->eval(I1);
-  Image I2(x, y); p2->eval(I2);
 
+  ThreadedEvaluator ev;
+  ev.add_node(p1, x, y);
+  ev.add_node(p2, x, y);
+  ev.run();
+
+  Image *i1 = ev.img(0);
+  Image *i2 = ev.img(1);
+  
   for (int i = 0 ; i < x; i++)
     for (int j = 0 ; j < y; j++) {
       RGB t = _mask.getPixel(i, j).clamp();
       I.putPixel(i, j, 
-		 I1.getPixel(i, j) * t + 
-		 I2.getPixel(i, j) * t.invert());
+		 i1->getPixel(i, j) * t + 
+		 i2->getPixel(i, j) * t.invert());
     }
 }
 
@@ -834,10 +889,23 @@ void BinOp::destroy(){
 
 void BinOp::eval(Image& I) {
   const int x = I.getX(), y = I.getY();
-  Image i1(x, y), i2(x, y);
-  op1()->eval(i1); 
-  op2()->eval(i2);
-  do_op(I, i1, i2);
+
+  if (p1->size() > 5 and p2->size() > 5) {
+    Image *i1, *i2;
+    ThreadedEvaluator ev;
+    ev.add_node(p1, x, y);
+    ev.add_node(p2, x, y);
+    ev.run();
+    i1 = ev.img(0);
+    i2 = ev.img(1);
+    do_op(I, *i1, *i2);
+  }
+  else {
+    Image i1(x, y), i2(x, y);
+    op1()->eval(i1); 
+    op2()->eval(i2);
+    do_op(I, i1, i2);
+  }
 }
 
 #define DO_OP(Class, expr)					     \
