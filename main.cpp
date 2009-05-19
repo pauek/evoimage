@@ -5,6 +5,7 @@
 #include <sstream>
 #include <vector>
 #include <readline/readline.h>
+#include <pthread.h>
 #include <Node.h>
 
 using namespace std;
@@ -86,11 +87,43 @@ Image getNumTemp(int i, int j){
   return numTemp;
 }
 
+struct _eval {
+  Image *pimg;
+  Node *expr;
+};
+
+void *eval_one(void *_args) {
+  _eval *args = (_eval *)_args;
+  args->expr->eval(*args->pimg);
+  return NULL;
+}
+
 void compose16(Image& mosaic, const vector<Node *>& pop) {
   assert(pop.size() <= 16);
-  for (uint i = 0; i < pop.size(); i++) {
-    Image thumb(width, height);
-    pop[i]->eval(thumb);
+  const int sz = pop.size();
+  Image *pimg[16];
+
+  // Create the images
+  for(int i = 0; i < sz; i++) {
+    pimg[i] = new Image(width, height);
+  }
+
+  // Launch threads
+  pthread_t thr[16];
+  struct _eval e[16];
+  for (int i = 0; i < sz; i++) {
+    e[i].pimg = pimg[i];
+    e[i].expr = pop[i];
+    (void) pthread_create(&thr[i], NULL, eval_one, &e[i]);
+  }
+
+  // Wait for the threads to finish
+  for (int i = 0; i < sz; i++) {
+    (void) pthread_join(thr[i], NULL);
+  }
+  
+  for (int i = 0; i < sz; i++) {
+    Image& thumb = *pimg[i];
     int c = i / 4, c2 = i % 4;
 
     for (int i = 0; i < thumb.getX(); i++)
