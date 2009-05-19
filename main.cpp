@@ -206,15 +206,15 @@ int main(int argc, char *argv[]) {
     string cmd;
     csin >> cmd;
     if (cmd == "?" || cmd == "help") {
-      cout << "[h]elp|? -- show this message" << endl << endl
-	   << "[s]how [image number]  -- by default shows the last 16 images generation. With a 1-16 number as a parameter shows that image" << endl << endl
-	   << "[p]rint [image number] -- by default prints the last 16 images generation. With a 1-16 number as a parameter shows that image" << endl << endl
-	   << "config   -- config [width, height] <val>" << endl << endl
-	   << "new      -- restart the population" << endl << endl
-	   << "[n]ext  [parent number] -- mutates expression, generating a new 16 images generation" << endl << endl
-	   << "[e]xport [parent number] -- export the image" << endl << endl
-	   << "[t]ree [image number] -- generates a graphic visualization of the image tree" << endl << endl
-	   << "[q]uit   -- quits the program" << endl;
+      cout << "[h]elp|?                           show this message" << endl
+	   << "[s]how [image id]                  by default shows the last 16 images generation. " << endl  
+	   << "[p]rint [image id]                 by default prints the last 16 images generation. " << endl 
+	   << "config [width, height] <val>       sets images width or height at given value" << endl
+	   << "new                                restart the population" << endl 
+	   << "[n]ext  <image id>                 mutates given expression, creating a new 16 child generation"  << endl
+	   << "[e]xport <image id> <filename>     export the image expression to a file"  << endl
+	   << "[t]ree <image id>                  generates a graphic visualization of the image tree"  << endl
+	   << "[q]uit                             quits the program" << endl;
     }
     if (cmd == "s" || cmd == "show") {
       uint num;
