@@ -493,36 +493,40 @@ Node *UnaryOp::_mutate(int& idx) {
   p1 = p1->_mutate(idx);  
   if (--idx != 0) { return this; }
   else{ 
-    if (frand() < replace_prob) {
+  	float randVal = frand();
+    if (randVal < replace_prob) {
       return randomNode(depth() + 1);
     }
     else {
-      if(frand() < 0.6) { 
+      if(randVal < 0.6) { 
 	return randomUnaryHead(p1); 
       }
-      else { 
-	return bypassUnary(); 
+      else if (randVal < 0.8){ 
+	return bypassUnary();} 
+	else { return nodeAsParam();}
       }
     }
   }
-}
+
 
 Node *BinOp::_mutate(int& idx) {
   p1 = p1->_mutate(idx);
   p2 = p2->_mutate(idx);
   if (--idx != 0) { return this; }
   else {
-    if (frand() < replace_prob) {
+  	float randVal = frand();
+    if (randVal < replace_prob) {
       // TODO: Cas 6
       return randomNode(depth() + 1);
     }
     else {
-      if(frand() < 0.6) { 
+      if(randVal < 0.6) { 
 	return randomBinaryHead(p1, p2); 
       }
-      else { 
+      else if (randVal < 0.8){ 
 	return bypassBinary(); 
       }
+      else{ return nodeAsParam(); }
     }
   }
 }
