@@ -123,7 +123,7 @@ class Image {
   float xbr, ybr; // bottom right map coordinates
   RGB *p;
 public:
-  Image (int _x , int _y, 
+  Image (int _x = 0 , int _y = 0, 
          float _xtl = -1.0, float _ytl =  1.0,
          float _xbr =  1.0, float _ybr = -1.0) {
       x = _x;
@@ -140,6 +140,12 @@ public:
     copyPixels(I);
   }
   ~Image() { delete[] p; }
+
+  void resize(int w, int h) {
+    delete p;
+    p = new RGB[w * h];
+    x = w, y = h;
+  }
 
   int  getX () const { return x; }
   int  getY () const { return y; }

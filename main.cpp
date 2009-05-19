@@ -12,7 +12,7 @@ using namespace std;
 
 // Paràmetres
 string outfile = "img.pnm"; // Nom imatge de sortida
-int    width = 120;         // Amplada de la imatge
+int    width  = 150;        // Amplada de la imatge
 int    height = 120;        // Alçada de la imatge
 int    level = 4;           // Profunditat de l'arbre generat
 int    numimg = 16;         // Número de mutants a generar
@@ -100,6 +100,8 @@ void *eval_one(void *_args) {
 }
 
 void compose(Image& mosaic, int side, const vector<Node *>& pop) {
+  const int sep = 2;
+  mosaic.resize(sep + (width + sep) * side, sep + (height + sep) * side);
   assert(pop.size() <= 100);
   const int sz = pop.size();
   Image *pimg[100];
@@ -127,14 +129,16 @@ void compose(Image& mosaic, int side, const vector<Node *>& pop) {
     Image& thumb = *pimg[i];
     int c = i / side, c2 = i % side;
 
+    int xstart = sep + c2 * (width + sep);
+    int ystart = sep + c  * (height + sep);
     for (int i = 0; i < thumb.getX(); i++)
       for (int j = 0; j < thumb.getY(); j++)
-	mosaic.putPixel((c2*width)+i, (c*height)+j, thumb.getPixel(i, j));
+	mosaic.putPixel(xstart + i, ystart + j, thumb.getPixel(i, j));
     
     Image numTemp = getNumTemp(c, c2, side);
     for (int i = 0; i < 24; i++)
       for (int j = 0; j < 24; j++)
-	mosaic.putPixel((c2*width)+i, (c*height)+j, numTemp.getPixel(i,j));
+	mosaic.putPixel(xstart + i, ystart + j, numTemp.getPixel(i,j));
   }
 }
 
@@ -235,6 +239,7 @@ int main(int argc, char *argv[]) {
 
   srand(seed != -1 ? seed : unsigned(time(0)));
 
+  Image mosaic;
   vector<Node *> pop; // Population of images
 
   init_population(pop);
@@ -274,7 +279,6 @@ int main(int argc, char *argv[]) {
       }
       else {
 	int side = calc_side();
-	Image mosaic(width * side, height * side);
 	compose(mosaic, side, pop);
 	display(mosaic);
       }
@@ -304,7 +308,6 @@ int main(int argc, char *argv[]) {
     else if (cmd == "new") {
       init_population(pop);
       int side = calc_side();
-      Image mosaic(width * side, height * side);
       compose(mosaic, side, pop);
       display(mosaic);
     }
@@ -315,7 +318,6 @@ int main(int argc, char *argv[]) {
       if (idx >= 1 && idx <= int(pop.size())) {
 	next_generation(pop, idx-1);
 	int side = calc_side();
-	Image mosaic(width * side, height * side);
 	compose(mosaic, side, pop);
 	display(mosaic);
       }
