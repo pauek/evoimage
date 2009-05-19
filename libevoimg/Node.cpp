@@ -154,6 +154,36 @@ Node* BinOp::bypassBinary() {
   return son;
 }
 
+Node* UnaryOp::nodeAsParam(){
+	
+	Node* nodeP1 = this->clone();
+	
+	if (frand() < 0.5){
+		Node* newFather = randomBinaryHead(nodeP1, randomLeaf());
+		return newFather;
+	}
+	else{
+		Node* newFather = randomUnaryHead(nodeP1);
+		return newFather;
+		}
+
+	
+}
+
+Node* BinOp::nodeAsParam(){
+	Node* nodeP1 = this->clone();
+	
+	if (frand() < 0.5){
+		Node* newFather = randomBinaryHead(nodeP1, randomLeaf());
+		return newFather;
+	}
+	else{
+		Node* newFather = randomUnaryHead(nodeP1);
+		return newFather;
+		}
+	
+}
+
 inline int clamp(float x) {
   int v = int(x*255);
   if (v > 255) v = 255;
@@ -463,36 +493,40 @@ Node *UnaryOp::_mutate(int& idx) {
   p1 = p1->_mutate(idx);  
   if (--idx != 0) { return this; }
   else{ 
-    if (frand() < replace_prob) {
+  	float randVal = frand();
+    if (randVal < replace_prob) {
       return randomNode(depth() + 1);
     }
     else {
-      if(frand() < 0.6) { 
+      if(randVal < 0.6) { 
 	return randomUnaryHead(p1); 
       }
-      else { 
-	return bypassUnary(); 
+      else if (randVal < 0.8){ 
+	return bypassUnary();} 
+	else { return nodeAsParam();}
       }
     }
   }
-}
+
 
 Node *BinOp::_mutate(int& idx) {
   p1 = p1->_mutate(idx);
   p2 = p2->_mutate(idx);
   if (--idx != 0) { return this; }
   else {
-    if (frand() < replace_prob) {
+  	float randVal = frand();
+    if (randVal < replace_prob) {
       // TODO: Cas 6
       return randomNode(depth() + 1);
     }
     else {
-      if(frand() < 0.6) { 
+      if(randVal < 0.6) { 
 	return randomBinaryHead(p1, p2); 
       }
-      else { 
+      else if (randVal < 0.8){ 
 	return bypassBinary(); 
       }
+      else{ return nodeAsParam(); }
     }
   }
 }
