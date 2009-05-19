@@ -319,14 +319,13 @@ int main(int argc, char *argv[]) {
 	cout << "usage: export <idx> <filename>" << endl;
       }
     }
-	//--------------------------
     else if (cmd == "ei" || cmd == "export-image") {
       string filename;
       int idx;
       csin >> idx >> filename;
       if (csin && idx >= 1 && idx <= (int)pop.size()) {
 	    string fout(filename.c_str());
-	    Image Iaux( width, height);
+	    Image Iaux( bwidth, bheight);
 	    pop[idx-1]->eval(Iaux);
 	    Iaux.save_pnm(fout);
       }
@@ -334,7 +333,6 @@ int main(int argc, char *argv[]) {
 	cout << "usage: export-image <idx> <filename>" << endl;
       }
     }
-	//------------------------
     else if (cmd == "t" || cmd == "tree") {
       int idx;
       csin >> idx;

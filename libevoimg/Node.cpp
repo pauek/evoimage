@@ -996,7 +996,7 @@ void GraphvizVisitor::visitWarp(Warp* p) {
   p->op3()->accept(*this);
   int i3 = _idx; 
   int i4 = ++_idx;
-  _out << "n" << i4 << "[label=\"Dissolve\",shape=oval];" << endl;
+  _out << "n" << i4 << "[label=\"Warp\",shape=oval];" << endl;
   _out << "n" << i4 << " -> " << "n" << i1 << ";" << endl;
   _out << "n" << i4 << " -> " << "n" << i2 << ";" << endl;
   _out << "n" << i4 << " -> " << "n" << i3 << ";" << endl;
