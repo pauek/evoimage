@@ -1,0 +1,1 @@
+(Abs (/ (sharpen (% (& y (- (Sin (Atan (Abs x) y)) y)) (Cos (/ y x)))) #(0.341107 0.524993 1.02648)))

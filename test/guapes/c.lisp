@@ -1,0 +1,1 @@
+(Cos (/ (dissolve y (+ (* x #(1.13104 0.298082 0.288642)) (Sin y)) (emboss y)) (Sin (blur x))))

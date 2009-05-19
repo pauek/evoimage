@@ -1,0 +1,1 @@
+(Sin (blur (+ (Log (Expt #(0.162912 0.35233 0.932745) x) (Expt (Expt (Cos (Atan x x)) (sharpen (| x y))) (Round (Round (Min y x) (blur #(0.339968 0.833077 0.629311))) (* (sharpen y) (^ y y))))) x)))

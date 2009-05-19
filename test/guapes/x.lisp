@@ -1,0 +1,1 @@
+(hsv-to-rgb (Sin (- (blur (sharpen (Max (Abs (Atan y (Round y #(0.992909 0.181027 0.240119)))) x))) (gradDir (- (Atan (Log (Cos (Cos (* x y))) (sharpen (gaussBlur #(0.198763 0.245444 0.621343)))) #(0.212585 0.690574 0.852539)) x)))))

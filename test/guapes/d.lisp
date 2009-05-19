@@ -1,0 +1,1 @@
+(Cos (gaussBlur (gaussBlur (/ y x))))

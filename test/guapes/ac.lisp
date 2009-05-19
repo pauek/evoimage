@@ -1,0 +1,1 @@
+(Sin (blur (+ (Log #(0.242882 0.258151 0.74268) (Expt (Expt (Cos (sharpen (gradDir #(0.660676 0.780611 0.541927)))) (Abs (sharpen (| (blur y) y)))) (Round (blur #(0.275638 1.42116 0.544274)) (* (sharpen y) (^ y y))))) (- (% y x) (% x x)))))

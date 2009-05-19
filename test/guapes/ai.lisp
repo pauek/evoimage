@@ -1,0 +1,1 @@
+(sharpen (% (& y (- (Abs x) y)) (Cos (/ y x))))
