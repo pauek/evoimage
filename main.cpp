@@ -206,15 +206,16 @@ int main(int argc, char *argv[]) {
     string cmd;
     csin >> cmd;
     if (cmd == "?" || cmd == "help") {
-      cout << "[h]elp|?                           show this message" << endl
-	   << "[s]how [image id]                  by default shows the last 16 images generation. " << endl  
-	   << "[p]rint [image id]                 by default prints the last 16 images generation. " << endl 
-	   << "config [width, height] <val>       sets images width or height at given value" << endl
-	   << "new                                restart the population" << endl 
-	   << "[n]ext  <image id>                 mutates given expression, creating a new 16 child generation"  << endl
-	   << "[e]xport <image id> <filename>     export the image expression to a file"  << endl
-	   << "[t]ree <image id>                  generates a graphic visualization of the image tree"  << endl
-	   << "[q]uit                             quits the program" << endl;
+      cout << "[h]elp|?                                  show this message" << endl
+	   << "[s]how [image id]                         by default shows the last 16 images generation. " << endl  
+	   << "[p]rint [image id]                        by default prints the last 16 images generation. " << endl 
+	   << "config [width, height] <val>              sets images width or height at given value" << endl
+	   << "new                                       restart the population" << endl 
+	   << "[n]ext  <image id>                        mutates given expression, creating a new 16 child generation"  << endl
+	   << "[e]xport <image id> <filename>            export the image expression to a file"  << endl
+	   << "[ei, export-image] <image id> <filename>  export the image to a pgm file"  << endl
+	   << "[t]ree <image id>                         generates a graphic visualization of the image tree"  << endl
+	   << "[q]uit                                    quits the program" << endl;
     }
     if (cmd == "s" || cmd == "show") {
       uint num;
@@ -284,6 +285,22 @@ int main(int argc, char *argv[]) {
 	cout << "usage: export <idx> <filename>" << endl;
       }
     }
+	//--------------------------
+    else if (cmd == "ei" || cmd == "export-image") {
+      string filename;
+      int idx;
+      csin >> idx >> filename;
+      if (csin && idx >= 1 && idx <= (int)pop.size()) {
+	    string fout(filename.c_str());
+	    Image Iaux( width, height);
+	    pop[idx-1]->eval(Iaux);
+	    Iaux.save_pnm(fout);
+      }
+      else {
+	cout << "usage: export-image <idx> <filename>" << endl;
+      }
+    }
+	//------------------------
     else if (cmd == "t" || cmd == "tree") {
       int idx;
       csin >> idx;
