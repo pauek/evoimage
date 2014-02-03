@@ -2,6 +2,7 @@
 *.pnm
 *.png
 out*
+*.o
 evoimg
 libevoimg/libevoimg.a
 pyevoimg/build
