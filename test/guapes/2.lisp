@@ -1,1 +1,1 @@
-(hsv-to-rgb (/ (bwNoise) (Abs x)))
+(hsv-to-rgb (/ (bwNoise 1) (Abs x)))

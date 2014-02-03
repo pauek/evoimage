@@ -1,1 +1,1 @@
-(sharpen (* (* (Cos #(0.614355 0.415654 0.954907)) (Max y #(0.864032 0.384151 0.206649))) (Max (& (/ (/ y x) (- x #(0.605293 0.570566 0.158225))) (Cos (hsv-to-rgb (colorNoise)))) (- (sharpen (emboss #(0.887068 0.0412117 0.787377))) (hsv-to-rgb (Atan y (colorNoise)))))))
+(sharpen (* (* (Cos #(0.614355 0.415654 0.954907)) (Max y #(0.864032 0.384151 0.206649))) (Max (& (/ (/ y x) (- x #(0.605293 0.570566 0.158225))) (Cos (hsv-to-rgb (colorNoise 1)))) (- (sharpen (emboss #(0.887068 0.0412117 0.787377))) (hsv-to-rgb (Atan y (colorNoise 2)))))))

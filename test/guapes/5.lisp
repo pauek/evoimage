@@ -1,1 +1,1 @@
-(Min (blur (colorNoise)) (Max y (bwNoise)))
+(Min (blur (colorNoise 1)) (Max y (bwNoise 0)))
