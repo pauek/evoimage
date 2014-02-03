@@ -3,7 +3,7 @@
 *.png
 out*
 evoimg
-
+libevoimg/libevoimg.a
 pyevoimg/build
 test.py.save
 CoreV2
