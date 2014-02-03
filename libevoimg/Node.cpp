@@ -6,6 +6,7 @@
 #include <iomanip>
 #include <vector>
 #include <sstream>
+#include <unistd.h>
 #include "Node.h"
 using namespace std;
 

@@ -4,6 +4,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <unistd.h>
 #include <readline/readline.h>
 #include <pthread.h>
 #include <Node.h>

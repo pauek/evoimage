@@ -2,6 +2,8 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include <unistd.h>
+#include <stdio.h>
 #include <Node.h>
 
 using namespace std;

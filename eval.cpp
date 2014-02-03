@@ -4,6 +4,7 @@
 #include <fstream>
 #include <cstdio>
 #include <vector>
+#include <unistd.h>
 #include <Node.h>
 
 using namespace std;
