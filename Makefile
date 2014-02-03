@@ -26,7 +26,7 @@ libevoimg:
 	g++ $(CXXFLAGS) -c -o $@ $<
 
 clean: cleanlib
-	rm -f *.o evoimg
+	rm -f *.o evoimg eval random
 
 cleanlib:
 	make -C libevoimg clean
