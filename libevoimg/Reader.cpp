@@ -29,28 +29,23 @@ string read_token(istream& i) {
 
 float read_number(istream& i) {
    string token = read_token(i);
-   cout << "num: '" << token << "'" << endl;
    return strtod(token.c_str(), NULL);
 }
 
 Node* read_vec(istream& i) {
-   cout << "read_vec" << endl;
    char c;
    c = i.get(); assert(c == '(');
    float n1 = read_number(i);
    float n2 = read_number(i);
    float n3 = read_number(i);
    c = i.get(); assert(c == ')');
-   cout << n1 << ' ' << n2 << ' ' << n3 << endl;
    return new Const(n1, n2, n3);
 }	
 
 Node* read_list(istream& i) {
    vector<Node*> acum;
    string head = read_token(i);
-   cout << "head: '" << head << "'" << endl;
    char c = next(i);
-   cout << "c: '" << c << "'" << endl;
    while (c != ')') {
       i.putback(c);
       Node* n = read(i);
@@ -58,7 +53,6 @@ Node* read_list(istream& i) {
          acum.push_back(n);
       }
       c = next(i);
-      cout << "c: '" << c << "'" << endl;
    }
    if      (head == "Sin" || head == "sin")                   { return new Sin(acum[0]); }
    else if (head == "Cos" || head == "cos")                   { return new Cos(acum[0]); }
@@ -96,7 +90,6 @@ Node* read_list(istream& i) {
 
 Node* read(istream& i) {
    char c = next(i);
-   cout << "read-c: " << c << endl;
    switch (c) {
    case '(':
       return read_list(i);

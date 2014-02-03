@@ -40,9 +40,10 @@ void parseArgs(int argc, char *argv[], vector<string>& args) {
 }
 
 void usage() {
-  cout << "usage: eval [options] <expr>..." << endl;
+  cout << "usage: eval [options] <file>..." << endl;
   cout << endl;
   cout << "options: " << endl;
+  cout << " -e, expression" << endl;
   cout << " -w, image width [" << width << "]" << endl;
   cout << " -h, image height [" << height << "]" << endl;
   cout << " -s, seed [" << seed << "]" << endl;

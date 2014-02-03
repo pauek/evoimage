@@ -84,7 +84,7 @@ Image getNumTemp(int i, int j, int side){
    pgm2digit(_digit, i*side + j + 1);
    for (int k = 0; k < 24; k++) 
       for (int l = 0; l < 24; l++) 
-         numTemp.putPixel(k, l, _digit[k][l] );
+         numTemp.put(k, l, _digit[k][l] );
 
    return numTemp;
 }
@@ -132,14 +132,14 @@ void compose(Image& mosaic, int side, const vector<Node *>& pop) {
 
       int xstart = sep + c2 * (width + sep);
       int ystart = sep + c  * (height + sep);
-      for (int i = 0; i < thumb.getX(); i++)
-         for (int j = 0; j < thumb.getY(); j++)
-            mosaic.putPixel(xstart + i, ystart + j, thumb.getPixel(i, j));
+      for (int i = 0; i < thumb.xsize(); i++)
+         for (int j = 0; j < thumb.ysize(); j++)
+            mosaic.put(xstart + i, ystart + j, thumb.get(i, j));
     
       Image numTemp = getNumTemp(c, c2, side);
       for (int i = 0; i < 24; i++)
          for (int j = 0; j < 24; j++)
-            mosaic.putPixel(xstart + i, ystart + j, numTemp.getPixel(i,j));
+            mosaic.put(xstart + i, ystart + j, numTemp.get(i,j));
    }
 }
 
