@@ -12,6 +12,8 @@ using namespace std;
 
 // ThreadedEvaluator ///////////////////////////////////////
 
+/* -- Traiem això perquè no es pot compilar a Javascript [03/Feb/2014]
+
 class ThreadedEvaluator {
    struct _Thread {
       pthread_t thr;
@@ -56,6 +58,8 @@ void *ThreadedEvaluator::eval_one(void *x) {
    t->_node->eval(*t->_img);
    return NULL;
 }
+
+*/
 
 ////////////////////////////////////////////////////////////
 
@@ -755,20 +759,27 @@ void Dissolve::eval(Image& I) {
    Image _mask(x, y);
    p3->eval(_mask);
 
+   Image i1(x, y);
+   Image i2(x, y);
+   p1->eval(i1);
+   p2->eval(i2);
+
+   /*
    ThreadedEvaluator ev;
    ev.add_node(p1, x, y);
    ev.add_node(p2, x, y);
    ev.run();
-
+   
    Image *i1 = ev.img(0);
    Image *i2 = ev.img(1);
+   */
   
    for (int i = 0 ; i < x; i++)
       for (int j = 0 ; j < y; j++) {
          RGB t = _mask.getPixel(i, j).clamp();
          I.putPixel(i, j, 
-                    i1->getPixel(i, j) * t + 
-                    i2->getPixel(i, j) * t.invert());
+                    i1.getPixel(i, j) * t + 
+                    i2.getPixel(i, j) * t.invert());
       }
 }
 
@@ -888,6 +899,8 @@ void BinaryOp::destroy(){
 
 void BinaryOp::eval(Image& I) {
    const int x = I.getX(), y = I.getY();
+   /*
+   -- Fora Threaded Evaluator [03/Feb/2014]
 
    if (p1->size() > 5 and p2->size() > 5) {
       Image *i1, *i2;
@@ -899,7 +912,10 @@ void BinaryOp::eval(Image& I) {
       i2 = ev.img(1);
       do_op(I, *i1, *i2);
    }
-   else {
+   else 
+
+   */
+   {
       Image i1(x, y), i2(x, y);
       op1()->eval(i1); 
       op2()->eval(i2);
