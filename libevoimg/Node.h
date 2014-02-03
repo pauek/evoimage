@@ -170,6 +170,7 @@ protected:
    static const float replace_prob = 0.5;
 
 public:
+   virtual ~Node() {}
    virtual void  destroy();
    virtual void  eval(Image& e) = 0;
    virtual void  print(std::ostream& o) const { o << "?"; }
@@ -379,7 +380,7 @@ public:
 
 // Operacions Binàries ///////////////////////////////////////////////
 
-class BinOp : public Node {
+class BinaryOp : public Node {
    Node *p1, *p2;
 
 protected:
@@ -388,7 +389,7 @@ protected:
    Node* nodeAsParam();
 public:
    void destroy();
-   BinOp(Node* _p1, Node* _p2) {
+   BinaryOp(Node* _p1, Node* _p2) {
       p1 = _p1;
       p2 = _p2;
    }
@@ -413,9 +414,9 @@ public:
 };
 
 #define DEF_BINARY_OP(Name)                              \
-   class Name : public BinOp {                           \
+   class Name : public BinaryOp {                           \
    public:                                               \
-   Name (Node* p1, Node* p2): BinOp(p1, p2) {}           \
+   Name (Node* p1, Node* p2): BinaryOp(p1, p2) {}           \
    void do_op(Image& res, Image& op1, Image& op2);       \
    std::string head() const;                             \
    Node *clone () const {                                \
@@ -444,14 +445,14 @@ class Visitor {
 public:
    virtual void visitLeaf(Leaf *) = 0;
    virtual void visitUnaryOp(UnaryOp *) = 0;
-   virtual void visitBinOp(BinOp *) = 0;
+   virtual void visitBinaryOp(BinaryOp *) = 0;
    virtual void visitDissolve(Dissolve *) = 0;
    virtual void visitWarp(Warp *) = 0;
 };
 
 inline void Leaf::accept(Visitor& v) { v.visitLeaf(this); }
 inline void UnaryOp::accept(Visitor& v) { v.visitUnaryOp(this); }
-inline void BinOp::accept(Visitor& v) { v.visitBinOp(this); }
+inline void BinaryOp::accept(Visitor& v) { v.visitBinaryOp(this); }
 inline void Dissolve::accept(Visitor& v) { v.visitDissolve(this); }
 inline void Warp::accept(Visitor& v) { v.visitWarp(this); }
 
@@ -470,7 +471,7 @@ public:
 
    void visitLeaf(Leaf *);
    void visitUnaryOp(UnaryOp *);
-   void visitBinOp(BinOp *);
+   void visitBinaryOp(BinaryOp *);
    void visitDissolve(Dissolve *);
    void visitWarp(Warp *);
 };

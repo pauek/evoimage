@@ -200,7 +200,7 @@ Node* UnaryOp::bypassUnary() {
    return son;
 }
 
-Node* BinOp::bypassBinary() {
+Node* BinaryOp::bypassBinary() {
    Node* son = frand() < 0.5 ? op1()->clone() : op2()->clone();
    return son;
 }
@@ -221,7 +221,7 @@ Node* UnaryOp::nodeAsParam(){
 	
 }
 
-Node* BinOp::nodeAsParam(){
+Node* BinaryOp::nodeAsParam(){
 	Node* nodeP1 = this->clone();
 	
 	if (frand() < 0.5){
@@ -558,7 +558,7 @@ Node *UnaryOp::_mutate(int& idx) {
 }
 
 
-Node *BinOp::_mutate(int& idx) {
+Node *BinaryOp::_mutate(int& idx) {
    p1 = p1->_mutate(idx);
    p2 = p2->_mutate(idx);
    if (--idx != 0) { return this; }
@@ -880,13 +880,13 @@ void hsv_to_rgb::eval(Image& I) {
 
 // BinaryOperations //////////////////////////////////////////////////
 
-void BinOp::destroy(){
+void BinaryOp::destroy(){
    op1()->destroy();
    op2()->destroy();
    delete this;
 }
 
-void BinOp::eval(Image& I) {
+void BinaryOp::eval(Image& I) {
    const int x = I.getX(), y = I.getY();
 
    if (p1->size() > 5 and p2->size() > 5) {
@@ -944,7 +944,7 @@ DO_OP(Round, (op1.getPixel(i,j) / op1.getPixel(i,j) + offs).map( floor ))
 DO_OP(Min,   _min(op1.getPixel(i, j), op2.getPixel(i, j)))
 DO_OP(Max,   _max(op1.getPixel(i, j), op2.getPixel(i, j)))
 
-void BinOp::print(ostream& o) const {
+void BinaryOp::print(ostream& o) const {
    o << "(" << head() << " ";
    op1()->print(o);
    o << " ";
@@ -1030,7 +1030,7 @@ void GraphvizVisitor::visitUnaryOp(UnaryOp* p) {
    _out << "n" << i2 << " -> " << "n" << i1 << ";" << endl;
 }
 
-void GraphvizVisitor::visitBinOp(BinOp* p) {
+void GraphvizVisitor::visitBinaryOp(BinaryOp* p) {
    p->op1()->accept(*this); 
    int i1 = _idx; 
    p->op2()->accept(*this);
