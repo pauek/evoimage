@@ -1,0 +1,1 @@
+(cos (abs (cos (| (* x y) (+ (& x #(0.858969 0.575299 0.395757)) (sharpen (grad-dir (emboss x))))))))
