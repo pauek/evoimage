@@ -65,12 +65,11 @@ void display(const Image& I) {
 
   // Launch a new process
   if (fork() == 0) {
-    int ret;
     // I'm the child
     {
       stringstream sout;
       sout << "display " << outfile;
-      ret = system(sout.str().c_str());
+      system(sout.str().c_str());
     }
 
     // When display finishes, we delete the file
