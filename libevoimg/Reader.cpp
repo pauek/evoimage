@@ -6,111 +6,108 @@
 #include "Node.h"
 using namespace std;
 
-string read_token( std::istream& i) {
-   std::string acum="";
-   char c=i.get();
-   while ( !i.eof() && !isspace(c) && c != ')'){
-      acum += c;
-      c=i.get();
+char next(istream& i) {
+   char c = i.get();
+   while (isspace(c)) {
+      c = i.get();
    }
-	
-   if(!i.eof()) { i.putback(c );  }
-   return acum;
-}
-
-float read_number (std::istream& i){
-   std::string token = read_token ( i);
-   return (strtod (token.c_str(), NULL));	
-}
-
-Node* read_vec(std::istream& i) {
-   char c = i.get();
-   c = i.get();
-   assert(c != 'c');
-	
-   float n1 = read_number(i);
-   c = i.get();
-   float n2 = read_number(i);
-   c = i.get();
-   float n3 = read_number(i);
-	
-   c = i.get();
-   assert(c != ')');
-	
-   return new v_fix (n1, n2, n3);
-}	
-
-char getnext (std::istream& i) {
-   char c = i.get();
-   while(isspace(c)){
-      c=i.get();		
-   }			
-   i.putback(c);
    return c;
 }
 
-Node* read_list(std::istream& i ) {
-   vector <Node*> acum;
-   char c = i.get();
-   Node* n;
-   string head = read_token ( i);
-   while ( c != ')' ) {
-      n = read ( i);
-      if ( n != NULL) {acum.push_back ( n);}
-      c = i.get ();  // aqui no seria get_next?
+string read_token(istream& i) {
+   string acum;
+   char c = next(i);
+   while (!i.eof() && !isspace(c) && c != ')') {
+      acum += c;
+      c = i.get();
    }
-   if ( head == "+" || head == "Sum" || head == "sum") { return new Sum ( acum [0], acum [1] ); }
-   else if ( head == "-"  || head == "Rest" || head == "rest") { return new Rest ( acum [0] , acum [1] ); }
-   else if ( head == "*" || head == "Mult" || head == "mult") { return new Mult ( acum [0], acum [1] ); }
-   else if ( head == "/" || head == "Div" || head == "div") { return new Div ( acum [0], acum [1] ); }
-   else if ( head == "%" || head == "Mod" || head == "mod") { return new Mod ( acum [0], acum [1] ); }
-   else if ( head == "Log" || head == "log") { return new Log ( acum [0], acum [1] ); }
-   else if ( head == "Round" || head == "round") { return new Round ( acum [0], acum [1] ); }
-   else if ( head == "&" || head == "And" || head == "and") { return new And ( acum [0], acum [1] ); }
-   else if ( head == "|" || head == "Or" || head == "or") { return new Or ( acum [0], acum [1] ); }
-   else if ( head == "^" || head == "Xor" || head == "xor") { return new Xor ( acum [0], acum [1] ); }
-   else if ( head == "Sin" || head == "sin") { return new Sin ( acum [0]);}
-   else if ( head == "Cos" || head == "cos") { return new Cos ( acum [0]);}
-   else if ( head == "Atan" || head == "atan") { return new Atan ( acum [0], acum [1] ); }
-   else if ( head == "X" || head == "x") { return new X ( ); }
-   else if ( head == "Y" || head == "y") { return new Y ( ); }
-   else if ( head == "gradDir" ) { return new gradDir ( acum [0]);}
-   else if ( head == "gaussBlur" ) { return new gaussBlur ( acum [0]);}
-   else if ( head == "emboss" || head == "Emboss") { return new emboss ( acum [0]);}
-   else if ( head == "sharpen" || head == "Sharpen") { return new sharpen ( acum [0]);}
-   else if ( head == "warp" ) { return new Warp(acum [0], acum[1], acum[2]); }
-   else if ( head == "dissolve" ) { return new Dissolve(acum [0], acum[1], acum[2]); }
-   else if ( head == "blur" ) { return new blur ( acum [0]);}
-   else if ( head == "hsv-to-rgb" ) { return new hsv_to_rgb(acum[0]); }
-   else if ( head == "bwNoise" ) { return new bwNoise (acum[0]); }
-   else if ( head == "colorNoise" ) { return new colorNoise (acum[0]); }
-   else if ( head == "Abs" || head == "abs") { return new Abs ( acum [0]);}
-   else if ( head == "Expt" || head == "expt") { return new Expt ( acum [0], acum [1] ); }
-   else if ( head == "Max" || head == "max") { return new Max(acum [0], acum [1]); }
-   else if ( head == "Min" || head == "min") { return new Min(acum [0], acum [1]); }
+   if (!i.eof()) { 
+      i.putback(c);
+   }
+   return acum;
+}
+
+float read_number(istream& i) {
+   string token = read_token(i);
+   cout << "num: '" << token << "'" << endl;
+   return strtod(token.c_str(), NULL);
+}
+
+Node* read_vec(istream& i) {
+   cout << "read_vec" << endl;
+   char c;
+   c = i.get(); assert(c == '(');
+   float n1 = read_number(i);
+   float n2 = read_number(i);
+   float n3 = read_number(i);
+   c = i.get(); assert(c == ')');
+   cout << n1 << ' ' << n2 << ' ' << n3 << endl;
+   return new Const(n1, n2, n3);
+}	
+
+Node* read_list(istream& i) {
+   vector<Node*> acum;
+   string head = read_token(i);
+   cout << "head: '" << head << "'" << endl;
+   char c = next(i);
+   cout << "c: '" << c << "'" << endl;
+   while (c != ')') {
+      i.putback(c);
+      Node* n = read(i);
+      if (n != NULL) {
+         acum.push_back(n);
+      }
+      c = next(i);
+      cout << "c: '" << c << "'" << endl;
+   }
+   if      (head == "Sin" || head == "sin")                   { return new Sin(acum[0]); }
+   else if (head == "Cos" || head == "cos")                   { return new Cos(acum[0]); }
+   else if (head == "Abs" || head == "abs")                   { return new Abs(acum[0]);}
+   else if (head == "gradDir" || head == "grad-dir")          { return new GradDir(acum[0]); }
+   else if (head == "gaussBlur" || head == "gauss-blur")      { return new GaussBlur(acum[0]); }
+   else if (head == "Emboss" || head == "emboss")             { return new Emboss(acum[0]); }
+   else if (head == "Sharpen" || head == "sharpen")           { return new Sharpen(acum[0]); }
+   else if (head == "blur")                                   { return new Blur(acum[0]);}
+   else if (head == "hsv-to-rgb" )                            { return new HsvToRgb(acum[0]); }
+   else if (head == "bwNoise" || head == "bw-noise")          { return new BwNoise(acum[0]); }
+   else if (head == "colorNoise" || head == "color-noise")    { return new ColorNoise(acum[0]); }
+
+   else if (head == "+" || head == "Sum" || head == "sum")    { return new Sum(acum[0], acum[1]); }
+   else if (head == "-"  || head == "Rest" || head == "rest") { return new Sub(acum[0] , acum[1]); }
+   else if (head == "*" || head == "Mult" || head == "mult")  { return new Mult(acum[0], acum[1]); }
+   else if (head == "/" || head == "Div" || head == "div")    { return new Div(acum[0], acum[1]); }
+   else if (head == "%" || head == "Mod" || head == "mod")    { return new Mod(acum[0], acum[1]); }
+   else if (head == "Log" || head == "log")                   { return new Log(acum[0], acum[1]); }
+   else if (head == "Round" || head == "round")               { return new Round(acum[0], acum[1]); }
+   else if (head == "&" || head == "And" || head == "and")    { return new And(acum[0], acum[1]); }
+   else if (head == "|" || head == "Or" || head == "or")      { return new Or(acum[0], acum[1]); }
+   else if (head == "^" || head == "Xor" || head == "xor")    { return new Xor(acum[0], acum[1]); }
+   else if (head == "Atan" || head == "atan")                 { return new Atan(acum[0], acum[1]); }
+   else if (head == "Expt" || head == "expt")                 { return new Expt(acum[0], acum[1]); }
+   else if (head == "Max" || head == "max")                   { return new Max(acum[0], acum[1]); }
+   else if (head == "Min" || head == "min")                   { return new Min(acum[0], acum[1]); }
+
+   else if (head == "warp" )                                  { return new Warp(acum[0], acum[1], acum[2]); }
+   else if (head == "dissolve" )                              { return new Dissolve(acum[0], acum[1], acum[2]); }
    else { 
       assert(false); 
    }
 }
 
-Node* read (std::istream& i){
-   std::string acum="";
-   char c=getnext(i);
-	
-   while(isspace(c)){c=i.get();} //és redundant si ja ehem posat el getnext abans????
-	
-   if(c=='('){
+Node* read(istream& i) {
+   char c = next(i);
+   cout << "read-c: " << c << endl;
+   switch (c) {
+   case '(':
       return read_list(i);
-   }
-   else if (c=='#'){
+   case '#':
       return read_vec(i);
-   }
-   //Aqui és on hem de fer l'if per veure si és (x o y) o bé un numero
-   else if ( c == 'x' || c == 'X' ) {
+   case 'x': case 'X':
       return new X();
-   }
-   else if ( c == 'y' || c == 'Y' ) {
+   case 'y': case 'Y':
       return new Y();
+   default:
+      i.putback(c);
+      return new Const(read_number(i));
    }
-   return new v_fix(read_number( i));
 }

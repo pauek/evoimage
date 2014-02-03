@@ -117,6 +117,11 @@ public:
    RGB hsv_to_rgb() const;
 };
 
+inline RGB operator+(double x, const RGB& c) { return c+x; }
+inline RGB operator-(double x, const RGB& c) { return c-x; }
+inline RGB operator*(double x, const RGB& c) { return c*x; }
+inline RGB operator/(double x, const RGB& c) { return c/x; }
+
 class Image {
    int x, y;
    float xtl, ytl; // top left map coordinates
@@ -147,10 +152,10 @@ public:
       x = w, y = h;
    }
 
-   int  getX () const { return x; }
-   int  getY () const { return y; }
-   RGB  getPixel (int i, int j) const  { return p[j*x+i]; }
-   void putPixel (int i, int j, RGB v) { p[j*x+i] = v; }
+   int  xsize() const { return x; }
+   int  ysize() const { return y; }
+   RGB  get(int i, int j) const  { return p[j*x + i]; }
+   void put(int i, int j, RGB v) { p[j*x + i] = v; }
 
    void get_tl(float& x, float& y) const { x = xtl, y = ytl; }
    void get_br(float& x, float& y) const { x = xbr, y = ybr; }
@@ -212,7 +217,7 @@ public:
    void  print(std::ostream& o) const;
    Node *clone() const { return new X(); }
    Node *_mutate_leaf();
-   std::string name() const { return "X"; }
+   std::string name() const { return "x"; }
 };
 
 class Y : public Leaf {
@@ -221,23 +226,161 @@ public:
    void  print(std::ostream& o) const;
    Node *clone() const { return new Y(); }
    Node *_mutate_leaf();
-   std::string name() const { return "Y"; }
+   std::string name() const { return "y"; }
 };
 
-class v_fix : public Leaf {
+class Const : public Leaf {
    float p1, p2, p3;
 public:
-   v_fix(float _p1) { p1=_p1; p2=_p1; p3=_p1; }
-   v_fix(float _p1, float _p2, float _p3) { p1=_p1; p2=_p2; p3=_p3; }
+   Const(float _p1) { p1=_p1; p2=_p1; p3=_p1; }
+   Const(float _p1, float _p2, float _p3) { p1=_p1; p2=_p2; p3=_p3; }
   
    void  eval(Image& e);
    void  print(std::ostream& o) const;
-   Node *clone() const { return new v_fix(p1, p2, p3); }
+   Node *clone() const { return new Const(p1, p2, p3); }
    Node *_mutate(int& idx);
    Node *_mutate_leaf();
    std::string name() const;
 };
 
+
+// Operacions Unàries ////////////////////////////////////////////////
+
+class UnaryOp : public Node {
+   Node *p1;
+
+protected:
+   void setNULL() { p1 = NULL; }
+   Node *_mutate(int& idx);
+   Node* bypassUnary();
+   Node* nodeAsParam();
+
+public:
+   UnaryOp(Node* _p1) { p1 = _p1; }
+   Node* op1() const { return p1; }
+   virtual std::string head() const { return "?"; }  
+   void destroy();
+   int  depth() const { return 1 + p1->depth(); }
+   int  size() const { return 1 + p1->size(); }
+   void print(std::ostream& o) const;
+   void accept(Visitor& v);
+};
+
+#define DEF_UNARY_OP(Name)                      \
+   class Name : public UnaryOp {                \
+   public:                                      \
+   Name (Node* p1) : UnaryOp(p1) {}             \
+   void eval(Image& I);                         \
+   std::string head() const;                    \
+   Node *clone() const {                        \
+      return new Name(op1()->clone());          \
+   }                                            \
+   }
+
+DEF_UNARY_OP(Abs);
+DEF_UNARY_OP(Sin);
+DEF_UNARY_OP(Cos);
+DEF_UNARY_OP(GaussBlur);
+DEF_UNARY_OP(GradDir);
+DEF_UNARY_OP(Emboss);
+DEF_UNARY_OP(Sharpen);
+DEF_UNARY_OP(Blur);
+DEF_UNARY_OP(HsvToRgb);
+
+class Noise : public UnaryOp {
+   static drand48_data _data;
+
+protected:
+   float  random();
+   static void set_seed(int s);
+
+public:
+   Noise(Node* p1) : UnaryOp(p1) {}
+   void eval(Image& e);
+   virtual RGB gen_noise() = 0;
+};
+
+class BwNoise : public Noise {
+public:
+   BwNoise(Node *p1) : Noise(p1) {}
+   RGB gen_noise();
+   std::string head() const;
+   Node *clone() const { return new BwNoise(op1()->clone()); }
+   std::string name() const { return "bw-noise"; }
+};
+
+class ColorNoise : public Noise {
+public:
+   ColorNoise(Node *p1) : Noise(p1) {}
+   RGB gen_noise();
+   std::string head() const;
+   Node *clone() const { return new ColorNoise(op1()->clone()); }
+   std::string name() const { return "color-noise"; }
+};
+
+
+// Operacions Binàries ///////////////////////////////////////////////
+
+class BinaryOp : public Node {
+   Node *p1, *p2;
+
+protected:
+   Node *_mutate(int& idx);
+   Node* bypassBinary();
+   Node* nodeAsParam();
+public:
+   void destroy();
+   BinaryOp(Node* _p1, Node* _p2) {
+      p1 = _p1;
+      p2 = _p2;
+   }
+
+   void eval(Image& I);
+
+   Node* op1() const { return p1; }
+   Node* op2() const { return p2; }
+   virtual std::string head() const { return "?"; }
+
+   int depth() const {
+      return 1 + std::max(p1->depth(), p2->depth());
+   }
+  
+   int size() const {
+      return 1 + (p1->size() + p2->size());
+   }
+
+   virtual void do_op(Image& res, Image& op1, Image& op2) = 0;
+   void print(std::ostream& o) const;
+   void accept(Visitor& v);
+};
+
+#define DEF_BINARY_OP(Name)                              \
+   class Name : public BinaryOp {                           \
+   public:                                               \
+   Name (Node* p1, Node* p2): BinaryOp(p1, p2) {}           \
+   void do_op(Image& res, Image& op1, Image& op2);       \
+   std::string head() const;                             \
+   Node *clone () const {                                \
+      return new Name(op1()->clone(), op2()->clone());	\
+   }                                                     \
+   }
+
+DEF_BINARY_OP(Sum);
+DEF_BINARY_OP(Sub);
+DEF_BINARY_OP(Mult);
+DEF_BINARY_OP(Div);
+DEF_BINARY_OP(Mod);
+DEF_BINARY_OP(Log);
+DEF_BINARY_OP(Round);
+DEF_BINARY_OP(And);
+DEF_BINARY_OP(Or);
+DEF_BINARY_OP(Xor);
+DEF_BINARY_OP(Atan);
+DEF_BINARY_OP(Expt);
+DEF_BINARY_OP(Min);
+DEF_BINARY_OP(Max);
+
+// Operacions Ternàries /////////////////////////////////////////////////////
 
 class Warp : public Node {
    Node *p1, *p2, *p3;
@@ -302,142 +445,6 @@ public:
    void accept(Visitor& v);
 };
 
-// Operacions Unàries ////////////////////////////////////////////////
-
-class UnaryOp : public Node {
-   Node *p1;
-
-protected:
-   void setNULL() { p1 = NULL; }
-   Node *_mutate(int& idx);
-   Node* bypassUnary();
-   Node* nodeAsParam();
-
-public:
-   UnaryOp(Node* _p1) { p1 = _p1; }
-   Node* op1() const { return p1; }
-   virtual std::string head() const { return "?"; }  
-   void destroy();
-   int  depth() const { return 1 + p1->depth(); }
-   int  size() const { return 1 + p1->size(); }
-   void print(std::ostream& o) const;
-   void accept(Visitor& v);
-};
-
-#define DEF_UNARY_OP(Name)                      \
-   class Name : public UnaryOp {                \
-   public:                                      \
-   Name (Node* p1) : UnaryOp(p1) {}             \
-   void eval(Image& I);                         \
-   std::string head() const;                    \
-   Node *clone() const {                        \
-      return new Name(op1()->clone());          \
-   }                                            \
-   }
-
-DEF_UNARY_OP(Abs);
-DEF_UNARY_OP(Sin);
-DEF_UNARY_OP(Cos);
-DEF_UNARY_OP(gaussBlur);
-DEF_UNARY_OP(gradDir);
-DEF_UNARY_OP(emboss);
-DEF_UNARY_OP(sharpen);
-DEF_UNARY_OP(blur);
-DEF_UNARY_OP(hsv_to_rgb);
-
-class Noise : public UnaryOp {
-   static drand48_data _data;
-
-protected:
-   float  random();
-   static void set_seed(int s);
-
-public:
-   Noise(Node *p) : UnaryOp(p) {}
-   void eval(Image& e);
-   virtual RGB gen_noise() = 0;
-};
-
-class bwNoise : public Noise {
-public:
-   bwNoise(Node *p) : Noise(p) {}
-   RGB gen_noise();
-   std::string head() const;
-   void print(std::ostream& o) const;
-   Node *clone() const { return new bwNoise(op1()->clone()); }
-   std::string name() const { return "bwNoise"; }
-};
-
-class colorNoise : public Noise {
-public:
-   colorNoise(Node *p) : Noise(p) {}
-   RGB gen_noise();
-   std::string head() const;
-   void print(std::ostream& o) const;
-   Node *clone() const { return new colorNoise(op1()->clone()); }
-   std::string name() const { return "colorNoise"; }
-};
-
-// Operacions Binàries ///////////////////////////////////////////////
-
-class BinaryOp : public Node {
-   Node *p1, *p2;
-
-protected:
-   Node *_mutate(int& idx);
-   Node* bypassBinary();
-   Node* nodeAsParam();
-public:
-   void destroy();
-   BinaryOp(Node* _p1, Node* _p2) {
-      p1 = _p1;
-      p2 = _p2;
-   }
-
-   void eval(Image& I);
-
-   Node* op1() const { return p1; }
-   Node* op2() const { return p2; }
-   virtual std::string head() const { return "?"; }
-
-   int depth() const {
-      return 1 + std::max(p1->depth(), p2->depth());
-   }
-  
-   int size() const {
-      return 1 + (p1->size() + p2->size());
-   }
-
-   virtual void do_op(Image& res, Image& op1, Image& op2) = 0;
-   void print(std::ostream& o) const;
-   void accept(Visitor& v);
-};
-
-#define DEF_BINARY_OP(Name)                              \
-   class Name : public BinaryOp {                           \
-   public:                                               \
-   Name (Node* p1, Node* p2): BinaryOp(p1, p2) {}           \
-   void do_op(Image& res, Image& op1, Image& op2);       \
-   std::string head() const;                             \
-   Node *clone () const {                                \
-      return new Name(op1()->clone(), op2()->clone());	\
-   }                                                     \
-   }
-
-DEF_BINARY_OP(Sum);
-DEF_BINARY_OP(Rest);
-DEF_BINARY_OP(Mult);
-DEF_BINARY_OP(Div);
-DEF_BINARY_OP(Mod);
-DEF_BINARY_OP(Log);
-DEF_BINARY_OP(Round);
-DEF_BINARY_OP(And);
-DEF_BINARY_OP(Or);
-DEF_BINARY_OP(Xor);
-DEF_BINARY_OP(Atan);
-DEF_BINARY_OP(Expt);
-DEF_BINARY_OP(Min);
-DEF_BINARY_OP(Max);
 
 // Visitor ///////////////////////////////////////////////////////////
 
@@ -480,11 +487,10 @@ void show_graph(Node *);
 
 // Reader ////////////////////////////////////////////////////////////
 
-std::string read_token(std::istream& i);
-float read_number(std::istream& i);
-Node* read_vec(std::istream& i);
-char  getnext(std::istream& i);
-Node* read_list(std::istream& i);
+// std::string read_token(std::istream& i);
+// float read_number(std::istream& i);
+// Node* read_vec(std::istream& i);
+// Node* read_list(std::istream& i);
 Node* read(std::istream& i);
 
 #endif

@@ -100,22 +100,20 @@ Node *Node::randomUnaryOp(int level) {
 }
 
 Node* Node::randomUnaryHead(Node* p1) {
-   int selector = rand() % 11;
+   int selector = rand() % 9;
    switch (selector) {
    case 0: return new Sin(p1);
    case 1: return new Cos(p1);
-   case 2: return new gradDir(p1);
-   case 3: return new gaussBlur(p1);
-   case 4: return new emboss(p1);
-   case 5: return new sharpen(p1);
-   case 6: return new blur(p1);
-   case 7: return new hsv_to_rgb(p1);
-   case 8: return new bwNoise(p1);
-   case 9: return new colorNoise(p1);
-   case 10: 
-   default:
-      return new Abs(p1);
+   case 2: return new GradDir(p1);
+   case 3: return new GaussBlur(p1);
+   case 4: return new Emboss(p1);
+   case 5: return new Sharpen(p1);
+   case 6: return new Blur(p1);
+   case 7: return new HsvToRgb(p1);
+   case 8: return new Abs(p1);
    }
+   assert(false);
+   return NULL;
 }
 
 Node *Node::randomBinaryOp(int level) {
@@ -137,7 +135,7 @@ Node* Node::randomBinaryHead(Node* p1, Node* p2){
    int selector = rand() % 14;	
    switch (selector) {
    case 0: return new Sum(p1, p2);
-   case 1: return new Rest(p1, p2);
+   case 1: return new Sub(p1, p2);
    case 2: return new Mult(p1, p2);
    case 3: return new Div(p1, p2);
    case 4: return new Mod(p1, p2);
@@ -195,7 +193,7 @@ Node* Node::randomLeaf() {
    case 1:
       return new Y();
    case 2: default:
-      return new v_fix(frand(), frand(), frand());
+      return new Const(frand(), frand(), frand());
    }
 }
 
@@ -248,15 +246,15 @@ inline int clamp(float x) {
 
 void Image::save_pnm(string name) const {
    ofstream out(name.c_str());
-   int X = getX(), Y = getY();
+   int X = xsize(), Y = ysize();
    out << "P3" << endl
        << X << " " << Y << endl
        << "255" << endl;
    for (int j = 0; j < Y; j++) {
       for (int i = 0; i < X; i++) {
-         out << clamp(getPixel( i, j ).getr()) << ' '
-             << clamp(getPixel( i, j ).getg()) << ' '
-             << clamp(getPixel( i, j ).getb()) << ' ';
+         out << clamp(get( i, j ).getr()) << ' '
+             << clamp(get( i, j ).getg()) << ' '
+             << clamp(get( i, j ).getb()) << ' ';
       }
       out << endl;
    }
@@ -267,7 +265,7 @@ void Image::copyPixels(const Image& I) {
    const int _y = (y > I.y ? I.y : y);
    for (int i = 0; i < _x; i++) {
       for (int j = 0; j < _y; j++) {
-         putPixel(i, j, I.getPixel(i, j));
+         put(i, j, I.get(i, j));
       }
    }
 }
@@ -275,165 +273,165 @@ void Image::copyPixels(const Image& I) {
 void Image::filtraImatge (const RGB kernel[3][3]) {
    RGB res;
 
-   if (getX() < 3 || getY() < 3) return;
+   if (xsize() < 3 || ysize() < 3) return;
 
    // Core
    Image Tmp(*this);
    for (int i = 1; i < x - 1; i++) {
       for (int j = 1; j < y - 1; j++) {
          res = 
-            kernel[2][2] * RGB(Tmp.getPixel(i-1, j-1)) + 
-            kernel[1][2] * RGB(Tmp.getPixel(i  , j-1)) + 
-            kernel[0][2] * RGB(Tmp.getPixel(i+1, j-1)) + 
+            kernel[2][2] * RGB(Tmp.get(i-1, j-1)) + 
+            kernel[1][2] * RGB(Tmp.get(i  , j-1)) + 
+            kernel[0][2] * RGB(Tmp.get(i+1, j-1)) + 
 
-            kernel[2][1] * RGB(Tmp.getPixel(i-1, j  )) + 
-            kernel[1][1] * RGB(Tmp.getPixel(i  , j  )) + 
-            kernel[0][1] * RGB(Tmp.getPixel(i+1, j  )) + 
+            kernel[2][1] * RGB(Tmp.get(i-1, j  )) + 
+            kernel[1][1] * RGB(Tmp.get(i  , j  )) + 
+            kernel[0][1] * RGB(Tmp.get(i+1, j  )) + 
 
-            kernel[2][0] * RGB(Tmp.getPixel(i-1, j+1)) + 
-            kernel[1][0] * RGB(Tmp.getPixel(i  , j+1)) + 
-            kernel[0][0] * RGB(Tmp.getPixel(i+1, j+1));
+            kernel[2][0] * RGB(Tmp.get(i-1, j+1)) + 
+            kernel[1][0] * RGB(Tmp.get(i  , j+1)) + 
+            kernel[0][0] * RGB(Tmp.get(i+1, j+1));
 	
-         putPixel(i, j, res);
+         put(i, j, res);
       }
    }
 
    // Top
    for (int i = 1; i < x - 1; i++) {
       res = 
-         kernel[2][2] * RGB(Tmp.getPixel(i-1, 0)) + 
-         kernel[1][2] * RGB(Tmp.getPixel(i  , 0)) + 
-         kernel[0][2] * RGB(Tmp.getPixel(i+1, 0)) + 
+         kernel[2][2] * RGB(Tmp.get(i-1, 0)) + 
+         kernel[1][2] * RGB(Tmp.get(i  , 0)) + 
+         kernel[0][2] * RGB(Tmp.get(i+1, 0)) + 
       
-         kernel[2][1] * RGB(Tmp.getPixel(i-1, 0)) + 
-         kernel[1][1] * RGB(Tmp.getPixel(i  , 0)) + 
-         kernel[0][1] * RGB(Tmp.getPixel(i+1, 0)) + 
+         kernel[2][1] * RGB(Tmp.get(i-1, 0)) + 
+         kernel[1][1] * RGB(Tmp.get(i  , 0)) + 
+         kernel[0][1] * RGB(Tmp.get(i+1, 0)) + 
       
-         kernel[2][0] * RGB(Tmp.getPixel(i-1, 1)) + 
-         kernel[1][0] * RGB(Tmp.getPixel(i  , 1)) + 
-         kernel[0][0] * RGB(Tmp.getPixel(i+1, 1));
+         kernel[2][0] * RGB(Tmp.get(i-1, 1)) + 
+         kernel[1][0] * RGB(Tmp.get(i  , 1)) + 
+         kernel[0][0] * RGB(Tmp.get(i+1, 1));
 	
-      putPixel(i, 0, res);
+      put(i, 0, res);
    }
 
    // Bottom
    for (int i = 1; i < x - 1; i++) {
       res = 
-         kernel[2][2] * RGB(Tmp.getPixel(i-1, y-2)) + 
-         kernel[1][2] * RGB(Tmp.getPixel(i  , y-2)) + 
-         kernel[0][2] * RGB(Tmp.getPixel(i+1, y-2)) + 
+         kernel[2][2] * RGB(Tmp.get(i-1, y-2)) + 
+         kernel[1][2] * RGB(Tmp.get(i  , y-2)) + 
+         kernel[0][2] * RGB(Tmp.get(i+1, y-2)) + 
       
-         kernel[2][1] * RGB(Tmp.getPixel(i-1, y-1)) + 
-         kernel[1][1] * RGB(Tmp.getPixel(i  , y-1)) + 
-         kernel[0][1] * RGB(Tmp.getPixel(i+1, y-1)) + 
+         kernel[2][1] * RGB(Tmp.get(i-1, y-1)) + 
+         kernel[1][1] * RGB(Tmp.get(i  , y-1)) + 
+         kernel[0][1] * RGB(Tmp.get(i+1, y-1)) + 
       
-         kernel[2][0] * RGB(Tmp.getPixel(i-1, y-1)) + 
-         kernel[1][0] * RGB(Tmp.getPixel(i  , y-1)) + 
-         kernel[0][0] * RGB(Tmp.getPixel(i+1, y-1));
+         kernel[2][0] * RGB(Tmp.get(i-1, y-1)) + 
+         kernel[1][0] * RGB(Tmp.get(i  , y-1)) + 
+         kernel[0][0] * RGB(Tmp.get(i+1, y-1));
 	
-      putPixel(i, y-1, res);
+      put(i, y-1, res);
    }
 
    // Left
    for (int j = 1; j < y - 1; j++) {
       res = 
-         kernel[2][2] * RGB(Tmp.getPixel(0, j-1)) + 
-         kernel[1][2] * RGB(Tmp.getPixel(0, j-1)) + 
-         kernel[0][2] * RGB(Tmp.getPixel(1, j-1)) + 
+         kernel[2][2] * RGB(Tmp.get(0, j-1)) + 
+         kernel[1][2] * RGB(Tmp.get(0, j-1)) + 
+         kernel[0][2] * RGB(Tmp.get(1, j-1)) + 
       
-         kernel[2][1] * RGB(Tmp.getPixel(0, j  )) + 
-         kernel[1][1] * RGB(Tmp.getPixel(0, j  )) + 
-         kernel[0][1] * RGB(Tmp.getPixel(1, j  )) + 
+         kernel[2][1] * RGB(Tmp.get(0, j  )) + 
+         kernel[1][1] * RGB(Tmp.get(0, j  )) + 
+         kernel[0][1] * RGB(Tmp.get(1, j  )) + 
       
-         kernel[2][0] * RGB(Tmp.getPixel(0, j+1)) + 
-         kernel[1][0] * RGB(Tmp.getPixel(0, j+1)) + 
-         kernel[0][0] * RGB(Tmp.getPixel(1, j+1));
+         kernel[2][0] * RGB(Tmp.get(0, j+1)) + 
+         kernel[1][0] * RGB(Tmp.get(0, j+1)) + 
+         kernel[0][0] * RGB(Tmp.get(1, j+1));
     
-      putPixel(0, j, res);
+      put(0, j, res);
    }
   
    // Right
    for (int j = 1; j < y - 1; j++) {
       res = 
-         kernel[2][2] * RGB(Tmp.getPixel(x-2, j-1)) + 
-         kernel[1][2] * RGB(Tmp.getPixel(x-1, j-1)) + 
-         kernel[0][2] * RGB(Tmp.getPixel(x-1, j-1)) + 
+         kernel[2][2] * RGB(Tmp.get(x-2, j-1)) + 
+         kernel[1][2] * RGB(Tmp.get(x-1, j-1)) + 
+         kernel[0][2] * RGB(Tmp.get(x-1, j-1)) + 
       
-         kernel[2][1] * RGB(Tmp.getPixel(x-2, j  )) + 
-         kernel[1][1] * RGB(Tmp.getPixel(x-1, j  )) + 
-         kernel[0][1] * RGB(Tmp.getPixel(x-1, j  )) + 
+         kernel[2][1] * RGB(Tmp.get(x-2, j  )) + 
+         kernel[1][1] * RGB(Tmp.get(x-1, j  )) + 
+         kernel[0][1] * RGB(Tmp.get(x-1, j  )) + 
       
-         kernel[2][0] * RGB(Tmp.getPixel(x-2, j+1)) + 
-         kernel[1][0] * RGB(Tmp.getPixel(x-1, j+1)) + 
-         kernel[0][0] * RGB(Tmp.getPixel(x-1, j+1));
+         kernel[2][0] * RGB(Tmp.get(x-2, j+1)) + 
+         kernel[1][0] * RGB(Tmp.get(x-1, j+1)) + 
+         kernel[0][0] * RGB(Tmp.get(x-1, j+1));
     
-      putPixel(x-1, j, res);
+      put(x-1, j, res);
    }
 
    // TopLeft
    res = 
-      kernel[2][2] * RGB(Tmp.getPixel(0, 0)) + 
-      kernel[1][2] * RGB(Tmp.getPixel(0, 0)) + 
-      kernel[0][2] * RGB(Tmp.getPixel(1, 0)) + 
+      kernel[2][2] * RGB(Tmp.get(0, 0)) + 
+      kernel[1][2] * RGB(Tmp.get(0, 0)) + 
+      kernel[0][2] * RGB(Tmp.get(1, 0)) + 
     
-      kernel[2][1] * RGB(Tmp.getPixel(0, 0)) + 
-      kernel[1][1] * RGB(Tmp.getPixel(0, 0)) + 
-      kernel[0][1] * RGB(Tmp.getPixel(1, 0)) + 
+      kernel[2][1] * RGB(Tmp.get(0, 0)) + 
+      kernel[1][1] * RGB(Tmp.get(0, 0)) + 
+      kernel[0][1] * RGB(Tmp.get(1, 0)) + 
     
-      kernel[2][0] * RGB(Tmp.getPixel(0, 1)) + 
-      kernel[1][0] * RGB(Tmp.getPixel(0, 1)) + 
-      kernel[0][0] * RGB(Tmp.getPixel(1, 1));
+      kernel[2][0] * RGB(Tmp.get(0, 1)) + 
+      kernel[1][0] * RGB(Tmp.get(0, 1)) + 
+      kernel[0][0] * RGB(Tmp.get(1, 1));
 
-   putPixel(0, 0, res);
+   put(0, 0, res);
   
    // BottomLeft
    res = 
-      kernel[2][2] * RGB(Tmp.getPixel(0, y-2)) + 
-      kernel[1][2] * RGB(Tmp.getPixel(0, y-2)) + 
-      kernel[0][2] * RGB(Tmp.getPixel(1, y-2)) + 
+      kernel[2][2] * RGB(Tmp.get(0, y-2)) + 
+      kernel[1][2] * RGB(Tmp.get(0, y-2)) + 
+      kernel[0][2] * RGB(Tmp.get(1, y-2)) + 
     
-      kernel[2][1] * RGB(Tmp.getPixel(0, y-1)) + 
-      kernel[1][1] * RGB(Tmp.getPixel(0, y-1)) + 
-      kernel[0][1] * RGB(Tmp.getPixel(1, y-1)) + 
+      kernel[2][1] * RGB(Tmp.get(0, y-1)) + 
+      kernel[1][1] * RGB(Tmp.get(0, y-1)) + 
+      kernel[0][1] * RGB(Tmp.get(1, y-1)) + 
     
-      kernel[2][0] * RGB(Tmp.getPixel(0, y-1)) + 
-      kernel[1][0] * RGB(Tmp.getPixel(0, y-1)) + 
-      kernel[0][0] * RGB(Tmp.getPixel(1, y-1));
+      kernel[2][0] * RGB(Tmp.get(0, y-1)) + 
+      kernel[1][0] * RGB(Tmp.get(0, y-1)) + 
+      kernel[0][0] * RGB(Tmp.get(1, y-1));
   
-   putPixel(0, y-1, res);
+   put(0, y-1, res);
 
 
    // TopRight
    res = 
-      kernel[2][2] * RGB(Tmp.getPixel(x-2, 0)) + 
-      kernel[1][2] * RGB(Tmp.getPixel(x-1, 0)) + 
-      kernel[0][2] * RGB(Tmp.getPixel(x-1, 0)) + 
+      kernel[2][2] * RGB(Tmp.get(x-2, 0)) + 
+      kernel[1][2] * RGB(Tmp.get(x-1, 0)) + 
+      kernel[0][2] * RGB(Tmp.get(x-1, 0)) + 
     
-      kernel[2][1] * RGB(Tmp.getPixel(x-2, 0)) + 
-      kernel[1][1] * RGB(Tmp.getPixel(x-1, 0)) + 
-      kernel[0][1] * RGB(Tmp.getPixel(x-1, 0)) + 
+      kernel[2][1] * RGB(Tmp.get(x-2, 0)) + 
+      kernel[1][1] * RGB(Tmp.get(x-1, 0)) + 
+      kernel[0][1] * RGB(Tmp.get(x-1, 0)) + 
     
-      kernel[2][0] * RGB(Tmp.getPixel(x-2, 1)) + 
-      kernel[1][0] * RGB(Tmp.getPixel(x-1, 1)) + 
-      kernel[0][0] * RGB(Tmp.getPixel(x-1, 1));
+      kernel[2][0] * RGB(Tmp.get(x-2, 1)) + 
+      kernel[1][0] * RGB(Tmp.get(x-1, 1)) + 
+      kernel[0][0] * RGB(Tmp.get(x-1, 1));
   
-   putPixel(x-1, 0, res);
+   put(x-1, 0, res);
 
    // TopRight
    res = 
-      kernel[2][2] * RGB(Tmp.getPixel(x-2, y-2)) + 
-      kernel[1][2] * RGB(Tmp.getPixel(x-1, y-2)) + 
-      kernel[0][2] * RGB(Tmp.getPixel(x-1, y-2)) + 
+      kernel[2][2] * RGB(Tmp.get(x-2, y-2)) + 
+      kernel[1][2] * RGB(Tmp.get(x-1, y-2)) + 
+      kernel[0][2] * RGB(Tmp.get(x-1, y-2)) + 
     
-      kernel[2][1] * RGB(Tmp.getPixel(x-2, y-1)) + 
-      kernel[1][1] * RGB(Tmp.getPixel(x-1, y-1)) + 
-      kernel[0][1] * RGB(Tmp.getPixel(x-1, y-1)) + 
+      kernel[2][1] * RGB(Tmp.get(x-2, y-1)) + 
+      kernel[1][1] * RGB(Tmp.get(x-1, y-1)) + 
+      kernel[0][1] * RGB(Tmp.get(x-1, y-1)) + 
     					    
-      kernel[2][0] * RGB(Tmp.getPixel(x-2, y-1)) + 
-      kernel[1][0] * RGB(Tmp.getPixel(x-1, y-1)) + 
-      kernel[0][0] * RGB(Tmp.getPixel(x-1, y-1));
+      kernel[2][0] * RGB(Tmp.get(x-2, y-1)) + 
+      kernel[1][0] * RGB(Tmp.get(x-1, y-1)) + 
+      kernel[0][0] * RGB(Tmp.get(x-1, y-1));
   
-   putPixel(x-1, y-1, res);
+   put(x-1, y-1, res);
 }
 
 bool Image::allBallW(){
@@ -443,8 +441,8 @@ bool Image::allBallW(){
    RGB W(0.999, 0.999, 0.999);	
    for (int i = 0; i < x; i++) {
       for (int j = 0; j < y; j++) {
-         if (getPixel(i, j) < B) { countB++; }
-         if (getPixel(i, j) > W) { countW++; }
+         if (get(i, j) < B) { countB++; }
+         if (get(i, j) > W) { countW++; }
       }
    }
    if (countB >= int(x*y*0.9) || countW >= int(x*y*0.75)) { return true; }
@@ -492,7 +490,7 @@ Node *Y::_mutate_leaf() {
    }
 }
 
-string v_fix::name() const { 
+string Const::name() const { 
    std::stringstream s;
    s << std::setprecision(2) << p1 << ", " 
      << std::setprecision(2) << p2 << ", " 
@@ -500,14 +498,14 @@ string v_fix::name() const {
    return s.str(); 
 }
 
-Node *v_fix::_mutate(int& idx) {
+Node *Const::_mutate(int& idx) {
    p1 *= 0.8 + 0.4*frand();
    p2 *= 0.8 + 0.4*frand();
    p3 *= 0.8 + 0.4*frand();
    return Leaf::_mutate(idx);
 }
 
-Node *v_fix::_mutate_leaf() {
+Node *Const::_mutate_leaf() {
    if (frand() < .7) {
       return this;
    }
@@ -594,14 +592,14 @@ void X::eval(Image& e) {
    float xtl, ytl, xbr, ybr;
    e.get_tl(xtl, ytl);
    e.get_br(xbr, ybr);
-   const int x = e.getX(), y = e.getY();
+   const int x = e.xsize(), y = e.ysize();
    if (x == 1 && y == 1) {
-      e.putPixel(0, 0, RGB( (xbr - xtl)/2.0 ));
+      e.put(0, 0, RGB( (xbr - xtl)/2.0 ));
    }
    else {
       for (int i = 0 ; i < x ; i++)
          for (int j = 0 ; j < y ; j++)
-            e.putPixel(i, j, RGB( (xbr - xtl)*float(i)/float(x-1) + xtl ));
+            e.put(i, j, RGB( (xbr - xtl)*float(i)/float(x-1) + xtl ));
    }
 }
 
@@ -609,24 +607,22 @@ void Y::eval(Image& e) {
    float xtl, ytl, xbr, ybr;
    e.get_tl(xtl, ytl);
    e.get_br(xbr, ybr);
-   const int x = e.getX(), y = e.getY();
+   const int x = e.xsize(), y = e.ysize();
    if (x == 1 && y == 1) {
-      e.putPixel(0, 0, RGB( (ybr - ytl)/2.0 ));
+      e.put(0, 0, RGB( (ybr - ytl)/2.0 ));
    }
    else {
       for (int i = 0 ; i < x ; i++)
          for (int j = 0 ; j < y ; j++)
-            e.putPixel(i, j, RGB( (ybr - ytl)*float(j)/float(y-1) + ytl ));
+            e.put(i, j, RGB( (ybr - ytl)*float(j)/float(y-1) + ytl ));
    }
 }
 
-
-
-void v_fix::eval(Image& e) {
-   const int x = e.getX(), y = e.getY();
+void Const::eval(Image& e) {
+   const int x = e.xsize(), y = e.ysize();
    for (int i = 0 ; i < x ; i++)
       for (int j = 0 ; j < y ; j++)
-         e.putPixel(i, j, RGB( p1 , p2 , p3 ));
+         e.put(i, j, RGB( p1 , p2 , p3 ));
 }
 
 
@@ -643,6 +639,22 @@ inline RGB bilinear(const RGB& aa, const RGB& ab,
                   linear(ba, bb, u), v );
 }
 
+inline RGB cubic(const RGB& a, const RGB& b, const RGB& c, const RGB& d, double x) {
+   return b + 0.5 * x*(c - a + x*(2.0*a - 5.0*b + 4.0*c - d + x*(3.0*(b - c) + d - a)));
+}
+
+inline RGB bicubic(const RGB& aa, const RGB& ab, const RGB& ac, const RGB& ad,
+                   const RGB& ba, const RGB& bb, const RGB& bc, const RGB& bd,
+                   const RGB& ca, const RGB& cb, const RGB& cc, const RGB& cd,
+                   const RGB& da, const RGB& db, const RGB& dc, const RGB& dd,
+                   double u, double v) {
+   return cubic(cubic(aa, ab, ac, ad, u),
+                cubic(ba, bb, bc, bd, u),
+                cubic(ca, cb, cc, cd, u),
+                cubic(da, db, dc, dd, u), v);
+}
+
+
 drand48_data Noise::_data;
 
 float Noise::random() {
@@ -658,13 +670,13 @@ void Noise::set_seed(int s) {
 void Noise::eval(Image& e) {
    Image seed(1, 1);
    op1()->eval(seed);
-   float fseed = seed.getPixel(0, 0).getr();
+   float fseed = seed.get(0, 0).getr();
    int lseed = long(floor(fseed * 10000));
    set_seed(lseed);
 
-   const int x = e.getX(), y = e.getY();
+   const int x = e.xsize(), y = e.ysize();
    if (x == 1 && y == 1) {
-      e.putPixel(0, 0, gen_noise());
+      e.put(0, 0, gen_noise());
       return;
    }
   
@@ -680,8 +692,33 @@ void Noise::eval(Image& e) {
    Image I(xsz, ysz);
    for (int i = 0 ; i < xsz ; i++)
       for (int j = 0 ; j < ysz ; j++)
-         I.putPixel(i, j, gen_noise()); // alternativa: (frand() < .5 ? 0.0 : 1.0)
+         I.put(i, j, gen_noise()); // alternativa: (frand() < .5 ? 0.0 : 1.0)
 
+   // Bicubic interpolation
+   for (int i = 0 ; i < x ; i++) {
+      for (int j = 0 ; j < y ; j++) {
+         double u = width  * float(i) / float(x-1);
+         double v = height * float(j) / float(y-1);
+         u /= noise_size;
+         v /= noise_size;
+         int _x = floor(u), _y = floor(v);
+         double u_r = u - _x, v_r = v - _y;
+         int _x_1 = _x - 1, _x_2 = _x + 2;
+         int _y_1 = _y - 1, _y_2 = _y + 2;
+         if (_x_1 < 0)   _x_1 = 0;
+         if (_x_2 >= xsz) _x_2 = xsz - 1;
+         if (_y_1 < 0)   _y_1 = 0;
+         if (_y_2 >= xsz) _y_2 = xsz - 1;
+         e.put(i, j, 
+               bicubic(I.get(_x_1, _y_1), I.get(_x, _y_1), I.get(_x+1, _y_1), I.get(_x_2, _y_1),
+                       I.get(_x_1, _y  ), I.get(_x, _y  ), I.get(_x+1, _y  ), I.get(_x_2, _y  ),
+                       I.get(_x_1, _y+1), I.get(_x, _y+1), I.get(_x+1, _y+1), I.get(_x_2, _y+1),
+                       I.get(_x_1, _y_2), I.get(_x, _y_2), I.get(_x+1, _y_2), I.get(_x_2, _y_2),
+                       u_r, v_r ));
+      }
+   }
+   
+   /*
    // Bilinear interpolation
    for (int i = 0 ; i < x ; i++) {
       for (int j = 0 ; j < y ; j++) {
@@ -691,19 +728,20 @@ void Noise::eval(Image& e) {
          v /= noise_size;
          int _x = floor(u), _y = floor(v);
          double u_r = u - _x, v_r = v - _y;
-         e.putPixel(i, j, 
-                    bilinear( I.getPixel(_x, _y),   I.getPixel(_x+1, _y),
-                              I.getPixel(_x, _y+1), I.getPixel(_x+1, _y+1),
+         e.put(i, j, 
+                    bilinear( I.get(_x, _y),   I.get(_x+1, _y),
+                              I.get(_x, _y+1), I.get(_x+1, _y+1),
                               u_r, v_r ));
       }
    }
+   */
 }
 
-RGB bwNoise::gen_noise() {
+RGB BwNoise::gen_noise() {
    return RGB(random());
 }
 
-RGB colorNoise::gen_noise() {
+RGB ColorNoise::gen_noise() {
    return RGB(random(), random(), random());
 }
 
@@ -711,7 +749,7 @@ void Warp::eval(Image& I) {
    // (warp <expr> <scale x> <scale y>)
    Image scalex(1, 1);
    p2->eval(scalex);
-   float scx = scalex.getPixel(0, 0).getr();
+   float scx = scalex.get(0, 0).getr();
    if (!isfinite(scx)) {
       scx = 1;
    }
@@ -722,7 +760,7 @@ void Warp::eval(Image& I) {
 
    Image scaley(1, 1);
    p3->eval(scaley);
-   float scy = scaley.getPixel(0, 0).getr();
+   float scy = scaley.get(0, 0).getr();
    if (!isfinite(scy)) {
       scy = 1;
    }
@@ -739,7 +777,7 @@ void Warp::eval(Image& I) {
    float xv = xtl - xcen, yv = ytl - ycen;
    xv *= scx, yv *= scy;
   
-   Image result(I.getX(), I.getY(),
+   Image result(I.xsize(), I.ysize(),
                 xcen + xv, ycen + yv,
                 xcen - xv, ycen - yv);
    p1->eval(result);
@@ -755,7 +793,7 @@ void Warp::destroy() {
 }
 
 void Dissolve::eval(Image& I) {
-   const int x = I.getX(), y = I.getY();
+   const int x = I.xsize(), y = I.ysize();
    Image _mask(x, y);
    p3->eval(_mask);
 
@@ -776,10 +814,10 @@ void Dissolve::eval(Image& I) {
   
    for (int i = 0 ; i < x; i++)
       for (int j = 0 ; j < y; j++) {
-         RGB t = _mask.getPixel(i, j).clamp();
-         I.putPixel(i, j, 
-                    i1.getPixel(i, j) * t + 
-                    i2.getPixel(i, j) * t.invert());
+         RGB t = _mask.get(i, j).clamp();
+         I.put(i, j, 
+                    i1.get(i, j) * t + 
+                    i2.get(i, j) * t.invert());
       }
 }
 
@@ -800,10 +838,10 @@ void UnaryOp::destroy() {
 
 void Abs::eval(Image& I) {
    op1()->eval(I);
-   const int x = I.getX(), y = I.getY();
+   const int x = I.xsize(), y = I.ysize();
    for (int i = 0; i < x; i++)
       for (int j = 0; j < y; j++)
-         I.putPixel(i, j, I.getPixel(i,j).map( fabs ));
+         I.put(i, j, I.get(i,j).map( fabs ));
 }
 
 // Forcem entre 0.0 i 1.0
@@ -813,10 +851,10 @@ float mySin(float x) {
 
 void Sin::eval(Image& I) {
    op1()->eval(I);
-   const int x = I.getX(), y = I.getY();
+   const int x = I.xsize(), y = I.ysize();
    for (int i = 0; i < x; i++)
       for (int j = 0; j < y; j++)
-         I.putPixel(i, j, I.getPixel(i,j).map( mySin ));
+         I.put(i, j, I.get(i,j).map( mySin ));
 }
 
 float myCos(float x) {
@@ -825,13 +863,13 @@ float myCos(float x) {
 
 void Cos::eval(Image& I) {
    op1()->eval(I);
-   const int x = I.getX(), y = I.getY();
+   const int x = I.xsize(), y = I.ysize();
    for (int i = 0; i < x; i++)
       for (int j = 0; j < y; j++)
-         I.putPixel(i, j, I.getPixel(i,j).map( myCos ));
+         I.put(i, j, I.get(i,j).map( myCos ));
 }
 
-void gaussBlur::eval(Image& I) {
+void GaussBlur::eval(Image& I) {
    static const RGB kernel[3][3] = {
       {  1.,  2.,  1. },
       {  2.,  4.,  2. },
@@ -841,7 +879,7 @@ void gaussBlur::eval(Image& I) {
    I.filtraImatge(kernel);
 }
 
-void gradDir::eval(Image& I){
+void GradDir::eval(Image& I){
    static const RGB kernel[3][3] = {
       {  1., -2.,  1. },
       { -2.,  5., -2. },
@@ -851,7 +889,7 @@ void gradDir::eval(Image& I){
    I.filtraImatge(kernel);
 }
 
-void sharpen::eval(Image& I){
+void Sharpen::eval(Image& I){
    static const RGB kernel[3][3] = {
       { -1., -1., -1. },
       { -1.,  9., -1. },
@@ -861,7 +899,7 @@ void sharpen::eval(Image& I){
    I.filtraImatge(kernel);
 }
 
-void emboss::eval(Image& I){
+void Emboss::eval(Image& I){
    static const RGB kernel[3][3] = {
       {  2.,  0.,  0. },
       {  0., -1.,  0. },
@@ -871,7 +909,7 @@ void emboss::eval(Image& I){
    I.filtraImatge(kernel);
 }
 
-void blur::eval (Image& I){
+void Blur::eval (Image& I){
    static const RGB kernel[3][3] = {
       { 1./9., 1./9., 1./9. },
       { 1./9., 1./9., 1./9. },
@@ -881,12 +919,12 @@ void blur::eval (Image& I){
    I.filtraImatge(kernel);
 }
 
-void hsv_to_rgb::eval(Image& I) {
+void HsvToRgb::eval(Image& I) {
    op1()->eval(I);
-   const int x = I.getX(), y = I.getY();
+   const int x = I.xsize(), y = I.ysize();
    for (int i = 0; i < x; i++)
       for (int j = 0; j < y; j++)
-         I.putPixel(i, j, I.getPixel(i,j).hsv_to_rgb());
+         I.put(i, j, I.get(i,j).hsv_to_rgb());
 }
 
 // BinaryOperations //////////////////////////////////////////////////
@@ -898,7 +936,7 @@ void BinaryOp::destroy(){
 }
 
 void BinaryOp::eval(Image& I) {
-   const int x = I.getX(), y = I.getY();
+   const int x = I.xsize(), y = I.ysize();
    /*
    -- Fora Threaded Evaluator [03/Feb/2014]
 
@@ -925,10 +963,10 @@ void BinaryOp::eval(Image& I) {
 
 #define DO_OP(Class, expr)                                  \
    void Class::do_op(Image& res, Image& op1, Image& op2) {  \
-      const int x = res.getX(), y = res.getY();             \
+      const int x = res.xsize(), y = res.ysize();           \
       for (int i = 0; i < x; i++)                           \
          for (int j = 0; j < y; j++)                        \
-            res.putPixel(i, j, (expr));                     \
+            res.put(i, j, (expr));                          \
    }
 
 inline float _fmod(float x, float y) {
@@ -945,20 +983,20 @@ inline RGB _min(const RGB& c1, const RGB& c2) {
 
 const RGB offs(0.5, 0.5, 0.5);
 
-DO_OP(Sum,   op1.getPixel(i,j) + op2.getPixel(i,j))
-DO_OP(Rest,  op1.getPixel(i,j) - op2.getPixel(i,j))
-DO_OP(Mult,  op1.getPixel(i,j) * op2.getPixel(i,j))
-DO_OP(Div,   op1.getPixel(i,j) / op2.getPixel(i,j))
-DO_OP(And,   op1.getPixel(i,j) & op2.getPixel(i,j))
-DO_OP(Or,    op1.getPixel(i,j) | op2.getPixel(i,j))
-DO_OP(Xor,   op1.getPixel(i,j) ^ op2.getPixel(i,j))
-DO_OP(Log,   op1.getPixel(i,j).map( log10 ) / op2.getPixel(i,j).map( log10 ))
-DO_OP(Mod,   op1.getPixel(i,j).map2(_fmod, op2.getPixel(i,j)))
-DO_OP(Atan,  op1.getPixel(i,j).map2( atan2, op2.getPixel(i,j) ))
-DO_OP(Expt,  op1.getPixel(i,j).map2( pow, op2.getPixel(i,j) ))
-DO_OP(Round, (op1.getPixel(i,j) / op1.getPixel(i,j) + offs).map( floor ))
-DO_OP(Min,   _min(op1.getPixel(i, j), op2.getPixel(i, j)))
-DO_OP(Max,   _max(op1.getPixel(i, j), op2.getPixel(i, j)))
+DO_OP(Sum,   op1.get(i,j) + op2.get(i,j))
+DO_OP(Sub,   op1.get(i,j) - op2.get(i,j))
+DO_OP(Mult,  op1.get(i,j) * op2.get(i,j))
+DO_OP(Div,   op1.get(i,j) / op2.get(i,j))
+DO_OP(And,   op1.get(i,j) & op2.get(i,j))
+DO_OP(Or,    op1.get(i,j) | op2.get(i,j))
+DO_OP(Xor,   op1.get(i,j) ^ op2.get(i,j))
+DO_OP(Log,   op1.get(i,j).map( log10 ) / op2.get(i,j).map( log10 ))
+DO_OP(Mod,   op1.get(i,j).map2(_fmod, op2.get(i,j)))
+DO_OP(Atan,  op1.get(i,j).map2( atan2, op2.get(i,j) ))
+DO_OP(Expt,  op1.get(i,j).map2( pow, op2.get(i,j) ))
+DO_OP(Round, (op1.get(i,j) / op1.get(i,j) + offs).map( floor ))
+DO_OP(Min,   _min(op1.get(i, j), op2.get(i, j)))
+DO_OP(Max,   _max(op1.get(i, j), op2.get(i, j)))
 
 void BinaryOp::print(ostream& o) const {
    o << "(" << head() << " ";
@@ -974,41 +1012,39 @@ void UnaryOp::print(ostream& o) const {
    o << ")";
 }
 
-void v_fix::print(ostream& o) const {
+void Const::print(ostream& o) const {
    if( p1 == p2 || p2 == p3) { o << p1; } 
    else{ o << "#(" << p1 << " " << p2 << " " << p3 << ")"; }
 }
 
 string Sum::head()  const { return "+"; }
-string Rest::head() const { return "-"; }
+string Sub::head() const { return "-"; }
 string Mult::head()  const { return "*"; }
 string Div::head()  const { return "/"; }
 string Mod::head()  const { return "%"; }
-string Log::head()  const { return "Log"; }
-string Round::head()  const { return "Round"; }
+string Log::head()  const { return "log"; }
+string Round::head()  const { return "round"; }
 string And::head()  const { return "&"; }
 string Or::head()  const { return "|"; }
 string Xor::head()  const { return "^"; }
-string Sin::head()  const { return "Sin"; }
-string Cos::head()  const { return "Cos"; }
-string Atan::head()  const { return "Atan"; }
-string gaussBlur::head()  const { return "gaussBlur"; }
-string gradDir::head()  const { return "gradDir"; }
-string emboss::head()  const { return "emboss"; }
-string sharpen::head()  const { return "sharpen"; }
-string blur::head() const { return "blur";}
-string hsv_to_rgb::head() const { return "hsv-to-rgb"; }
-string Abs::head()  const { return "Abs"; }
-string Expt::head()  const { return "Expt"; }
-string Max::head()  const { return "Max"; }
-string Min::head()  const { return "Min"; }
-string bwNoise::head()  const { return "bwNoise"; }
-string colorNoise::head()  const { return "colorNoise"; }
+string Sin::head()  const { return "sin"; }
+string Cos::head()  const { return "cos"; }
+string Atan::head()  const { return "atan"; }
+string GaussBlur::head()  const { return "gauss-blur"; }
+string GradDir::head()  const { return "grad-dir"; }
+string Emboss::head()  const { return "emboss"; }
+string Sharpen::head()  const { return "sharpen"; }
+string Blur::head() const { return "blur";}
+string HsvToRgb::head() const { return "hsv-to-rgb"; }
+string Abs::head()  const { return "abs"; }
+string Expt::head()  const { return "expt"; }
+string Max::head()  const { return "max"; }
+string Min::head()  const { return "min"; }
+string BwNoise::head()  const { return "bw-noise"; }
+string ColorNoise::head()  const { return "color-noise"; }
 
 void Y::print(ostream& o) const { o << "y"; }
 void X::print(ostream& o) const { o << "x"; }
-void bwNoise::print(ostream& o) const { o << "(bwNoise)"; }
-void colorNoise::print(ostream& o) const { o << "(colorNoise)"; }
 
 void Warp::print(ostream& o) const {
    o << "(warp ";  
