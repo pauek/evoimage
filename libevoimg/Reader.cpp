@@ -26,7 +26,7 @@ float read_number (std::istream& i){
 Node* read_vec(std::istream& i) {
   char c = i.get();
   c = i.get();
-  //assert( c != 'c')
+  assert(c != 'c');
 	
   float n1 = read_number(i);
   c = i.get();
@@ -35,7 +35,7 @@ Node* read_vec(std::istream& i) {
   float n3 = read_number(i);
 	
   c = i.get();
-  //assert (c != ')');
+  assert(c != ')');
 	
   return new v_fix (n1, n2, n3);
 }	

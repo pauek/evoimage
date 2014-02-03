@@ -179,12 +179,11 @@ void display(const Image& I) {
 
    // Launch a new process
    if (fork() == 0) {
-      int ret;
       // I'm the child
       {
          stringstream sout;
          sout << "display " << outfile;
-         ret = system(sout.str().c_str());
+         system(sout.str().c_str());
       }
 
       // When display finishes, we delete the file
@@ -226,7 +225,7 @@ void next_generation(vector<Node *>& pop, int ifather) {
    Node *father = pop[ifather];
    vector<Node *> next;
    next.push_back(father);
-   while (next.size() < numimg) {
+   while (int(next.size()) < numimg) {
       next.push_back(father->clone()->mutate());
    }
    pop.swap(next);
