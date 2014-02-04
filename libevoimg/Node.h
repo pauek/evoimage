@@ -445,9 +445,6 @@ public:
    void accept(Visitor& v);
 };
 
-
-// Visitor ///////////////////////////////////////////////////////////
-
 class Visitor {
 public:
    virtual void visitLeaf(Leaf *) = 0;
@@ -463,34 +460,9 @@ inline void BinaryOp::accept(Visitor& v) { v.visitBinaryOp(this); }
 inline void Dissolve::accept(Visitor& v) { v.visitDissolve(this); }
 inline void Warp::accept(Visitor& v) { v.visitWarp(this); }
 
-class GraphvizVisitor : public Visitor {
-   std::ostream& _out;
-   int _idx;
-public:
-   GraphvizVisitor(std::ostream& out)
-      :_out(out), _idx(0) {
-      _out << "digraph G {" << std::endl;
-   }
+// API
 
-   ~GraphvizVisitor() {
-      _out << "}" << std::endl;
-   }
-
-   void visitLeaf(Leaf *);
-   void visitUnaryOp(UnaryOp *);
-   void visitBinaryOp(BinaryOp *);
-   void visitDissolve(Dissolve *);
-   void visitWarp(Warp *);
-};
-
-void show_graph(Node *);
-
-// Reader ////////////////////////////////////////////////////////////
-
-// std::string read_token(std::istream& i);
-// float read_number(std::istream& i);
-// Node* read_vec(std::istream& i);
-// Node* read_list(std::istream& i);
+void  show_graph(Node *);
 Node* read(std::istream& i);
 
 #endif

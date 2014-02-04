@@ -4,9 +4,9 @@
 #include <vector>
 #include <unistd.h>
 #include <stdio.h>
-#include <Node.h>
-
 using namespace std;
+
+#include <evoimage>
 
 // Paràmetres
 string outfile1 = "<none>"; // Nom imatge de sortida

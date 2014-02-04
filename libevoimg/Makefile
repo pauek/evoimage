@@ -1,6 +1,6 @@
 
 CXXFLAGS = -Wall
-OBJECTS = Node.o Reader.o
+OBJECTS = Node.o Reader.o Tree.o
 
 ifdef DEBUG
   CXXFLAGS += -g3

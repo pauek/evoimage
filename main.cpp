@@ -7,9 +7,9 @@
 #include <unistd.h>
 #include <readline/readline.h>
 #include <pthread.h>
-#include <Node.h>
-
 using namespace std;
+
+#include <evoimage>
 
 // Paràmetres
 string outfile = "img.pnm"; // Nom imatge de sortida

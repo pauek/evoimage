@@ -5,9 +5,10 @@
 #include <cstdio>
 #include <vector>
 #include <unistd.h>
-#include <Node.h>
 
 using namespace std;
+
+#include <evoimage>
 
 // Paràmetres
 int    width = 400;        // Amplada de la imatge

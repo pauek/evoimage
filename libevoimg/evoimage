@@ -1,0 +1,7 @@
+
+#ifndef EVOIMAGE_H
+#define EVOIMAGE_H
+
+#include "Node.h"
+
+#endif
